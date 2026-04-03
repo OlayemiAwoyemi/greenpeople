@@ -1,111 +1,90 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Vote } from "lucide-react";
-import heroPeople from "@/assets/hero-people.jpg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight, faCheckToSlot } from "@fortawesome/free-solid-svg-icons";
 import LiveCounter from "./LiveCounter";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background image */}
+    <section className="relative min-h-screen flex items-center overflow-hidden">
+      {/* Background image - real photo */}
       <div className="absolute inset-0">
         <img
-          src={heroPeople}
-          alt="Diverse Nigerians standing together in unity"
+          src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1920&q=80&auto=format&fit=crop"
+          alt="Diverse group of happy people together"
           className="w-full h-full object-cover"
-          width={1920}
-          height={1080}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-foreground/70 via-foreground/60 to-foreground/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-accent/90 via-accent/80 to-accent/60" />
       </div>
 
-      {/* Nigerian flag accent stripe */}
-      <div className="absolute top-0 left-0 right-0 h-1 flex">
-        <div className="flex-1 bg-primary" />
-        <div className="flex-1 bg-primary-foreground" />
-        <div className="flex-1 bg-primary" />
-      </div>
-
-      <div className="relative z-20 section-container text-center py-32 md:py-40">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="inline-flex items-center gap-2 bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 rounded-full px-4 py-2 mb-8"
-        >
-          <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-          <span className="text-primary-foreground/90 text-sm font-medium">
-            The Movement is Live — Join Today
-          </span>
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-primary-foreground leading-[0.95] mb-6"
-        >
-          Green People
-          <br />
-          <span className="text-accent">Movement</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-primary-foreground/80 text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto mb-10 leading-relaxed"
-        >
-          We are registering millions of new voters to own 2027.
-          <br className="hidden md:block" />
-          Join the biggest people-powered movement Nigeria has ever seen.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10"
-        >
-          <a
-            href="#join"
-            className="group bg-accent text-accent-foreground px-8 py-4 rounded-full text-lg font-bold hover:opacity-90 transition-all flex items-center gap-2 animate-pulse-glow"
+      <div className="relative z-20 section-container py-28 md:py-36">
+        <div className="max-w-2xl">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 rounded-full px-3 py-1.5 mb-6"
           >
-            Join the Movement Now (Free)
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </a>
-          <a
-            href="https://cvr.inecnigeria.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group bg-primary-foreground/10 backdrop-blur-sm border-2 border-primary-foreground/30 text-primary-foreground px-8 py-4 rounded-full text-lg font-bold hover:bg-primary-foreground/20 transition-all flex items-center gap-2"
+            <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+            <span className="text-primary-foreground/90 text-xs font-medium">
+              The Movement is Live
+            </span>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground leading-tight mb-4"
           >
-            <Vote className="w-5 h-5" />
-            Register to Vote Today
-          </a>
-        </motion.div>
+            Green People Movement
+          </motion.h1>
 
-        <LiveCounter />
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="text-primary-foreground/80 text-sm md:text-base max-w-lg mb-8 leading-relaxed"
+          >
+            We are registering millions of new voters to own 2027.
+            Join the biggest people-powered movement Nigeria has ever seen.
+          </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-          className="mt-8 text-primary-foreground/50 text-sm md:text-base"
-        >
-          From Lagos to Kano, Port Harcourt to Maiduguri — one green future for every Nigerian
-        </motion.p>
-      </div>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="flex flex-col sm:flex-row items-start gap-3 mb-8"
+          >
+            <a
+              href="#join"
+              className="group bg-primary text-primary-foreground px-6 py-3 rounded-md text-sm font-semibold hover:opacity-90 transition-all flex items-center gap-2"
+            >
+              Join the Movement (Free)
+              <FontAwesomeIcon icon={faArrowRight} className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </a>
+            <a
+              href="https://cvr.inecnigeria.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/30 text-primary-foreground px-6 py-3 rounded-md text-sm font-semibold hover:bg-primary-foreground/20 transition-all flex items-center gap-2"
+            >
+              <FontAwesomeIcon icon={faCheckToSlot} className="w-3.5 h-3.5" />
+              Register to Vote
+            </a>
+          </motion.div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        animate={{ y: [0, 10, 0] }}
-        transition={{ repeat: Infinity, duration: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
-      >
-        <div className="w-6 h-10 rounded-full border-2 border-primary-foreground/30 flex items-start justify-center p-1.5">
-          <div className="w-1.5 h-3 bg-primary-foreground/50 rounded-full" />
+          <LiveCounter />
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 0.6 }}
+            className="mt-6 text-primary-foreground/50 text-xs"
+          >
+            From Lagos to Kano, Port Harcourt to Maiduguri — one green future for every Nigerian
+          </motion.p>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

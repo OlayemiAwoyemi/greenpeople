@@ -1,57 +1,55 @@
-import { Leaf, MessageCircle, Mail, Shield } from "lucide-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { faShieldHalved, faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import greenLogo from "@/assets/green-logo.png";
 
 const GreenFooter = () => {
   return (
-    <footer className="bg-foreground py-16 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-foreground to-foreground/95" />
-
-      <div className="section-container relative z-10">
-        {/* Final CTA */}
-        <div className="text-center mb-16">
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-black text-primary-foreground mb-4">
-            The future won't wait.
-            <br />
-            <span className="text-accent">Will you?</span>
+    <footer className="bg-accent py-14">
+      <div className="section-container">
+        <div className="text-center mb-12">
+          <h2 className="text-xl md:text-2xl font-bold text-accent-foreground mb-3">
+            The future won't wait. <span className="text-primary">Will you?</span>
           </h2>
-          <p className="text-primary-foreground/60 text-lg max-w-xl mx-auto mb-8">
-            Every single Nigerian who joins makes us stronger. This is our time. This is our country. This is our movement.
+          <p className="text-accent-foreground/50 text-sm max-w-md mx-auto mb-6">
+            Every Nigerian who joins makes us stronger. This is our time.
           </p>
           <a
             href="#join"
-            className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-8 py-4 rounded-full text-lg font-bold hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-md text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             Join Green People Now
           </a>
         </div>
 
-        <div className="border-t border-primary-foreground/10 pt-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="border-t border-accent-foreground/10 pt-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <Leaf className="w-6 h-6 text-accent" />
-              <span className="font-bold text-primary-foreground">Green People Movement</span>
+              <img src={greenLogo} alt="Green People" className="w-6 h-6 rounded-full" />
+              <span className="font-semibold text-sm text-accent-foreground">Green People Movement</span>
             </div>
 
-            <div className="flex items-center gap-6 text-primary-foreground/50 text-sm">
-              <a href="#" className="hover:text-accent transition-colors flex items-center gap-1.5">
-                <MessageCircle className="w-4 h-4" />
-                WhatsApp Community
+            <div className="flex items-center gap-5 text-accent-foreground/40 text-xs">
+              <a href="#" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <FontAwesomeIcon icon={faWhatsapp} className="w-3.5 h-3.5" />
+                WhatsApp
               </a>
-              <a href="#" className="hover:text-accent transition-colors flex items-center gap-1.5">
-                <Shield className="w-4 h-4" />
-                Privacy Policy
+              <a href="#" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <FontAwesomeIcon icon={faShieldHalved} className="w-3.5 h-3.5" />
+                Privacy
               </a>
-              <a href="#" className="hover:text-accent transition-colors flex items-center gap-1.5">
-                <Mail className="w-4 h-4" />
+              <a href="#" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <FontAwesomeIcon icon={faEnvelope} className="w-3.5 h-3.5" />
                 Contact
               </a>
             </div>
           </div>
 
-          <div className="mt-8 text-center">
-            <p className="text-primary-foreground/30 text-sm">
+          <div className="mt-6 text-center">
+            <p className="text-accent-foreground/25 text-xs">
               © {new Date().getFullYear()} Green People Movement — greenpeople.ng
             </p>
-            <p className="text-primary-foreground/20 text-xs mt-2">
+            <p className="text-accent-foreground/15 text-[10px] mt-1">
               A people movement for Nigeria's future. Not affiliated with any political party.
             </p>
           </div>
