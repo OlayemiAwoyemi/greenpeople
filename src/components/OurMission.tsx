@@ -1,19 +1,19 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { UserPlus, Megaphone, Target } from "lucide-react";
-import registerVoters from "@/assets/register-voters.jpg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserPlus, faBullhorn, faBullseye } from "@fortawesome/free-solid-svg-icons";
 
 const missions = [
   {
-    icon: UserPlus,
+    icon: faUserPlus,
     title: "Mass Voter Registration Drive",
     description:
-      "We're going to every village, every market, every campus. If you're 18 and above, you should be registered. We make it easy.",
+      "We're going to every village, every market, every campus. If you're 18 and above, you should be registered.",
     stat: "10M+",
     statLabel: "Target New Voters",
   },
   {
-    icon: Megaphone,
+    icon: faBullhorn,
     title: "Build the Largest People Movement",
     description:
       "Not a party. Not a politician. A people movement. When millions move together, nothing can stop us.",
@@ -21,10 +21,10 @@ const missions = [
     statLabel: "States Mobilising",
   },
   {
-    icon: Target,
+    icon: faBullseye,
     title: "Create Real Change for 2027",
     description:
-      "Every new voter is a new voice. Every new voice makes the people stronger. 2027 will be decided by us — the people.",
+      "Every new voter is a new voice. Every new voice makes the people stronger. 2027 will be decided by us.",
     stat: "2027",
     statLabel: "Our Target Year",
   },
@@ -35,46 +35,44 @@ const OurMission = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="mission" className="py-24 md:py-32 relative overflow-hidden" ref={ref}>
+    <section id="mission" className="py-20 md:py-28 bg-secondary/30" ref={ref}>
       <div className="section-container">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <motion.span
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
-              className="text-accent font-semibold text-sm uppercase tracking-widest mb-4 block"
+              className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block"
             >
               Our Mission
             </motion.span>
             <motion.h2
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.1 }}
-              className="font-display text-4xl md:text-5xl font-black text-foreground mb-12 leading-tight"
+              className="text-2xl md:text-3xl font-bold text-foreground mb-10 leading-tight"
             >
-              Three goals.
-              <br />
-              <span className="text-gradient-green">One green future.</span>
+              Three goals. <span className="text-gradient-green">One green future.</span>
             </motion.h2>
 
-            <div className="space-y-8">
+            <div className="space-y-6">
               {missions.map((mission, i) => (
                 <motion.div
                   key={mission.title}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -15 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.2 + i * 0.15 }}
-                  className="flex gap-5 group"
+                  transition={{ delay: 0.15 + i * 0.1 }}
+                  className="flex gap-4 group"
                 >
-                  <div className="shrink-0 w-14 h-14 rounded-xl gradient-green flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <mission.icon className="w-7 h-7 text-primary-foreground" />
+                  <div className="shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <FontAwesomeIcon icon={mission.icon} className="w-4 h-4 text-primary" />
                   </div>
                   <div>
-                    <div className="flex items-baseline gap-3 mb-1">
-                      <h3 className="font-bold text-lg text-foreground">{mission.title}</h3>
-                      <span className="text-accent font-bold text-sm">{mission.stat}</span>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <h3 className="font-semibold text-sm text-foreground">{mission.title}</h3>
+                      <span className="text-primary font-bold text-xs">{mission.stat}</span>
                     </div>
-                    <p className="text-muted-foreground leading-relaxed text-sm">
+                    <p className="text-muted-foreground text-xs leading-relaxed">
                       {mission.description}
                     </p>
                   </div>
@@ -84,24 +82,22 @@ const OurMission = () => {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.97 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ delay: 0.3, duration: 0.7 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
             className="relative"
           >
-            <div className="rounded-3xl overflow-hidden shadow-2xl shadow-primary/10">
+            <div className="rounded-xl overflow-hidden">
               <img
-                src={registerVoters}
-                alt="Nigerians registering to vote"
-                className="w-full h-auto object-cover"
+                src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=800&q=80&auto=format&fit=crop"
+                alt="Community gathering and voter registration"
+                className="w-full h-80 object-cover"
                 loading="lazy"
-                width={1280}
-                height={720}
               />
             </div>
-            <div className="absolute -bottom-6 -left-6 bg-primary text-primary-foreground px-6 py-4 rounded-2xl shadow-xl">
-              <div className="text-3xl font-black">10M+</div>
-              <div className="text-sm text-primary-foreground/80">Voters Target</div>
+            <div className="absolute -bottom-4 -left-4 bg-accent text-accent-foreground px-4 py-3 rounded-lg shadow-lg">
+              <div className="text-xl font-bold">10M+</div>
+              <div className="text-xs text-accent-foreground/80">Voters Target</div>
             </div>
           </motion.div>
         </div>

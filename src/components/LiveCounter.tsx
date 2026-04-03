@@ -17,21 +17,21 @@ const LiveCounter = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 1.2, duration: 0.6 }}
-      className="flex flex-wrap items-center justify-center gap-3 text-sm md:text-base"
+      transition={{ delay: 0.8, duration: 0.5 }}
+      className="flex flex-wrap items-center gap-2 text-xs"
     >
-      <span className="text-primary-foreground/70">Already</span>
-      <span className="font-bold text-accent animate-counter-pulse">
+      <span className="text-primary-foreground/60">Already</span>
+      <span className="font-semibold text-primary animate-counter-pulse">
         {formatNumber(members)}
       </span>
-      <span className="text-primary-foreground/70">Nigerians joined</span>
-      <span className="text-primary-foreground/40">•</span>
-      <span className="font-bold text-accent animate-counter-pulse">
+      <span className="text-primary-foreground/60">joined</span>
+      <span className="text-primary-foreground/30">·</span>
+      <span className="font-semibold text-primary animate-counter-pulse">
         {formatNumber(voters)}
       </span>
-      <span className="text-primary-foreground/70">new voters registering right now</span>
+      <span className="text-primary-foreground/60">voters registering</span>
     </motion.div>
   );
 };
