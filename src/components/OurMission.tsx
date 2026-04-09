@@ -17,7 +17,7 @@ const missions = [
     title: "Build the Largest People Movement",
     description:
       "Not a party. Not a politician. A people movement. When millions move together, nothing can stop us.",
-    stat: "36",
+    stat: "36+FCT",
     statLabel: "States Mobilising",
   },
   {

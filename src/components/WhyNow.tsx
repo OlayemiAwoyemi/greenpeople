@@ -14,7 +14,7 @@ const features = [
     icon: faHandshake,
     title: "Unity Across States",
     description:
-      "North, South, East, West — our strength is in our diversity. One movement, 36 states, one green future.",
+      "North, South, East, West — our strength is in our diversity. One movement, 36 states + FCT, one green future.",
   },
   {
     icon: faSeedling,

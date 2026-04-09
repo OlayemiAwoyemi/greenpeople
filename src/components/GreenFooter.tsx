@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { faShieldHalved, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import greenLogo from "@/assets/green-logo.png";
+import PrivacyModal from "./PrivacyModal";
 
 const GreenFooter = () => {
   return (
@@ -16,7 +17,7 @@ const GreenFooter = () => {
           </p>
           <a
             href="#join"
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-md text-sm font-semibold hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity whitespace-nowrap"
           >
             Join Green People Now
           </a>
@@ -30,15 +31,17 @@ const GreenFooter = () => {
             </div>
 
             <div className="flex items-center gap-5 text-accent-foreground/40 text-xs">
-              <a href="#" className="hover:text-primary transition-colors flex items-center gap-1.5">
+              <a href="https://wa.me/2348141894696" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors flex items-center gap-1.5 whitespace-nowrap">
                 <FontAwesomeIcon icon={faWhatsapp} className="w-3.5 h-3.5" />
                 WhatsApp
               </a>
-              <a href="#" className="hover:text-primary transition-colors flex items-center gap-1.5">
-                <FontAwesomeIcon icon={faShieldHalved} className="w-3.5 h-3.5" />
-                Privacy
-              </a>
-              <a href="#" className="hover:text-primary transition-colors flex items-center gap-1.5">
+              <PrivacyModal>
+                <button className="hover:text-primary transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                  <FontAwesomeIcon icon={faShieldHalved} className="w-3.5 h-3.5" />
+                  Privacy
+                </button>
+              </PrivacyModal>
+              <a href="mailto:hello@greenpeople.ng" className="hover:text-primary transition-colors flex items-center gap-1.5 whitespace-nowrap">
                 <FontAwesomeIcon icon={faEnvelope} className="w-3.5 h-3.5" />
                 Contact
               </a>

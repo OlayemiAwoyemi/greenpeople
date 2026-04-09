@@ -2,14 +2,10 @@ import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faAward, faShareNodes, faCheck } from "@fortawesome/free-solid-svg-icons";
-
-const nigerianStates = [
-  "Abia","Adamawa","Akwa Ibom","Anambra","Bauchi","Bayelsa","Benue","Borno",
-  "Cross River","Delta","Ebonyi","Edo","Ekiti","Enugu","FCT","Gombe","Imo",
-  "Jigawa","Kaduna","Kano","Katsina","Kebbi","Kogi","Kwara","Lagos","Nasarawa",
-  "Niger","Ogun","Ondo","Osun","Oyo","Plateau","Rivers","Sokoto","Taraba",
-  "Yobe","Zamfara"
-];
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { nigerianStates, nigerianStatesAndLGAs } from "@/data/nigerianLGAs";
+import PrivacyModal from "./PrivacyModal";
 
 const ageGroups = ["18-24", "25-34", "35-44", "45-54", "55+"];
 
@@ -17,21 +13,48 @@ const JoinForm = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
     state: "",
     lga: "",
     ageGroup: "",
+    gender: "",
+    hasPvc: "",
     reason: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const lgaOptions = formData.state ? nigerianStatesAndLGAs[formData.state] || [] : [];
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.ageGroup || !formData.gender || !formData.hasPvc) {
+      toast({ title: "Please fill all required fields", variant: "destructive" });
+      return;
+    }
+    setLoading(true);
+    const { error } = await supabase.from("members").insert({
+      full_name: formData.fullName.trim(),
+      phone: formData.phone.trim(),
+      state: formData.state,
+      lga: formData.lga,
+      age_group: formData.ageGroup,
+      gender: formData.gender,
+      has_pvc: formData.hasPvc,
+      reason: formData.reason.trim() || null,
+    });
+    setLoading(false);
+    if (error) {
+      toast({ title: "Something went wrong", description: error.message, variant: "destructive" });
+      return;
+    }
     setSubmitted(true);
   };
 
   if (submitted) {
+    const needsPvc = formData.hasPvc !== "Yes";
     return (
       <section id="join" className="py-20 md:py-28 gradient-green" ref={ref}>
         <div className="section-container">
@@ -52,7 +75,7 @@ const JoinForm = () => {
                 {formData.fullName || "Green Member"}
               </div>
               <div className="text-primary-foreground/50 text-xs">
-                {formData.state || "Nigeria"} · Member #{Math.floor(Math.random() * 900000 + 100000)}
+                {formData.state || "Nigeria"} · {formData.lga}
               </div>
               <div className="mt-4 flex items-center justify-center gap-1.5">
                 <FontAwesomeIcon icon={faAward} className="w-3.5 h-3.5 text-primary" />
@@ -63,11 +86,33 @@ const JoinForm = () => {
             <h2 className="text-xl font-bold text-primary-foreground mb-3">
               Welcome to the Movement! 🎉
             </h2>
+
+            {needsPvc && (
+              <div className="bg-primary/20 border border-primary/30 rounded-lg p-4 mb-4 text-left">
+                <p className="text-primary-foreground text-sm font-semibold mb-2">
+                  🗳️ Get Your PVC — It's Your Power!
+                </p>
+                <p className="text-primary-foreground/70 text-xs mb-3">
+                  {formData.hasPvc === "In Progress"
+                    ? "Great that you've started! Complete your registration and collect your PVC before 2027."
+                    : "You need your Permanent Voter's Card to vote in 2027. Start your registration today — it's free!"}
+                </p>
+                <a
+                  href="https://cvr.inecnigeria.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-xs font-semibold hover:opacity-90 transition-opacity whitespace-nowrap"
+                >
+                  Register on INEC Portal →
+                </a>
+              </div>
+            )}
+
             <p className="text-primary-foreground/60 text-sm mb-6">
               You are now part of something bigger. Share and bring others in.
             </p>
 
-            <button className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-md text-sm font-semibold hover:opacity-90 transition-opacity">
+            <button className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity whitespace-nowrap">
               <FontAwesomeIcon icon={faShareNodes} className="w-3.5 h-3.5" />
               Invite Friends
             </button>
@@ -76,6 +121,9 @@ const JoinForm = () => {
       </section>
     );
   }
+
+  const inputClass = "w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-lg px-3 py-2.5 text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-1 focus:ring-primary/50";
+  const labelClass = "text-primary-foreground/70 text-xs font-medium mb-1.5 block";
 
   return (
     <section id="join" className="py-20 md:py-28 gradient-green relative overflow-hidden" ref={ref}>
@@ -89,7 +137,7 @@ const JoinForm = () => {
             Be Part of History
           </span>
           <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-3 leading-tight">
-            Join the movement
+            Join the Movement
           </h2>
           <p className="text-primary-foreground/60 text-sm">
             It's free. It takes 60 seconds. And it could change Nigeria forever.
@@ -105,40 +153,25 @@ const JoinForm = () => {
         >
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="text-primary-foreground/70 text-xs font-medium mb-1.5 block">Full Name *</label>
-              <input
-                required
-                type="text"
-                maxLength={100}
-                value={formData.fullName}
+              <label className={labelClass}>Full Name *</label>
+              <input required type="text" maxLength={100} value={formData.fullName}
                 onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                placeholder="Your full name"
-                className="w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-md px-3 py-2.5 text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-1 focus:ring-primary/50"
-              />
+                placeholder="Your full name" className={inputClass} />
             </div>
             <div>
-              <label className="text-primary-foreground/70 text-xs font-medium mb-1.5 block">Phone/WhatsApp *</label>
-              <input
-                required
-                type="tel"
-                maxLength={15}
-                value={formData.phone}
+              <label className={labelClass}>Phone/WhatsApp *</label>
+              <input required type="tel" maxLength={15} value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="080XXXXXXXX"
-                className="w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-md px-3 py-2.5 text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-1 focus:ring-primary/50"
-              />
+                placeholder="080XXXXXXXX" className={inputClass} />
             </div>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="text-primary-foreground/70 text-xs font-medium mb-1.5 block">State *</label>
-              <select
-                required
-                value={formData.state}
-                onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                className="w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-md px-3 py-2.5 text-sm text-primary-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
-              >
+              <label className={labelClass}>State *</label>
+              <select required value={formData.state}
+                onChange={(e) => setFormData({ ...formData, state: e.target.value, lga: "" })}
+                className={inputClass}>
                 <option value="" className="text-foreground">Select state</option>
                 {nigerianStates.map((s) => (
                   <option key={s} value={s} className="text-foreground">{s}</option>
@@ -146,62 +179,87 @@ const JoinForm = () => {
               </select>
             </div>
             <div>
-              <label className="text-primary-foreground/70 text-xs font-medium mb-1.5 block">LGA</label>
-              <input
-                type="text"
-                maxLength={100}
-                value={formData.lga}
+              <label className={labelClass}>Local Government *</label>
+              <select required value={formData.lga}
                 onChange={(e) => setFormData({ ...formData, lga: e.target.value })}
-                placeholder="Your LGA"
-                className="w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-md px-3 py-2.5 text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-1 focus:ring-primary/50"
-              />
+                className={inputClass} disabled={!formData.state}>
+                <option value="" className="text-foreground">
+                  {formData.state ? "Select LGA" : "Select state first"}
+                </option>
+                {lgaOptions.map((lga) => (
+                  <option key={lga} value={lga} className="text-foreground">{lga}</option>
+                ))}
+              </select>
             </div>
           </div>
 
+          {/* Gender */}
           <div className="mb-4">
-            <label className="text-primary-foreground/70 text-xs font-medium mb-1.5 block">Age Group *</label>
+            <label className={labelClass}>Gender *</label>
+            <div className="flex gap-3">
+              {["Male", "Female"].map((g) => (
+                <button key={g} type="button"
+                  onClick={() => setFormData({ ...formData, gender: g })}
+                  className={`px-5 py-2 rounded-lg text-xs font-medium border transition-all ${
+                    formData.gender === g
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                  }`}>{g}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* Age Group */}
+          <div className="mb-4">
+            <label className={labelClass}>Age Group *</label>
             <div className="flex flex-wrap gap-2">
               {ageGroups.map((ag) => (
-                <button
-                  key={ag}
-                  type="button"
+                <button key={ag} type="button"
                   onClick={() => setFormData({ ...formData, ageGroup: ag })}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
                     formData.ageGroup === ag
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
-                  }`}
-                >
-                  {ag}
-                </button>
+                  }`}>{ag}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* PVC Status */}
+          <div className="mb-4">
+            <label className={labelClass}>Do you have your PVC? *</label>
+            <div className="flex flex-wrap gap-2">
+              {["Yes", "No", "In Progress"].map((opt) => (
+                <button key={opt} type="button"
+                  onClick={() => setFormData({ ...formData, hasPvc: opt })}
+                  className={`px-4 py-2 rounded-lg text-xs font-medium border transition-all whitespace-nowrap ${
+                    formData.hasPvc === opt
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                  }`}>{opt}</button>
               ))}
             </div>
           </div>
 
           <div className="mb-6">
-            <label className="text-primary-foreground/70 text-xs font-medium mb-1.5 block">
-              Why do you believe in Green People?
-            </label>
-            <textarea
-              maxLength={500}
-              rows={3}
-              value={formData.reason}
+            <label className={labelClass}>Why do you believe in Green People?</label>
+            <textarea maxLength={500} rows={3} value={formData.reason}
               onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
               placeholder="Tell us your why..."
-              className="w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-md px-3 py-2.5 text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-1 focus:ring-primary/50 resize-none"
-            />
+              className={`${inputClass} resize-none`} />
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-primary text-primary-foreground py-3 rounded-md text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-          >
+          <button type="submit" disabled={loading}
+            className="w-full bg-primary text-primary-foreground py-3 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 whitespace-nowrap">
             <FontAwesomeIcon icon={faPaperPlane} className="w-3.5 h-3.5" />
-            Join the Movement — It's Free
+            {loading ? "Joining..." : "Join the Movement — It's Free"}
           </button>
 
           <p className="text-primary-foreground/30 text-[10px] text-center mt-3">
-            Your information is secure. We will never share your data.
+            Your information is secure.{" "}
+            <PrivacyModal>
+              <button type="button" className="underline hover:text-primary-foreground/50">Privacy Policy</button>
+            </PrivacyModal>
           </p>
         </motion.form>
       </div>

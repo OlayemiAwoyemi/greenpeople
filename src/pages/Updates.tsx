@@ -1,0 +1,69 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faPen, faCalendar } from "@fortawesome/free-solid-svg-icons";
+import Navbar from "@/components/Navbar";
+import GreenFooter from "@/components/GreenFooter";
+
+type Post = { id: string; title: string; slug: string; excerpt: string | null; author: string; created_at: string; cover_image: string | null };
+
+const Updates = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    supabase.from("blog_posts").select("id, title, slug, excerpt, author, created_at, cover_image")
+      .eq("published", true).order("created_at", { ascending: false })
+      .then(({ data }) => { if (data) setPosts(data); });
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <main className="pt-20 pb-16">
+        <div className="section-container">
+          <div className="flex items-center justify-between mb-10">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground mb-2">Updates</h1>
+              <p className="text-muted-foreground text-sm">News and stories from the Green People Movement</p>
+            </div>
+            <Link to="/write" className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 flex items-center gap-2 whitespace-nowrap">
+              <FontAwesomeIcon icon={faPen} className="w-3 h-3" />
+              Write
+            </Link>
+          </div>
+
+          {posts.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-muted-foreground text-base mb-4">No updates yet. Stay tuned!</p>
+              <Link to="/write" className="text-primary text-sm font-semibold hover:underline">Write the first update →</Link>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {posts.map((post) => (
+                <article key={post.id} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+                  {post.cover_image && (
+                    <img src={post.cover_image} alt={post.title} className="w-full h-48 object-cover" loading="lazy" />
+                  )}
+                  <div className="p-5">
+                    <h2 className="text-lg font-semibold text-foreground mb-2 line-clamp-2">{post.title}</h2>
+                    {post.excerpt && <p className="text-muted-foreground text-sm mb-3 line-clamp-3">{post.excerpt}</p>}
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <FontAwesomeIcon icon={faCalendar} className="w-3 h-3" />
+                      {new Date(post.created_at).toLocaleDateString("en-NG", { dateStyle: "medium" })}
+                      <span>·</span>
+                      <span>{post.author}</span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
+      <GreenFooter />
+    </div>
+  );
+};
+
+export default Updates;

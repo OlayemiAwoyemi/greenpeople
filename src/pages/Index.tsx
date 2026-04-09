@@ -8,6 +8,7 @@ import Momentum from "@/components/Momentum";
 import JoinForm from "@/components/JoinForm";
 import GreenFooter from "@/components/GreenFooter";
 import FloatingLeaves from "@/components/FloatingLeaves";
+import GreenGuide from "@/components/GreenGuide";
 
 const Index = () => {
   return (
@@ -24,6 +25,7 @@ const Index = () => {
         <JoinForm />
       </main>
       <GreenFooter />
+      <GreenGuide />
     </div>
   );
 };
