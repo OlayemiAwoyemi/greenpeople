@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faComments } from "@fortawesome/free-solid-svg-icons";
+import AccessGate from "@/components/AccessGate";
 
 type Conversation = {
   id: string;
@@ -11,7 +12,7 @@ type Conversation = {
   updated_at: string;
 };
 
-const Chats = () => {
+const ChatsContent = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [messages, setMessages] = useState<{ role: string; content: string; created_at: string }[]>([]);
@@ -81,5 +82,11 @@ const Chats = () => {
     </div>
   );
 };
+
+const Chats = () => (
+  <AccessGate>
+    <ChatsContent />
+  </AccessGate>
+);
 
 export default Chats;

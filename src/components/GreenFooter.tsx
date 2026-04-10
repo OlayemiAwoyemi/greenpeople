@@ -1,8 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { faWhatsapp, faXTwitter, faInstagram, faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { faShieldHalved, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import greenLogo from "@/assets/green-logo.png";
 import PrivacyModal from "./PrivacyModal";
+
+const socialLinks = [
+  { icon: faXTwitter, href: "https://x.com/greenpeopleng", label: "X" },
+  { icon: faInstagram, href: "https://instagram.com/greenpeopleng", label: "Instagram" },
+  { icon: faFacebook, href: "https://facebook.com/greenpeopleng", label: "Facebook" },
+];
 
 const GreenFooter = () => {
   return (
@@ -17,17 +23,28 @@ const GreenFooter = () => {
           </p>
           <a
             href="#join"
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity whitespace-nowrap"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity whitespace-nowrap"
           >
             Join Green People Now
           </a>
         </div>
 
         <div className="border-t border-accent-foreground/10 pt-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <img src={greenLogo} alt="Green People" className="w-6 h-6 rounded-full" />
               <span className="font-semibold text-sm text-accent-foreground">Green People Movement</span>
+            </div>
+
+            {/* Social Media Links */}
+            <div className="flex items-center gap-4">
+              {socialLinks.map((s) => (
+                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-full bg-accent-foreground/10 flex items-center justify-center text-accent-foreground/50 hover:text-primary hover:bg-primary/10 transition-all"
+                  aria-label={s.label}>
+                  <FontAwesomeIcon icon={s.icon} className="w-4 h-4" />
+                </a>
+              ))}
             </div>
 
             <div className="flex items-center gap-5 text-accent-foreground/40 text-xs">

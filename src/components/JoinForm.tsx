@@ -122,7 +122,8 @@ const JoinForm = () => {
     );
   }
 
-  const inputClass = "w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-lg px-3 py-2.5 text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-1 focus:ring-primary/50";
+  const inputClass = "w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-xl px-3.5 py-2.5 text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 appearance-none";
+  const selectClass = "w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-xl px-3.5 py-2.5 pr-10 text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_12px_center]";
   const labelClass = "text-primary-foreground/70 text-xs font-medium mb-1.5 block";
 
   return (
@@ -149,7 +150,7 @@ const JoinForm = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.15 }}
           onSubmit={handleSubmit}
-          className="max-w-xl mx-auto bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/10 rounded-xl p-6 md:p-8"
+          className="max-w-xl mx-auto bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/10 rounded-2xl p-6 md:p-8"
         >
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
             <div>
@@ -171,7 +172,7 @@ const JoinForm = () => {
               <label className={labelClass}>State *</label>
               <select required value={formData.state}
                 onChange={(e) => setFormData({ ...formData, state: e.target.value, lga: "" })}
-                className={inputClass}>
+                className={selectClass}>
                 <option value="" className="text-foreground">Select state</option>
                 {nigerianStates.map((s) => (
                   <option key={s} value={s} className="text-foreground">{s}</option>
@@ -182,7 +183,7 @@ const JoinForm = () => {
               <label className={labelClass}>Local Government *</label>
               <select required value={formData.lga}
                 onChange={(e) => setFormData({ ...formData, lga: e.target.value })}
-                className={inputClass} disabled={!formData.state}>
+                className={selectClass} disabled={!formData.state}>
                 <option value="" className="text-foreground">
                   {formData.state ? "Select LGA" : "Select state first"}
                 </option>
@@ -250,7 +251,7 @@ const JoinForm = () => {
           </div>
 
           <button type="submit" disabled={loading}
-            className="w-full bg-primary text-primary-foreground py-3 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 whitespace-nowrap">
+            className="w-full bg-primary text-primary-foreground py-3 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 whitespace-nowrap">
             <FontAwesomeIcon icon={faPaperPlane} className="w-3.5 h-3.5" />
             {loading ? "Joining..." : "Join the Movement — It's Free"}
           </button>

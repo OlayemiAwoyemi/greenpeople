@@ -1,15 +1,48 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faPaperPlane, faImage } from "@fortawesome/free-solid-svg-icons";
+import AccessGate from "@/components/AccessGate";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 
-const Write = () => {
+const WriteContent = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({ title: "", content: "", excerpt: "", coverImage: "", author: "Green People Team" });
+
+  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `covers/${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("blog-images").upload(path, file);
+    if (error) {
+      toast({ title: "Upload failed", description: error.message, variant: "destructive" });
+      setUploading(false);
+      return;
+    }
+    const { data: urlData } = supabase.storage.from("blog-images").getPublicUrl(path);
+    setForm({ ...form, coverImage: urlData.publicUrl });
+    setUploading(false);
+  };
+
+  const modules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, false] }],
+        ["bold", "italic", "underline", "strike"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        ["blockquote", "link", "image", "video"],
+        ["clean"],
+      ],
+    },
+  }), []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +55,7 @@ const Write = () => {
     const { error } = await supabase.from("blog_posts").insert({
       title: form.title.trim(),
       slug: `${slug}-${Date.now()}`,
-      content: form.content.trim(),
+      content: form.content,
       excerpt: form.excerpt.trim() || null,
       cover_image: form.coverImage.trim() || null,
       author: form.author.trim() || "Green People Team",
@@ -37,11 +70,11 @@ const Write = () => {
     navigate("/updates");
   };
 
-  const inputClass = "w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50";
+  const inputClass = "w-full bg-secondary/50 border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30";
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="section-container py-8 max-w-2xl">
+      <div className="section-container py-8 max-w-3xl">
         <div className="flex items-center gap-3 mb-8">
           <Link to="/updates" className="text-muted-foreground hover:text-foreground transition-colors">
             <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
@@ -62,27 +95,49 @@ const Write = () => {
               onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
               placeholder="A short summary (optional)" className={inputClass} />
           </div>
+
+          {/* Cover Image Upload */}
           <div>
-            <label className="text-sm font-medium text-foreground mb-1.5 block">Cover Image URL</label>
-            <input value={form.coverImage}
-              onChange={(e) => setForm({ ...form, coverImage: e.target.value })}
-              placeholder="https://..." className={inputClass} />
+            <label className="text-sm font-medium text-foreground mb-1.5 block">Cover Image</label>
+            {form.coverImage ? (
+              <div className="relative rounded-xl overflow-hidden border border-border mb-2">
+                <img src={form.coverImage} alt="Cover" className="w-full h-48 object-cover" />
+                <button type="button" onClick={() => setForm({ ...form, coverImage: "" })}
+                  className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm text-foreground w-8 h-8 rounded-full text-xs hover:bg-background">
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <label className="flex items-center justify-center gap-2 w-full h-32 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/40 transition-colors bg-secondary/30">
+                <FontAwesomeIcon icon={faImage} className="w-5 h-5 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">{uploading ? "Uploading..." : "Click to upload cover image"}</span>
+                <input type="file" accept="image/*" onChange={handleCoverUpload} className="hidden" disabled={uploading} />
+              </label>
+            )}
           </div>
+
           <div>
             <label className="text-sm font-medium text-foreground mb-1.5 block">Author</label>
             <input value={form.author}
               onChange={(e) => setForm({ ...form, author: e.target.value })}
               placeholder="Author name" className={inputClass} />
           </div>
+
           <div>
             <label className="text-sm font-medium text-foreground mb-1.5 block">Content *</label>
-            <textarea required rows={12} value={form.content}
-              onChange={(e) => setForm({ ...form, content: e.target.value })}
-              placeholder="Write your update here..."
-              className={`${inputClass} resize-y`} />
+            <div className="rounded-xl overflow-hidden border border-border bg-background [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-border [&_.ql-toolbar]:bg-secondary/30 [&_.ql-container]:border-0 [&_.ql-container]:min-h-[300px] [&_.ql-editor]:text-sm [&_.ql-editor]:text-foreground">
+              <ReactQuill
+                theme="snow"
+                value={form.content}
+                onChange={(val) => setForm({ ...form, content: val })}
+                modules={modules}
+                placeholder="Write your update here..."
+              />
+            </div>
           </div>
+
           <button type="submit" disabled={loading}
-            className="bg-primary text-primary-foreground px-6 py-3 rounded-lg text-sm font-semibold hover:opacity-90 flex items-center gap-2 disabled:opacity-50 whitespace-nowrap">
+            className="bg-primary text-primary-foreground px-6 py-3 rounded-xl text-sm font-semibold hover:opacity-90 flex items-center gap-2 disabled:opacity-50 whitespace-nowrap">
             <FontAwesomeIcon icon={faPaperPlane} className="w-3.5 h-3.5" />
             {loading ? "Publishing..." : "Publish Update"}
           </button>
@@ -91,5 +146,11 @@ const Write = () => {
     </div>
   );
 };
+
+const Write = () => (
+  <AccessGate>
+    <WriteContent />
+  </AccessGate>
+);
 
 export default Write;
