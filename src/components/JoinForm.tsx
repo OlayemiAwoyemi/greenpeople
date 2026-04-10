@@ -150,7 +150,7 @@ const JoinForm = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.15 }}
           onSubmit={handleSubmit}
-          className="max-w-xl mx-auto bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/10 rounded-xl p-6 md:p-8"
+          className="max-w-xl mx-auto bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/10 rounded-2xl p-6 md:p-8"
         >
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
             <div>
@@ -251,7 +251,7 @@ const JoinForm = () => {
           </div>
 
           <button type="submit" disabled={loading}
-            className="w-full bg-primary text-primary-foreground py-3 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 whitespace-nowrap">
+            className="w-full bg-primary text-primary-foreground py-3 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 whitespace-nowrap">
             <FontAwesomeIcon icon={faPaperPlane} className="w-3.5 h-3.5" />
             {loading ? "Joining..." : "Join the Movement — It's Free"}
           </button>
