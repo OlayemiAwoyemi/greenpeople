@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots, faXmark, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { supabase } from "@/integrations/supabase/client";
 import ReactMarkdown from "react-markdown";
+import greenLogo from "@/assets/green-logo.png";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -69,9 +70,7 @@ const GreenGuide = () => {
       {open && (
         <div className="fixed bottom-24 left-4 right-4 sm:left-auto sm:right-6 sm:w-[360px] z-50 max-h-[480px] bg-background border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden">
           <div className="bg-accent px-4 py-3 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-              <span className="text-primary text-xs font-bold">GP</span>
-            </div>
+            <img src={greenLogo} alt="Green Guide" className="w-9 h-9 rounded-full shrink-0 object-cover" />
             <div className="min-w-0">
               <div className="text-accent-foreground text-sm font-semibold">Green Guide</div>
               <div className="text-accent-foreground/50 text-[11px]">Ask me anything about the movement</div>
