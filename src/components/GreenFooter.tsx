@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWhatsapp, faXTwitter, faInstagram, faFacebook } from "@fortawesome/free-brands-svg-icons";
+import { faWhatsapp, faXTwitter, faInstagram, faFacebook, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { faShieldHalved, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import greenLogo from "@/assets/green-logo.png";
 import PrivacyModal from "./PrivacyModal";
@@ -8,6 +8,7 @@ const socialLinks = [
   { icon: faXTwitter, href: "https://x.com/greenpeopleng", label: "X" },
   { icon: faInstagram, href: "https://instagram.com/greenpeopleng", label: "Instagram" },
   { icon: faFacebook, href: "https://facebook.com/greenpeopleng", label: "Facebook" },
+  { icon: faYoutube, href: "https://youtube.com/@greenpeopleng", label: "YouTube" },
 ];
 
 const GreenFooter = () => {
