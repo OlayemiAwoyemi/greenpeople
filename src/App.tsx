@@ -20,14 +20,16 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/updates" element={<Updates />} />
-          <Route path="/write" element={<Write />} />
-          <Route path="/chats" element={<Chats />} />
-          <Route path="/members" element={<Members />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading…</div>}>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/updates" element={<Updates />} />
+            <Route path="/write" element={<Write />} />
+            <Route path="/chats" element={<Chats />} />
+            <Route path="/members" element={<Members />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
