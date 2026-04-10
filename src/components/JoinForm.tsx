@@ -172,7 +172,7 @@ const JoinForm = () => {
               <label className={labelClass}>State *</label>
               <select required value={formData.state}
                 onChange={(e) => setFormData({ ...formData, state: e.target.value, lga: "" })}
-                className={inputClass}>
+                className={selectClass}>
                 <option value="" className="text-foreground">Select state</option>
                 {nigerianStates.map((s) => (
                   <option key={s} value={s} className="text-foreground">{s}</option>
@@ -183,7 +183,7 @@ const JoinForm = () => {
               <label className={labelClass}>Local Government *</label>
               <select required value={formData.lga}
                 onChange={(e) => setFormData({ ...formData, lga: e.target.value })}
-                className={inputClass} disabled={!formData.state}>
+                className={selectClass} disabled={!formData.state}>
                 <option value="" className="text-foreground">
                   {formData.state ? "Select LGA" : "Select state first"}
                 </option>
