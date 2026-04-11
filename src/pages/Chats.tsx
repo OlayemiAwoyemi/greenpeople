@@ -53,7 +53,7 @@ const ChatsContent = () => {
                   <span className="text-sm font-medium text-foreground">{c.visitor_name || "Visitor"}</span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {new Date(c.updated_at).toLocaleDateString("en-NG", { dateStyle: "medium" })}
+                  {new Date(c.created_at).toLocaleDateString("en-NG", { dateStyle: "medium" })}
                 </p>
               </button>
             ))}
