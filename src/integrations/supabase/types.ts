@@ -10,138 +10,66 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "13.0.5"
   }
   public: {
     Tables: {
-      blog_posts: {
+      consultation_messages: {
         Row: {
-          author: string
+          consultation_id: string
           content: string
-          cover_image: string | null
-          created_at: string
-          excerpt: string | null
-          id: string
-          published: boolean
-          slug: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          author?: string
-          content: string
-          cover_image?: string | null
-          created_at?: string
-          excerpt?: string | null
-          id?: string
-          published?: boolean
-          slug: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          author?: string
-          content?: string
-          cover_image?: string | null
-          created_at?: string
-          excerpt?: string | null
-          id?: string
-          published?: boolean
-          slug?: string
-          title?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      chat_conversations: {
-        Row: {
-          created_at: string
-          id: string
-          updated_at: string
-          visitor_name: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          updated_at?: string
-          visitor_name?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          updated_at?: string
-          visitor_name?: string | null
-        }
-        Relationships: []
-      }
-      chat_messages: {
-        Row: {
-          content: string
-          conversation_id: string
           created_at: string
           id: string
           role: string
         }
         Insert: {
+          consultation_id: string
           content: string
-          conversation_id: string
           created_at?: string
           id?: string
           role: string
         }
         Update: {
+          consultation_id?: string
           content?: string
-          conversation_id?: string
           created_at?: string
           id?: string
           role?: string
         }
         Relationships: [
           {
-            foreignKeyName: "chat_messages_conversation_id_fkey"
-            columns: ["conversation_id"]
+            foreignKeyName: "consultation_messages_consultation_id_fkey"
+            columns: ["consultation_id"]
             isOneToOne: false
-            referencedRelation: "chat_conversations"
+            referencedRelation: "consultations"
             referencedColumns: ["id"]
           },
         ]
       }
-      members: {
+      consultations: {
         Row: {
-          age_group: string
           created_at: string
-          full_name: string
-          gender: string
-          has_pvc: string
+          doctor_name: string
+          doctor_specialty: string
           id: string
-          lga: string
-          phone: string
-          reason: string | null
-          state: string
+          updated_at: string
+          user_id: string | null
         }
         Insert: {
-          age_group: string
           created_at?: string
-          full_name: string
-          gender: string
-          has_pvc: string
+          doctor_name: string
+          doctor_specialty: string
           id?: string
-          lga: string
-          phone: string
-          reason?: string | null
-          state: string
+          updated_at?: string
+          user_id?: string | null
         }
         Update: {
-          age_group?: string
           created_at?: string
-          full_name?: string
-          gender?: string
-          has_pvc?: string
+          doctor_name?: string
+          doctor_specialty?: string
           id?: string
-          lga?: string
-          phone?: string
-          reason?: string | null
-          state?: string
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
