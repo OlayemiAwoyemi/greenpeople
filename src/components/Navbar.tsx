@@ -62,7 +62,13 @@ const Navbar = () => {
             ) : (
               <a
                 key={link.href}
-                href={link.href}
+                href={isHomePage ? link.href : `/${link.href}`}
+                onClick={(e) => {
+                  if (!isHomePage) {
+                    e.preventDefault();
+                    window.location.href = `/${link.href}`;
+                  }
+                }}
                 className={`text-xs font-medium uppercase tracking-wide transition-colors hover:opacity-70 ${
                   solidNav ? "text-foreground/70" : "text-primary-foreground/80"
                 }`}
@@ -109,8 +115,14 @@ const Navbar = () => {
                 ) : (
                   <a
                     key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
+                    href={isHomePage ? link.href : `/${link.href}`}
+                    onClick={(e) => {
+                      setMobileOpen(false);
+                      if (!isHomePage) {
+                        e.preventDefault();
+                        window.location.href = `/${link.href}`;
+                      }
+                    }}
                     className="text-foreground/70 text-sm font-medium py-1"
                   >
                     {link.label}
