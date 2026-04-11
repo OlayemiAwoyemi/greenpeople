@@ -36,7 +36,7 @@ const LatestUpdates = () => {
   if (posts.length === 0) return null;
 
   return (
-    <section className="py-20 md:py-28 bg-accent/50" ref={ref}>
+    <section className="py-20 md:py-28 bg-secondary" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -64,7 +64,7 @@ const LatestUpdates = () => {
             <Link
               key={post.id}
               to={`/updates/${post.slug}`}
-              className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-md transition-shadow block"
+              className="bg-background border border-border rounded-xl overflow-hidden hover:shadow-md transition-shadow block"
             >
               {post.cover_image && (
                 <img
@@ -75,11 +75,11 @@ const LatestUpdates = () => {
                 />
               )}
               <div className="p-5">
-                <h3 className="text-base font-semibold text-foreground mb-2 line-clamp-2">
+                <h3 className="text-base font-semibold text-foreground mb-2 line-clamp-2 break-words hyphens-none" style={{ wordBreak: "normal", overflowWrap: "break-word" }}>
                   {post.title}
                 </h3>
                 {post.excerpt && (
-                  <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
+                  <p className="text-muted-foreground text-sm mb-3 line-clamp-2 break-words hyphens-none" style={{ wordBreak: "normal", overflowWrap: "break-word" }}>
                     {post.excerpt}
                   </p>
                 )}

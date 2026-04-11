@@ -6,11 +6,11 @@ import { Link, useLocation } from "react-router-dom";
 import greenLogo from "@/assets/green-logo.png";
 
 const navLinks = [
-  { label: "Why Now", href: "#why-now" },
-  { label: "Our Mission", href: "#mission" },
-  { label: "Register", href: "#register" },
-  { label: "Values", href: "#values" },
-  { label: "Momentum", href: "#momentum" },
+  { label: "Why Now", href: "#why-now", anchor: true },
+  { label: "Our Mission", href: "#mission", anchor: true },
+  { label: "Register", href: "#register", anchor: true },
+  { label: "Values", href: "#values", anchor: true },
+  { label: "Momentum", href: "#momentum", anchor: true },
   { label: "Updates", href: "/updates", isRoute: true },
 ];
 
