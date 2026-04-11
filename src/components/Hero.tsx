@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCheckToSlot, faShieldHalved, faHeart, faGlobe, faLeaf, faUsers } from "@fortawesome/free-solid-svg-icons";
 import LiveCounter from "./LiveCounter";
-import greenpeopleBg from "@/assets/greenpeople.jpg";
+import greenpeopleBg from "@/assets/green_people_bg.jpg";
 
 const values = [
   { icon: faShieldHalved, title: "Clean Leadership", desc: "Leaders who serve the people" },
