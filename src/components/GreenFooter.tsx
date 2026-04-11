@@ -31,36 +31,36 @@ const GreenFooter = () => {
         </div>
 
         <div className="border-t border-accent-foreground/10 pt-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-6">
+            <div className="flex items-center gap-2 justify-center md:justify-start">
               <img src={greenLogo} alt="Green People" className="w-6 h-6 rounded-full" />
-              <span className="font-semibold text-sm text-accent-foreground">Green People Movement</span>
+              <span className="font-semibold text-xs text-accent-foreground">Green People</span>
             </div>
 
-            {/* Social Media Links */}
-            <div className="flex items-center gap-4">
+            {/* Social Media Links — centered */}
+            <div className="flex items-center justify-center gap-3">
               {socialLinks.map((s) => (
                 <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-accent-foreground/10 flex items-center justify-center text-accent-foreground/50 hover:text-primary hover:bg-primary/10 transition-all"
+                  className="w-8 h-8 rounded-full bg-accent-foreground/10 flex items-center justify-center text-accent-foreground/50 hover:text-primary hover:bg-primary/10 transition-all"
                   aria-label={s.label}>
-                  <FontAwesomeIcon icon={s.icon} className="w-4 h-4" />
+                  <FontAwesomeIcon icon={s.icon} className="w-3.5 h-3.5" />
                 </a>
               ))}
             </div>
 
-            <div className="flex items-center gap-5 text-accent-foreground/40 text-xs">
+            <div className="flex items-center justify-center md:justify-end gap-4 text-accent-foreground/40 text-xs">
               <a href="https://wa.me/2348141894696" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors flex items-center gap-1.5 whitespace-nowrap">
-                <FontAwesomeIcon icon={faWhatsapp} className="w-3.5 h-3.5" />
+                <FontAwesomeIcon icon={faWhatsapp} className="w-3 h-3" />
                 WhatsApp
               </a>
               <PrivacyModal>
                 <button className="hover:text-primary transition-colors flex items-center gap-1.5 whitespace-nowrap">
-                  <FontAwesomeIcon icon={faShieldHalved} className="w-3.5 h-3.5" />
+                  <FontAwesomeIcon icon={faShieldHalved} className="w-3 h-3" />
                   Privacy
                 </button>
               </PrivacyModal>
               <a href="mailto:hello@greenpeople.ng" className="hover:text-primary transition-colors flex items-center gap-1.5 whitespace-nowrap">
-                <FontAwesomeIcon icon={faEnvelope} className="w-3.5 h-3.5" />
+                <FontAwesomeIcon icon={faEnvelope} className="w-3 h-3" />
                 Contact
               </a>
             </div>
