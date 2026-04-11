@@ -41,7 +41,7 @@ const Updates = () => {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.map((post) => (
-                <article key={post.id} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+              <Link key={post.id} to={`/updates/${post.slug}`} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-md transition-shadow block">
                   {post.cover_image && (
                     <img src={post.cover_image} alt={post.title} className="w-full h-48 object-cover" loading="lazy" />
                   )}
@@ -55,7 +55,7 @@ const Updates = () => {
                       <span>{post.author}</span>
                     </div>
                   </div>
-                </article>
+                </Link>
               ))}
             </div>
           )}

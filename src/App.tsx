@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import Updates from "./pages/Updates.tsx";
+import UpdatePost from "./pages/UpdatePost.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const Write = lazy(() => import("./pages/Write.tsx"));
@@ -24,6 +25,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/updates" element={<Updates />} />
+            <Route path="/updates/:slug" element={<UpdatePost />} />
             <Route path="/write" element={<Write />} />
             <Route path="/chats" element={<Chats />} />
             <Route path="/members" element={<Members />} />
