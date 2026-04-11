@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import greenLogo from "@/assets/green-logo.png";
 
 const navLinks = [
@@ -17,6 +17,10 @@ const navLinks = [
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+  // On non-home pages, always use "scrolled" (solid) style
+  const solidNav = scrolled || !isHomePage;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -38,7 +42,7 @@ const Navbar = () => {
       <div className="section-container flex items-center justify-between h-14 md:h-16">
         <a href="/" className="flex items-center gap-2">
           <img src={greenLogo} alt="Green People" className="w-8 h-8 rounded-full" />
-          <span className={`font-semibold text-sm tracking-tight transition-colors ${scrolled ? "text-foreground" : "text-primary-foreground"}`}>
+          <span className={`font-semibold text-sm tracking-tight transition-colors ${solidNav ? "text-foreground" : "text-primary-foreground"}`}>
             Green People
           </span>
         </a>
@@ -50,7 +54,7 @@ const Navbar = () => {
                 key={link.href}
                 to={link.href}
                 className={`text-xs font-medium uppercase tracking-wide transition-colors hover:opacity-70 ${
-                  scrolled ? "text-foreground/70" : "text-primary-foreground/80"
+                  solidNav ? "text-foreground/70" : "text-primary-foreground/80"
                 }`}
               >
                 {link.label}
@@ -60,7 +64,7 @@ const Navbar = () => {
                 key={link.href}
                 href={link.href}
                 className={`text-xs font-medium uppercase tracking-wide transition-colors hover:opacity-70 ${
-                  scrolled ? "text-foreground/70" : "text-primary-foreground/80"
+                  solidNav ? "text-foreground/70" : "text-primary-foreground/80"
                 }`}
               >
                 {link.label}
@@ -77,7 +81,7 @@ const Navbar = () => {
 
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className={`md:hidden ${scrolled ? "text-foreground" : "text-primary-foreground"}`}
+          className={`md:hidden ${solidNav ? "text-foreground" : "text-primary-foreground"}`}
         >
           <FontAwesomeIcon icon={mobileOpen ? faXmark : faBars} className="w-5 h-5" />
         </button>
