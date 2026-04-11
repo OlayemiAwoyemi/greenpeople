@@ -9,7 +9,6 @@ type Conversation = {
   id: string;
   visitor_name: string | null;
   created_at: string;
-  updated_at: string;
 };
 
 const ChatsContent = () => {
@@ -18,7 +17,7 @@ const ChatsContent = () => {
   const [messages, setMessages] = useState<{ role: string; content: string; created_at: string }[]>([]);
 
   useEffect(() => {
-    supabase.from("chat_conversations").select("*").order("updated_at", { ascending: false })
+    supabase.from("chat_conversations").select("*").order("created_at", { ascending: false })
       .then(({ data }) => { if (data) setConversations(data); });
   }, []);
 
