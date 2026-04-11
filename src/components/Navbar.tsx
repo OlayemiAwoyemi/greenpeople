@@ -17,6 +17,10 @@ const navLinks = [
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+  // On non-home pages, always use "scrolled" (solid) style
+  const solidNav = scrolled || !isHomePage;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
