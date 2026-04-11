@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import greenLogo from "@/assets/green-logo.png";
 
 const navLinks = [
