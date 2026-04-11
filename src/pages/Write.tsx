@@ -51,10 +51,10 @@ const WriteContent = () => {
       return;
     }
     setLoading(true);
-    const slug = form.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    const slug = form.title.toLowerCase().replace(/[^a-z\s-]+/g, "").replace(/\s+/g, "-").replace(/(^-|-$)+/g, "");
     const { error } = await supabase.from("blog_posts").insert({
       title: form.title.trim(),
-      slug: `${slug}-${Date.now()}`,
+      slug,
       content: form.content,
       excerpt: form.excerpt.trim() || null,
       cover_image: form.coverImage.trim() || null,

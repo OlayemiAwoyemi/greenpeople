@@ -9,7 +9,6 @@ type Conversation = {
   id: string;
   visitor_name: string | null;
   created_at: string;
-  updated_at: string;
 };
 
 const ChatsContent = () => {
@@ -18,7 +17,7 @@ const ChatsContent = () => {
   const [messages, setMessages] = useState<{ role: string; content: string; created_at: string }[]>([]);
 
   useEffect(() => {
-    supabase.from("chat_conversations").select("*").order("updated_at", { ascending: false })
+    supabase.from("chat_conversations").select("*").order("created_at", { ascending: false })
       .then(({ data }) => { if (data) setConversations(data); });
   }, []);
 
@@ -54,7 +53,7 @@ const ChatsContent = () => {
                   <span className="text-sm font-medium text-foreground">{c.visitor_name || "Visitor"}</span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {new Date(c.updated_at).toLocaleDateString("en-NG", { dateStyle: "medium" })}
+                  {new Date(c.created_at).toLocaleDateString("en-NG", { dateStyle: "medium" })}
                 </p>
               </button>
             ))}
