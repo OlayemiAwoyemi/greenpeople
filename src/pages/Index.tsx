@@ -5,6 +5,7 @@ import OurMission from "@/components/OurMission";
 import HowToRegister from "@/components/HowToRegister";
 import WhatWeStandFor from "@/components/WhatWeStandFor";
 import Momentum from "@/components/Momentum";
+import LatestUpdates from "@/components/LatestUpdates";
 import JoinForm from "@/components/JoinForm";
 import GreenFooter from "@/components/GreenFooter";
 import FloatingLeaves from "@/components/FloatingLeaves";
@@ -22,6 +23,7 @@ const Index = () => {
         <HowToRegister />
         <WhatWeStandFor />
         <Momentum />
+        <LatestUpdates />
         <JoinForm />
       </main>
       <GreenFooter />
