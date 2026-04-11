@@ -1,9 +1,9 @@
-import { useState, useMemo } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faPaperPlane, faImage } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faPaperPlane, faImage, faSave } from "@fortawesome/free-solid-svg-icons";
 import AccessGate from "@/components/AccessGate";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
@@ -11,9 +11,38 @@ import "react-quill-new/dist/quill.snow.css";
 const WriteContent = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const editId = searchParams.get("edit");
+
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [fetching, setFetching] = useState(!!editId);
   const [form, setForm] = useState({ title: "", content: "", excerpt: "", coverImage: "", author: "Green People Team" });
+
+  // Load existing post when editing
+  useEffect(() => {
+    if (!editId) return;
+    setFetching(true);
+    supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("id", editId)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (data) {
+          setForm({
+            title: data.title,
+            content: data.content,
+            excerpt: data.excerpt || "",
+            coverImage: data.cover_image || "",
+            author: data.author,
+          });
+        } else if (error) {
+          toast({ title: "Could not load post", description: error.message, variant: "destructive" });
+        }
+        setFetching(false);
+      });
+  }, [editId]);
 
   const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -51,26 +80,54 @@ const WriteContent = () => {
       return;
     }
     setLoading(true);
-    const slug = form.title.toLowerCase().replace(/[^a-z\s-]+/g, "").replace(/\s+/g, "-").replace(/(^-|-$)+/g, "");
-    const { error } = await supabase.from("blog_posts").insert({
-      title: form.title.trim(),
-      slug,
-      content: form.content,
-      excerpt: form.excerpt.trim() || null,
-      cover_image: form.coverImage.trim() || null,
-      author: form.author.trim() || "Green People Team",
-      published: true,
-    });
-    setLoading(false);
-    if (error) {
-      toast({ title: "Error publishing", description: error.message, variant: "destructive" });
-      return;
+
+    if (editId) {
+      // Update existing post
+      const { error } = await supabase.from("blog_posts").update({
+        title: form.title.trim(),
+        content: form.content,
+        excerpt: form.excerpt.trim() || null,
+        cover_image: form.coverImage.trim() || null,
+        author: form.author.trim() || "Green People Team",
+      }).eq("id", editId);
+      setLoading(false);
+      if (error) {
+        toast({ title: "Error updating", description: error.message, variant: "destructive" });
+        return;
+      }
+      toast({ title: "Update saved! ✅" });
+      navigate("/updates");
+    } else {
+      // Create new post
+      const slug = form.title.toLowerCase().replace(/[^a-z\s-]+/g, "").replace(/\s+/g, "-").replace(/(^-|-$)+/g, "");
+      const { error } = await supabase.from("blog_posts").insert({
+        title: form.title.trim(),
+        slug,
+        content: form.content,
+        excerpt: form.excerpt.trim() || null,
+        cover_image: form.coverImage.trim() || null,
+        author: form.author.trim() || "Green People Team",
+        published: true,
+      });
+      setLoading(false);
+      if (error) {
+        toast({ title: "Error publishing", description: error.message, variant: "destructive" });
+        return;
+      }
+      toast({ title: "Published successfully! 🎉" });
+      navigate("/updates");
     }
-    toast({ title: "Published successfully! 🎉" });
-    navigate("/updates");
   };
 
   const inputClass = "w-full bg-secondary/50 border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30";
+
+  if (fetching) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">Loading article…</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -79,7 +136,9 @@ const WriteContent = () => {
           <Link to="/updates" className="text-muted-foreground hover:text-foreground transition-colors">
             <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
           </Link>
-          <h1 className="text-2xl font-bold text-foreground">Write an Update</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            {editId ? "Edit Update" : "Write an Update"}
+          </h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -138,8 +197,10 @@ const WriteContent = () => {
 
           <button type="submit" disabled={loading}
             className="bg-primary text-primary-foreground px-6 py-3 rounded-xl text-sm font-semibold hover:opacity-90 flex items-center gap-2 disabled:opacity-50 whitespace-nowrap">
-            <FontAwesomeIcon icon={faPaperPlane} className="w-3.5 h-3.5" />
-            {loading ? "Publishing..." : "Publish Update"}
+            <FontAwesomeIcon icon={editId ? faSave : faPaperPlane} className="w-3.5 h-3.5" />
+            {loading
+              ? (editId ? "Saving…" : "Publishing…")
+              : (editId ? "Save Changes" : "Publish Update")}
           </button>
         </form>
       </div>
