@@ -12,6 +12,7 @@ const AccessGate = ({ children }: { children: React.ReactNode }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (code === ACCESS_CODE) {
+      sessionStorage.setItem("gp_access", ACCESS_CODE);
       setGranted(true);
     } else {
       setError(true);
