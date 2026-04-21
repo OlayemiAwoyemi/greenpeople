@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -57,17 +57,20 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          visitor_name: string
+          updated_at: string
+          visitor_name: string | null
         }
         Insert: {
           created_at?: string
           id?: string
-          visitor_name?: string
+          updated_at?: string
+          visitor_name?: string | null
         }
         Update: {
           created_at?: string
           id?: string
-          visitor_name?: string
+          updated_at?: string
+          visitor_name?: string | null
         }
         Relationships: []
       }
@@ -103,72 +106,13 @@ export type Database = {
           },
         ]
       }
-      consultation_messages: {
-        Row: {
-          consultation_id: string
-          content: string
-          created_at: string
-          id: string
-          role: string
-        }
-        Insert: {
-          consultation_id: string
-          content: string
-          created_at?: string
-          id?: string
-          role: string
-        }
-        Update: {
-          consultation_id?: string
-          content?: string
-          created_at?: string
-          id?: string
-          role?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "consultation_messages_consultation_id_fkey"
-            columns: ["consultation_id"]
-            isOneToOne: false
-            referencedRelation: "consultations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      consultations: {
-        Row: {
-          created_at: string
-          doctor_name: string
-          doctor_specialty: string
-          id: string
-          updated_at: string
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          doctor_name: string
-          doctor_specialty: string
-          id?: string
-          updated_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          doctor_name?: string
-          doctor_specialty?: string
-          id?: string
-          updated_at?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       members: {
         Row: {
-          age_group: string | null
+          age_group: string
           created_at: string
           full_name: string
-          gender: string | null
-          has_pvc: string | null
+          gender: string
+          has_pvc: string
           id: string
           lga: string
           phone: string
@@ -176,11 +120,11 @@ export type Database = {
           state: string
         }
         Insert: {
-          age_group?: string | null
+          age_group: string
           created_at?: string
           full_name: string
-          gender?: string | null
-          has_pvc?: string | null
+          gender: string
+          has_pvc: string
           id?: string
           lga: string
           phone: string
@@ -188,11 +132,11 @@ export type Database = {
           state: string
         }
         Update: {
-          age_group?: string | null
+          age_group?: string
           created_at?: string
           full_name?: string
-          gender?: string | null
-          has_pvc?: string | null
+          gender?: string
+          has_pvc?: string
           id?: string
           lga?: string
           phone?: string
