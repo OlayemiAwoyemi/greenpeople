@@ -126,7 +126,8 @@ const JoinForm = () => {
 
     setErrors({});
     setLoading(true);
-    const { error } = await supabase.from("members").insert({
+
+    const payload = {
       full_name: formData.fullName.trim(),
       phone: formData.phone.trim(),
       state: formData.state,
@@ -135,7 +136,29 @@ const JoinForm = () => {
       gender: formData.gender,
       has_pvc: formData.hasPvc,
       reason: formData.reason.trim() || null,
-    });
+    };
+
+    // Insert into the main members table
+    const { data: inserted, error } = await supabase
+      .from("members")
+      .insert(payload)
+      .select("id")
+      .maybeSingle();
+
+    // ALWAYS write to the append-only signup log — even on failure — so we
+    // never lose a registration even if the members row is later deleted.
+    try {
+      await supabase.from("member_signup_log").insert({
+        ...payload,
+        member_id: inserted?.id ?? null,
+        succeeded: !error,
+        error_message: error?.message ?? null,
+        user_agent: typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 500) : null,
+      });
+    } catch (logErr) {
+      console.error("Failed to write signup log:", logErr);
+    }
+
     setLoading(false);
     if (error) {
       toast({ title: "Something went wrong", description: error.message, variant: "destructive" });
