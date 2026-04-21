@@ -201,9 +201,9 @@ const JoinForm = () => {
 
             <button
               onClick={handleDownloadCard}
-              className="inline-flex items-center gap-2 bg-primary/20 text-primary px-4 py-2 rounded-lg text-xs font-semibold hover:bg-primary/30 transition-colors mb-6 whitespace-nowrap"
+              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all mb-6 whitespace-nowrap shadow-lg hover:shadow-xl hover:-translate-y-0.5"
             >
-              <FontAwesomeIcon icon={faDownload} className="w-3 h-3" />
+              <FontAwesomeIcon icon={faDownload} className="w-4 h-4" />
               Download Membership Card
             </button>
 
