@@ -40,7 +40,7 @@ const AnimatedCounter = ({ target, label, icon }: { target: number; label: strin
 const Momentum = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [stats, setStats] = useState({ members: 0, pvcHolders: 0, states: 0 });
+  const [stats, setStats] = useState({ members: 0, pvcHolders: 0, states: 0, lgas: 0 });
   const [testimonials, setTestimonials] = useState<{ full_name: string; state: string; reason: string }[]>([]);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
 
@@ -53,15 +53,17 @@ const Momentum = () => {
         .from("members").select("*", { count: "exact", head: true })
         .eq("has_pvc", "Yes");
 
-      const { data: statesData } = await supabase
-        .from("members").select("state");
+      const { data: locationData } = await supabase
+        .from("members").select("state, lga");
 
-      const uniqueStates = new Set(statesData?.map(m => m.state) || []);
+      const uniqueStates = new Set(locationData?.map(m => m.state) || []);
+      const uniqueLgas = new Set(locationData?.map(m => `${m.state}|${m.lga}`) || []);
 
       setStats({
         members: totalMembers || 0,
         pvcHolders: totalPvc || 0,
         states: uniqueStates.size,
+        lgas: uniqueLgas.size,
       });
 
       const { data: reasons } = await supabase
@@ -112,7 +114,7 @@ const Momentum = () => {
           <AnimatedCounter target={stats.members} label="Members Joined" icon={faUsers} />
           <AnimatedCounter target={stats.pvcHolders} label="PVC Holders" icon={faIdCard} />
           <AnimatedCounter target={stats.states} label="States Reached" icon={faLocationDot} />
-          <AnimatedCounter target={stats.members > 0 ? Math.round(stats.members * 3.5) : 0} label="Lives Impacted" icon={faChartLine} />
+          <AnimatedCounter target={stats.lgas} label="LGAs Reached" icon={faChartLine} />
         </motion.div>
 
         {/* Real testimonials from form submissions */}
