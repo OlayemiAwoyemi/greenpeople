@@ -106,6 +106,57 @@ export type Database = {
           },
         ]
       }
+      member_signup_log: {
+        Row: {
+          age_group: string
+          created_at: string
+          error_message: string | null
+          full_name: string
+          gender: string
+          has_pvc: string
+          id: string
+          lga: string
+          member_id: string | null
+          phone: string
+          reason: string | null
+          state: string
+          succeeded: boolean
+          user_agent: string | null
+        }
+        Insert: {
+          age_group: string
+          created_at?: string
+          error_message?: string | null
+          full_name: string
+          gender: string
+          has_pvc: string
+          id?: string
+          lga: string
+          member_id?: string | null
+          phone: string
+          reason?: string | null
+          state: string
+          succeeded?: boolean
+          user_agent?: string | null
+        }
+        Update: {
+          age_group?: string
+          created_at?: string
+          error_message?: string | null
+          full_name?: string
+          gender?: string
+          has_pvc?: string
+          id?: string
+          lga?: string
+          member_id?: string | null
+          phone?: string
+          reason?: string | null
+          state?: string
+          succeeded?: boolean
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       members: {
         Row: {
           age_group: string
