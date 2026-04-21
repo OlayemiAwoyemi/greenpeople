@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faUsers, faIdCard } from "@fortawesome/free-solid-svg-icons";
 import AccessGate from "@/components/AccessGate";
+import { useToast } from "@/hooks/use-toast";
+
+const PVC_OPTIONS = ["Yes", "No", "In Progress"] as const;
 
 type Member = {
   id: string;
@@ -21,11 +24,27 @@ type Member = {
 const MembersContent = () => {
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     supabase.from("members").select("*").order("created_at", { ascending: false })
       .then(({ data }) => { if (data) setMembers(data); setLoading(false); });
   }, []);
+
+  const updatePvc = async (id: string, newStatus: string) => {
+    setUpdatingId(id);
+    const previous = members;
+    setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, has_pvc: newStatus } : m)));
+    const { error } = await supabase.from("members").update({ has_pvc: newStatus }).eq("id", id);
+    setUpdatingId(null);
+    if (error) {
+      setMembers(previous);
+      toast({ title: "Could not update PVC status", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "PVC status updated" });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,12 +83,22 @@ const MembersContent = () => {
                   )}
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
-                    m.has_pvc === "Yes" ? "bg-primary/10 text-primary" : m.has_pvc === "In Progress" ? "bg-yellow-100 text-yellow-700" : "bg-destructive/10 text-destructive"
-                  }`}>
-                    <FontAwesomeIcon icon={faIdCard} className="w-3 h-3" />
-                    PVC: {m.has_pvc}
-                  </span>
+                  <div className="relative">
+                    <select
+                      value={m.has_pvc}
+                      disabled={updatingId === m.id}
+                      onChange={(e) => updatePvc(m.id, e.target.value)}
+                      className={`appearance-none cursor-pointer text-xs font-medium pl-7 pr-7 py-1.5 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50 ${
+                        m.has_pvc === "Yes" ? "bg-primary/10 text-primary" : m.has_pvc === "In Progress" ? "bg-yellow-100 text-yellow-700" : "bg-destructive/10 text-destructive"
+                      }`}
+                    >
+                      {PVC_OPTIONS.map((opt) => (
+                        <option key={opt} value={opt} className="text-foreground bg-background">{opt}</option>
+                      ))}
+                    </select>
+                    <FontAwesomeIcon icon={faIdCard} className="w-3 h-3 absolute left-2 top-1/2 -translate-y-1/2 pointer-events-none opacity-70" />
+                    <svg className="w-2.5 h-2.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
+                  </div>
                   <span className="text-[10px] text-muted-foreground">
                     {new Date(m.created_at).toLocaleDateString("en-NG", { dateStyle: "medium" })}
                   </span>

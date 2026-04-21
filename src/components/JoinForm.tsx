@@ -81,13 +81,20 @@ const JoinForm = () => {
     try {
       const canvas = await html2canvas(cardRef.current, {
         backgroundColor: "#0a2e1a",
-        scale: 3,
+        scale: 2,
         useCORS: true,
+        logging: false,
+        removeContainer: true,
       });
-      const link = document.createElement("a");
-      link.download = `GreenPeople-${formData.fullName.replace(/\s+/g, "_")}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.download = `GreenPeople-${formData.fullName.replace(/\s+/g, "_")}.png`;
+        link.href = url;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }, "image/png", 0.92);
     } catch {
       toast({ title: "Could not download card", variant: "destructive" });
     }

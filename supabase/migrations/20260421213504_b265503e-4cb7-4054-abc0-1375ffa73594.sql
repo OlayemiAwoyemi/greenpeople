@@ -1,0 +1,1 @@
+CREATE POLICY "Anyone can update member PVC status" ON public.members FOR UPDATE USING (true) WITH CHECK (true);

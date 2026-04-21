@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faCheckToSlot, faShieldHalved, faHeart, faGlobe, faLeaf, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faCheckToSlot, faShieldHalved, faHeart, faGlobe, faLeaf, faUsers, faScaleBalanced } from "@fortawesome/free-solid-svg-icons";
 import LiveCounter from "./LiveCounter";
 import greenpeopleBg from "@/assets/green_people_bg.jpg";
 
@@ -10,6 +10,7 @@ const values = [
   { icon: faGlobe, title: "One Nigeria", desc: "Beyond tribe and religion" },
   { icon: faLeaf, title: "Green Future", desc: "Jobs and sustainability" },
   { icon: faUsers, title: "People Power", desc: "Power belongs to you" },
+  { icon: faScaleBalanced, title: "Justice", desc: "Accountability for all" },
 ];
 
 const Hero = () => {
@@ -106,9 +107,7 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + i * 0.1 }}
-                className={`bg-primary-foreground/8 backdrop-blur-sm border border-primary-foreground/15 rounded-xl p-4 hover:bg-primary-foreground/12 transition-all ${
-                  i === 4 ? "col-span-2" : ""
-                }`}
+                className="bg-primary-foreground/8 backdrop-blur-sm border border-primary-foreground/15 rounded-xl p-4 hover:bg-primary-foreground/12 transition-all"
               >
                 <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center mb-2">
                   <FontAwesomeIcon icon={v.icon} className="w-3.5 h-3.5 text-primary" />
