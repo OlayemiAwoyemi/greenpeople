@@ -2,11 +2,33 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faUsers, faIdCard } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faUsers, faIdCard, faDownload, faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import AccessGate from "@/components/AccessGate";
 import { useToast } from "@/hooks/use-toast";
 
 const PVC_OPTIONS = ["Yes", "No", "In Progress"] as const;
+
+const escapeCsv = (val: string | null | undefined) => {
+  if (val == null) return "";
+  const s = String(val);
+  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+};
+
+const downloadCsv = (rows: Record<string, unknown>[], filename: string) => {
+  if (rows.length === 0) return;
+  const headers = Object.keys(rows[0]);
+  const csv = [
+    headers.join(","),
+    ...rows.map((r) => headers.map((h) => escapeCsv(r[h] as string)).join(",")),
+  ].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
 
 type Member = {
   id: string;
@@ -46,17 +68,56 @@ const MembersContent = () => {
     }
   };
 
+  const exportMembers = () => {
+    if (members.length === 0) {
+      toast({ title: "No members to export" });
+      return;
+    }
+    downloadCsv(members as unknown as Record<string, unknown>[], `green-people-members-${new Date().toISOString().slice(0, 10)}.csv`);
+    toast({ title: `Exported ${members.length} members` });
+  };
+
+  const exportSignupLog = async () => {
+    const { data, error } = await supabase
+      .from("member_signup_log")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error || !data || data.length === 0) {
+      toast({ title: "No signup log entries to export", variant: error ? "destructive" : "default" });
+      return;
+    }
+    downloadCsv(data as unknown as Record<string, unknown>[], `signup-log-backup-${new Date().toISOString().slice(0, 10)}.csv`);
+    toast({ title: `Exported ${data.length} log entries (full backup)` });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="section-container py-8">
-        <div className="flex items-center gap-3 mb-8">
+        <div className="flex flex-wrap items-center gap-3 mb-8">
           <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
             <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
           </Link>
           <h1 className="text-2xl font-bold text-foreground">Members</h1>
-          <span className="bg-primary/10 text-primary text-xs font-semibold px-2.5 py-1 rounded-full ml-auto">
+          <span className="bg-primary/10 text-primary text-xs font-semibold px-2.5 py-1 rounded-full">
             {members.length} total
           </span>
+          <div className="ml-auto flex flex-wrap items-center gap-2">
+            <button
+              onClick={exportMembers}
+              className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity"
+            >
+              <FontAwesomeIcon icon={faDownload} className="w-3 h-3" />
+              Export CSV
+            </button>
+            <button
+              onClick={exportSignupLog}
+              className="inline-flex items-center gap-1.5 bg-secondary text-foreground text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-secondary/80 transition-colors border border-border"
+              title="Download append-only backup log of every registration attempt"
+            >
+              <FontAwesomeIcon icon={faClockRotateLeft} className="w-3 h-3" />
+              Full Backup Log
+            </button>
+          </div>
         </div>
 
         {loading ? (
