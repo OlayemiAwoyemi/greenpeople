@@ -97,7 +97,7 @@ const UpdatePost = () => {
               </div>
               <div
                 className="prose prose-sm max-w-none text-foreground/90 overflow-hidden [&_img]:rounded-xl [&_img]:my-4 [&_p]:mb-4 [&_p]:leading-relaxed"
-                style={{ wordBreak: "normal", overflowWrap: "break-word", hyphens: "none", textAlign: "justify", textJustify: "inter-word" } as React.CSSProperties}
+                style={{ wordBreak: "normal", overflowWrap: "break-word", hyphens: "none", textAlign: "left", WebkitHyphens: "none", msHyphens: "none" } as React.CSSProperties}
                 dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
               />
             </article>

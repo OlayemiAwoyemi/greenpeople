@@ -1,7 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShieldHalved, faHeart, faGlobe, faLeaf, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faShieldHalved, faHeart, faGlobe, faLeaf, faUsers, faScaleBalanced } from "@fortawesome/free-solid-svg-icons";
 
 const values = [
   {
@@ -28,6 +28,11 @@ const values = [
     icon: faUsers,
     title: "Power Belongs to the People",
     description: "Not to the elite. Not to the connected. To you. To every ordinary Nigerian who dares to believe.",
+  },
+  {
+    icon: faScaleBalanced,
+    title: "Justice & Accountability",
+    description: "Equal rights for all. Leaders held to account. No one above the law, no one beneath it.",
   },
 ];
 
@@ -61,9 +66,7 @@ const WhatWeStandFor = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.05 + i * 0.08 }}
-              className={`bg-secondary/50 border border-border rounded-xl p-5 hover:shadow-md transition-shadow ${
-                i === 4 ? "sm:col-span-2 lg:col-span-1" : ""
-              }`}
+              className="bg-secondary/50 border border-border rounded-xl p-5 hover:shadow-md transition-shadow"
             >
               <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
                 <FontAwesomeIcon icon={value.icon} className="w-4 h-4 text-primary" />

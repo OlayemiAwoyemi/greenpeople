@@ -39,18 +39,30 @@ const GreenGuide = () => {
         await supabase.from("chat_messages").insert({ conversation_id: convId, role: "user", content: userMsg.content });
       }
 
-      const resp = await supabase.functions.invoke("green-guide", {
+      const { data, error } = await supabase.functions.invoke("green-guide", {
         body: { messages: newMessages },
       });
 
-      const assistantContent = resp.data?.reply || "I'm sorry, I couldn't respond right now. Please try again.";
+      let assistantContent: string;
+      if (error) {
+        console.error("green-guide invoke error:", error);
+        assistantContent = "I'm having a small hiccup connecting. Please try again in a moment.";
+      } else if (data?.error) {
+        assistantContent = data.error;
+      } else if (data?.reply) {
+        assistantContent = data.reply;
+      } else {
+        assistantContent = "I'm sorry, I couldn't respond right now. Please try again.";
+      }
+
       const assistantMsg: Msg = { role: "assistant", content: assistantContent };
       setMessages([...newMessages, assistantMsg]);
 
-      if (convId) {
+      if (convId && !error) {
         await supabase.from("chat_messages").insert({ conversation_id: convId, role: "assistant", content: assistantContent });
       }
-    } catch {
+    } catch (err) {
+      console.error("green-guide catch:", err);
       setMessages([...newMessages, { role: "assistant", content: "Something went wrong. Please try again." }]);
     }
     setLoading(false);
