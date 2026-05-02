@@ -5,6 +5,7 @@ import { faPaperPlane, faAward, faShareNodes, faCheck, faDownload } from "@forta
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { nigerianStates, nigerianStatesAndLGAs } from "@/data/nigerianLGAs";
+import { normalizeName, normalizeSentence } from "@/lib/textNormalize";
 import PrivacyModal from "./PrivacyModal";
 import html2canvas from "html2canvas";
 
@@ -127,15 +128,16 @@ const JoinForm = () => {
     setErrors({});
     setLoading(true);
 
+    const cleanReason = normalizeSentence(formData.reason || "");
     const payload = {
-      full_name: formData.fullName.trim(),
+      full_name: normalizeName(formData.fullName),
       phone: formData.phone.trim(),
       state: formData.state,
       lga: formData.lga,
       age_group: formData.ageGroup,
       gender: formData.gender,
       has_pvc: formData.hasPvc,
-      reason: formData.reason.trim() || null,
+      reason: cleanReason || null,
     };
 
     // Insert into the main members table
