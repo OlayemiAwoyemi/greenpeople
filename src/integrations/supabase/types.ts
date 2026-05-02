@@ -106,6 +106,98 @@ export type Database = {
           },
         ]
       }
+      curriculum_items: {
+        Row: {
+          active: boolean
+          category: Database["public"]["Enums"]["curriculum_category"]
+          created_at: string
+          description: string | null
+          id: string
+          title: string
+          url: string | null
+        }
+        Insert: {
+          active?: boolean
+          category?: Database["public"]["Enums"]["curriculum_category"]
+          created_at?: string
+          description?: string | null
+          id?: string
+          title: string
+          url?: string | null
+        }
+        Update: {
+          active?: boolean
+          category?: Database["public"]["Enums"]["curriculum_category"]
+          created_at?: string
+          description?: string | null
+          id?: string
+          title?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
+      curriculum_reads: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          member_id: string
+          points_awarded: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          member_id: string
+          points_awarded?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          member_id?: string
+          points_awarded?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_reads_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      finance_entries: {
+        Row: {
+          amount_naira: number
+          created_at: string
+          description: string
+          id: string
+          kind: Database["public"]["Enums"]["finance_kind"]
+          occurred_on: string
+          source_or_payee: string | null
+        }
+        Insert: {
+          amount_naira?: number
+          created_at?: string
+          description: string
+          id?: string
+          kind: Database["public"]["Enums"]["finance_kind"]
+          occurred_on?: string
+          source_or_payee?: string | null
+        }
+        Update: {
+          amount_naira?: number
+          created_at?: string
+          description?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["finance_kind"]
+          occurred_on?: string
+          source_or_payee?: string | null
+        }
+        Relationships: []
+      }
       member_signup_log: {
         Row: {
           age_group: string
@@ -196,6 +288,68 @@ export type Database = {
         }
         Relationships: []
       }
+      social_clicks: {
+        Row: {
+          created_at: string
+          id: string
+          member_id: string
+          points_awarded: number
+          post_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          member_id: string
+          points_awarded?: number
+          post_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          member_id?: string
+          points_awarded?: number
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_clicks_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "social_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      social_posts: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          platform: Database["public"]["Enums"]["social_platform"]
+          points: number
+          title: string | null
+          url: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          platform: Database["public"]["Enums"]["social_platform"]
+          points?: number
+          title?: string | null
+          url: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          platform?: Database["public"]["Enums"]["social_platform"]
+          points?: number
+          title?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -204,7 +358,14 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      curriculum_category:
+        | "leadership"
+        | "politics"
+        | "governance"
+        | "life"
+        | "civic_education"
+      finance_kind: "income" | "expenditure"
+      social_platform: "x" | "instagram" | "facebook" | "youtube"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -331,6 +492,16 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      curriculum_category: [
+        "leadership",
+        "politics",
+        "governance",
+        "life",
+        "civic_education",
+      ],
+      finance_kind: ["income", "expenditure"],
+      social_platform: ["x", "instagram", "facebook", "youtube"],
+    },
   },
 } as const
