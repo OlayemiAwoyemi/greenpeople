@@ -147,10 +147,10 @@ const Momentum = () => {
                   </p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
-                      {t.full_name.charAt(0)}
+                      {normalizeName(t.full_name).charAt(0)}
                     </div>
                     <div>
-                      <div className="font-semibold text-sm text-foreground">{t.full_name}</div>
+                      <div className="font-semibold text-sm text-foreground">{initialsAfterFirst(t.full_name)}</div>
                       <div className="text-muted-foreground text-xs">{t.state}</div>
                     </div>
                   </div>
