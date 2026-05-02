@@ -12,6 +12,10 @@ import NotFound from "./pages/NotFound.tsx";
 const Write = lazy(() => import("./pages/Write.tsx"));
 const Chats = lazy(() => import("./pages/Chats.tsx"));
 const Members = lazy(() => import("./pages/Members.tsx"));
+const HQ = lazy(() => import("./pages/HQ.tsx"));
+const Ranks = lazy(() => import("./pages/Ranks.tsx"));
+const Finance = lazy(() => import("./pages/Finance.tsx"));
+const MemberPage = lazy(() => import("./pages/MemberPage.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -29,6 +33,10 @@ const App = () => (
             <Route path="/write" element={<Write />} />
             <Route path="/chats" element={<Chats />} />
             <Route path="/members" element={<Members />} />
+            <Route path="/hq" element={<HQ />} />
+            <Route path="/ranks" element={<Ranks />} />
+            <Route path="/finance" element={<Finance />} />
+            <Route path="/:phone" element={<MemberPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
