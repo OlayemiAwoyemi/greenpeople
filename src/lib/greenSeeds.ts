@@ -16,7 +16,7 @@ export const tierFor = (points: number): Tier => {
   return tier;
 };
 
-export const nextTier = (points: number) => {
+export const nextTier = (points: number): Tier | null => {
   for (const t of TIERS) {
     if (points < t.min) return t;
   }
