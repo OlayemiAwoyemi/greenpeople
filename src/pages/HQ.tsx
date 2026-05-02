@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash, faXTwitter, faInstagram, faFacebook, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { faChalkboard, faMoneyBillTrendUp, faShareNodes } from "@fortawesome/free-solid-svg-icons";
+import { faXTwitter, faInstagram, faFacebook, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { faPlus, faTrash, faChalkboard, faMoneyBillTrendUp, faShareNodes } from "@fortawesome/free-solid-svg-icons";
 import AccessGate from "@/components/AccessGate";
 import Navbar from "@/components/Navbar";
 
