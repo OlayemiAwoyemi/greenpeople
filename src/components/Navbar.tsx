@@ -8,10 +8,10 @@ import greenLogo from "@/assets/green-logo.png";
 const navLinks = [
   { label: "Why Now", href: "#why-now", anchor: true },
   { label: "Our Mission", href: "#mission", anchor: true },
-  { label: "Register", href: "#register", anchor: true },
   { label: "Values", href: "#values", anchor: true },
-  { label: "Momentum", href: "#momentum", anchor: true },
   { label: "Updates", href: "/updates", isRoute: true },
+  { label: "Ladder", href: "/ranks", isRoute: true },
+  { label: "Finance", href: "/finance", isRoute: true },
 ];
 
 const Navbar = () => {

@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers, faChartLine, faLocationDot, faIdCard } from "@fortawesome/free-solid-svg-icons";
 import { supabase } from "@/integrations/supabase/client";
+import { initialsAfterFirst, normalizeName } from "@/lib/textNormalize";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 const AnimatedCounter = ({ target, label, icon }: { target: number; label: string; icon: IconDefinition }) => {
@@ -72,10 +73,15 @@ const Momentum = () => {
         .not("reason", "is", null)
         .not("reason", "eq", "")
         .order("created_at", { ascending: false })
-        .limit(10);
+        .limit(20);
 
       if (reasons && reasons.length > 0) {
-        setTestimonials(reasons.filter(r => r.reason) as { full_name: string; state: string; reason: string }[]);
+        // Shuffle on every page load
+        const shuffled = [...reasons]
+          .filter((r) => r.reason)
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 10);
+        setTestimonials(shuffled as { full_name: string; state: string; reason: string }[]);
       }
     };
     fetchData();
@@ -141,10 +147,10 @@ const Momentum = () => {
                   </p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
-                      {t.full_name.charAt(0)}
+                      {normalizeName(t.full_name).charAt(0)}
                     </div>
                     <div>
-                      <div className="font-semibold text-sm text-foreground">{t.full_name}</div>
+                      <div className="font-semibold text-sm text-foreground">{initialsAfterFirst(t.full_name)}</div>
                       <div className="text-muted-foreground text-xs">{t.state}</div>
                     </div>
                   </div>
