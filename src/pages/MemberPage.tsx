@@ -6,7 +6,7 @@ import { tierFor, nextTier } from "@/lib/greenSeeds";
 import Navbar from "@/components/Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXTwitter, faInstagram, faFacebook, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { faSeedling, faExternalLink, faCheck, faBookOpen } from "@fortawesome/free-solid-svg-icons";
+import { faSeedling, faUpRightFromSquare, faCheck, faBookOpen } from "@fortawesome/free-solid-svg-icons";
 
 type Platform = "x" | "instagram" | "facebook" | "youtube";
 type Category = "leadership" | "politics" | "governance" | "life" | "civic_education";
@@ -171,7 +171,7 @@ const MemberPage = () => {
                       className={`group text-left bg-card border rounded-xl p-3 flex items-center gap-3 hover:bg-secondary/50 transition-all ${done ? "border-primary/40" : "border-border"}`}
                     >
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${done ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
-                        <FontAwesomeIcon icon={done ? faCheck : faExternalLink} className="w-3.5 h-3.5" />
+                        <FontAwesomeIcon icon={done ? faCheck : faUpRightFromSquare} className="w-3.5 h-3.5" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-xs text-foreground truncate">{p.title || p.url}</div>
