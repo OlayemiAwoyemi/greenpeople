@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faCheckToSlot, faShieldHalved, faHeart, faGlobe, faLeaf, faUsers, faScaleBalanced } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faCheckToSlot, faShieldHalved, faHeart, faGlobe, faLeaf, faUsers, faScaleBalanced, faEye } from "@fortawesome/free-solid-svg-icons";
 import LiveCounter from "./LiveCounter";
 import greenpeopleBg from "@/assets/green_people_bg.jpg";
 
@@ -11,6 +11,7 @@ const values = [
   { icon: faLeaf, title: "Green Future", desc: "Jobs and sustainability" },
   { icon: faUsers, title: "People Power", desc: "Power belongs to you" },
   { icon: faScaleBalanced, title: "Justice", desc: "Accountability for all" },
+  { icon: faEye, title: "Open Books", desc: "Total finance transparency" },
 ];
 
 const Hero = () => {

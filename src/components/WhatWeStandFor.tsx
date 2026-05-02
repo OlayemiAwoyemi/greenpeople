@@ -1,7 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShieldHalved, faHeart, faGlobe, faLeaf, faUsers, faScaleBalanced } from "@fortawesome/free-solid-svg-icons";
+import { faShieldHalved, faHeart, faGlobe, faLeaf, faUsers, faScaleBalanced, faEye } from "@fortawesome/free-solid-svg-icons";
 
 const values = [
   {
@@ -33,6 +33,11 @@ const values = [
     icon: faScaleBalanced,
     title: "Justice & Accountability",
     description: "Equal rights for all. Leaders held to account. No one above the law, no one beneath it.",
+  },
+  {
+    icon: faEye,
+    title: "Open Books, Total Transparency",
+    description: "Every naira in, every naira out — public for all to see. Trust is built in the open.",
   },
 ];
 
