@@ -234,14 +234,23 @@ const JoinForm = () => {
               </div>
             )}
 
-            <p className="text-primary-foreground/60 text-sm mb-6">
+            <p className="text-primary-foreground/60 text-sm mb-4">
               You are now part of something bigger. Share and bring others in.
             </p>
 
-            <button className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity whitespace-nowrap">
-              <FontAwesomeIcon icon={faShareNodes} className="w-3.5 h-3.5" />
-              Invite Friends
-            </button>
+            <a
+              href={`/${formData.phone.replace(/\D/g, "")}`}
+              className="inline-flex items-center gap-2 bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-foreground/20 transition-all whitespace-nowrap mb-3"
+            >
+              🌱 Visit Your GreenSeeds Page
+            </a>
+
+            <div>
+              <button className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity whitespace-nowrap">
+                <FontAwesomeIcon icon={faShareNodes} className="w-3.5 h-3.5" />
+                Invite Friends
+              </button>
+            </div>
           </motion.div>
         </div>
       </section>
