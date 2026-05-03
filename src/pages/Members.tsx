@@ -101,17 +101,24 @@ const MembersContent = () => {
           <span className="bg-primary/10 text-primary text-xs font-semibold px-2.5 py-1 rounded-full">
             {members.length} total
           </span>
-          <div className="ml-auto flex flex-wrap items-center gap-2">
+          <div className="w-full sm:w-auto sm:ml-auto flex flex-wrap items-center justify-start gap-2">
+            <Link
+              to="/#join"
+              className="inline-flex items-center gap-1.5 bg-accent text-accent-foreground text-xs font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity whitespace-nowrap"
+            >
+              <FontAwesomeIcon icon={faUsers} className="w-3 h-3" />
+              Join Green People
+            </Link>
             <button
               onClick={exportMembers}
-              className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity whitespace-nowrap"
             >
               <FontAwesomeIcon icon={faDownload} className="w-3 h-3" />
               Export CSV
             </button>
             <button
               onClick={exportSignupLog}
-              className="inline-flex items-center gap-1.5 bg-secondary text-foreground text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-secondary/80 transition-colors border border-border"
+              className="inline-flex items-center gap-1.5 bg-secondary text-foreground text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-secondary/80 transition-colors border border-border whitespace-nowrap"
               title="Download append-only backup log of every registration attempt"
             >
               <FontAwesomeIcon icon={faClockRotateLeft} className="w-3 h-3" />

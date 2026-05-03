@@ -5,7 +5,7 @@ import { faPaperPlane, faAward, faShareNodes, faCheck, faDownload } from "@forta
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { nigerianStates, nigerianStatesAndLGAs } from "@/data/nigerianLGAs";
-import { normalizeName, normalizeSentence } from "@/lib/textNormalize";
+import { normalizeName, normalizeSentence, joinName } from "@/lib/textNormalize";
 import PrivacyModal from "./PrivacyModal";
 import html2canvas from "html2canvas";
 
@@ -28,16 +28,10 @@ const looksLikeGibberish = (s: string) => {
   return false;
 };
 
-const validateFullName = (name: string): string | null => {
-  const trimmed = name.trim();
-  if (trimmed.length < 4) return "Please enter your full name (at least 4 characters).";
-  const words = trimmed.split(/\s+/).filter(w => w.length > 0);
-  if (words.length < 2) return "Please enter both your first and last name.";
-  for (const word of words) {
-    if (!/^[a-zA-ZÀ-ÿ'-]+$/.test(word)) return "Name should only contain letters.";
-    if (word.length < 2) return "Each name should be at least 2 letters.";
-    if (hasRepeatingChars(word) || hasOnlyConsonants(word)) return "That doesn't look like a real name. Please check.";
-  }
+const validateNameWord = (word: string, label: string): string | null => {
+  if (!word || word.trim().length < 2) return `${label} must be at least 2 letters.`;
+  if (!/^[a-zA-ZÀ-ÿ'-]+( [a-zA-ZÀ-ÿ'-]+)*$/.test(word.trim())) return `${label} should only contain letters.`;
+  if (hasRepeatingChars(word) || hasOnlyConsonants(word)) return `That doesn't look like a real ${label.toLowerCase()}.`;
   return null;
 };
 
@@ -65,7 +59,9 @@ const JoinForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    fullName: "",
+    firstName: "",
+    middleName: "",
+    surname: "",
     phone: "",
     state: "",
     lga: "",
@@ -91,7 +87,7 @@ const JoinForm = () => {
         if (!blob) return;
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
-        link.download = `GreenPeople-${formData.fullName.replace(/\s+/g, "_")}.png`;
+        link.download = `GreenPeople-${joinName({ first: formData.firstName, middle: formData.middleName, surname: formData.surname }).replace(/\s+/g, "_")}.png`;
         link.href = url;
         link.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
@@ -99,15 +95,21 @@ const JoinForm = () => {
     } catch {
       toast({ title: "Could not download card", variant: "destructive" });
     }
-  }, [formData.fullName, toast]);
+  }, [formData.firstName, formData.middleName, formData.surname, toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate
     const newErrors: Record<string, string> = {};
-    const nameErr = validateFullName(formData.fullName);
-    if (nameErr) newErrors.fullName = nameErr;
+    const fnErr = validateNameWord(formData.firstName, "First name");
+    if (fnErr) newErrors.firstName = fnErr;
+    const snErr = validateNameWord(formData.surname, "Surname");
+    if (snErr) newErrors.surname = snErr;
+    if (formData.middleName.trim()) {
+      const mnErr = validateNameWord(formData.middleName, "Middle name");
+      if (mnErr) newErrors.middleName = mnErr;
+    }
     const phoneErr = validatePhone(formData.phone);
     if (phoneErr) newErrors.phone = phoneErr;
     const reasonErr = validateReason(formData.reason);
@@ -129,8 +131,16 @@ const JoinForm = () => {
     setLoading(true);
 
     const cleanReason = normalizeSentence(formData.reason || "");
+    const first = normalizeName(formData.firstName);
+    const middle = normalizeName(formData.middleName);
+    const surname = normalizeName(formData.surname);
+    const fullName = joinName({ first, middle, surname });
+
     const payload = {
-      full_name: normalizeName(formData.fullName),
+      full_name: fullName,
+      first_name: first,
+      middle_name: middle || null,
+      surname,
       phone: formData.phone.trim(),
       state: formData.state,
       lga: formData.lga,
@@ -147,11 +157,11 @@ const JoinForm = () => {
       .select("id")
       .maybeSingle();
 
-    // ALWAYS write to the append-only signup log — even on failure — so we
-    // never lose a registration even if the members row is later deleted.
+    // ALWAYS write to the append-only signup log — strip name-part fields not in log schema
+    const { first_name: _fn, middle_name: _mn, surname: _sn, ...logPayload } = payload;
     try {
       await supabase.from("member_signup_log").insert({
-        ...payload,
+        ...logPayload,
         member_id: inserted?.id ?? null,
         succeeded: !error,
         error_message: error?.message ?? null,
@@ -165,6 +175,10 @@ const JoinForm = () => {
     if (error) {
       toast({ title: "Something went wrong", description: error.message, variant: "destructive" });
       return;
+    }
+    // Persist owner-id so MemberPage knows this browser belongs to this member.
+    if (inserted?.id && typeof window !== "undefined") {
+      try { localStorage.setItem("gp_member_id", inserted.id); } catch { /* ignore */ }
     }
     setSubmitted(true);
   };
@@ -189,7 +203,7 @@ const JoinForm = () => {
               </h3>
               <p className="text-white/50 text-xs mb-4">Digital Membership Card</p>
               <div className="text-white font-semibold text-base mb-1">
-                {formData.fullName || "Green Member"}
+                {joinName({ first: formData.firstName, middle: formData.middleName, surname: formData.surname }) || "Green Member"}
               </div>
               <div className="text-white/50 text-xs">
                 {formData.state || "Nigeria"} · {formData.lga}
@@ -242,7 +256,7 @@ const JoinForm = () => {
               href={`/${formData.phone.replace(/\D/g, "")}`}
               className="inline-flex items-center gap-2 bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-foreground/20 transition-all whitespace-nowrap mb-3"
             >
-              🌱 Visit Your GreenSeeds Page
+              🏛️ Visit Your Member Page
             </a>
 
             <div>
@@ -289,21 +303,35 @@ const JoinForm = () => {
           onSubmit={handleSubmit}
           className="max-w-xl mx-auto bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/10 rounded-2xl p-6 md:p-8"
         >
-          <div className="grid sm:grid-cols-2 gap-4 mb-4">
+          <div className="grid sm:grid-cols-3 gap-3 mb-4">
             <div>
-              <label className={labelClass}>Full Name *</label>
-              <input required type="text" maxLength={100} value={formData.fullName}
-                onChange={(e) => { setFormData({ ...formData, fullName: e.target.value }); setErrors(prev => ({ ...prev, fullName: "" })); }}
-                placeholder="Your full name" className={`${inputClass} ${errors.fullName ? inputErrorBorder : ""}`} />
-              {errors.fullName && <p className={errorClass}>{errors.fullName}</p>}
+              <label className={labelClass}>First Name *</label>
+              <input required type="text" maxLength={50} value={formData.firstName}
+                onChange={(e) => { setFormData({ ...formData, firstName: e.target.value }); setErrors(prev => ({ ...prev, firstName: "" })); }}
+                placeholder="First" className={`${inputClass} ${errors.firstName ? inputErrorBorder : ""}`} />
+              {errors.firstName && <p className={errorClass}>{errors.firstName}</p>}
             </div>
             <div>
-              <label className={labelClass}>Phone/WhatsApp *</label>
-              <input required type="tel" maxLength={15} value={formData.phone}
-                onChange={(e) => { setFormData({ ...formData, phone: e.target.value }); setErrors(prev => ({ ...prev, phone: "" })); }}
-                placeholder="080XXXXXXXX" className={`${inputClass} ${errors.phone ? inputErrorBorder : ""}`} />
-              {errors.phone && <p className={errorClass}>{errors.phone}</p>}
+              <label className={labelClass}>Middle Name</label>
+              <input type="text" maxLength={50} value={formData.middleName}
+                onChange={(e) => { setFormData({ ...formData, middleName: e.target.value }); setErrors(prev => ({ ...prev, middleName: "" })); }}
+                placeholder="Middle (optional)" className={`${inputClass} ${errors.middleName ? inputErrorBorder : ""}`} />
+              {errors.middleName && <p className={errorClass}>{errors.middleName}</p>}
             </div>
+            <div>
+              <label className={labelClass}>Surname *</label>
+              <input required type="text" maxLength={50} value={formData.surname}
+                onChange={(e) => { setFormData({ ...formData, surname: e.target.value }); setErrors(prev => ({ ...prev, surname: "" })); }}
+                placeholder="Surname" className={`${inputClass} ${errors.surname ? inputErrorBorder : ""}`} />
+              {errors.surname && <p className={errorClass}>{errors.surname}</p>}
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className={labelClass}>Phone/WhatsApp *</label>
+            <input required type="tel" maxLength={15} value={formData.phone}
+              onChange={(e) => { setFormData({ ...formData, phone: e.target.value }); setErrors(prev => ({ ...prev, phone: "" })); }}
+              placeholder="080XXXXXXXX" className={`${inputClass} ${errors.phone ? inputErrorBorder : ""}`} />
+            {errors.phone && <p className={errorClass}>{errors.phone}</p>}
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4 mb-4">

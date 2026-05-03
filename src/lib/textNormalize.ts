@@ -1,12 +1,9 @@
-// Text normalization helpers for member-submitted data.
-// - Names: capitalize the first letter of each word (preserving hyphens, apostrophes, particles like "de", "van", etc. are still title-cased).
-// - Free text: trim, collapse whitespace, capitalize the first letter of each sentence.
+// Text normalization helpers.
 
 const SMALL_PARTICLES = new Set(["de", "del", "la", "van", "von", "der", "den", "di"]);
 
 const titleCaseWord = (word: string): string => {
   if (!word) return word;
-  // Handle hyphenated and apostrophe parts, e.g. "mary-jane", "o'connor"
   return word
     .split(/([-'])/)
     .map((part) => {
@@ -20,19 +17,13 @@ const titleCaseWord = (word: string): string => {
 
 export const normalizeName = (raw: string): string => {
   if (!raw) return "";
-  return raw
-    .replace(/\s+/g, " ")
-    .trim()
-    .split(" ")
-    .map(titleCaseWord)
-    .join(" ");
+  return raw.replace(/\s+/g, " ").trim().split(" ").map(titleCaseWord).join(" ");
 };
 
 export const normalizeSentence = (raw: string): string => {
   if (!raw) return "";
   const cleaned = raw.replace(/\s+/g, " ").trim();
   if (!cleaned) return "";
-  // Capitalize first letter of each sentence; keep rest as-is so acronyms (PVC, INEC) stay uppercase.
   return cleaned.replace(/(^|[.!?]\s+)([a-z])/g, (_, p1, p2) => p1 + p2.toUpperCase());
 };
 
@@ -46,5 +37,22 @@ export const initialsAfterFirst = (fullName: string): string => {
   return `${first} ${rest}`;
 };
 
-// Generic phone digit-only key
+// Even more privacy-preserving: "Firstname I. I."
 export const phoneKey = (phone: string): string => phone.replace(/\D/g, "");
+
+// Heuristic name splitter: 2 words → first + surname, 3+ → first + middle + surname.
+export type NameParts = { first: string; middle: string; surname: string };
+export const splitName = (full: string): NameParts => {
+  const parts = normalizeName(full).split(" ").filter(Boolean);
+  if (parts.length === 0) return { first: "", middle: "", surname: "" };
+  if (parts.length === 1) return { first: parts[0], middle: "", surname: "" };
+  if (parts.length === 2) return { first: parts[0], middle: "", surname: parts[1] };
+  return {
+    first: parts[0],
+    middle: parts.slice(1, -1).join(" "),
+    surname: parts[parts.length - 1],
+  };
+};
+
+export const joinName = (p: NameParts): string =>
+  [p.first, p.middle, p.surname].filter(Boolean).join(" ").trim();

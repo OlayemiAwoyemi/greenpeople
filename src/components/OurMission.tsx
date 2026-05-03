@@ -2,6 +2,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserPlus, faBullhorn, faBullseye } from "@fortawesome/free-solid-svg-icons";
+import missionHands from "@/assets/mission-hands.jpg";
 
 const missions = [
   {
@@ -89,9 +90,11 @@ const OurMission = () => {
           >
             <div className="rounded-xl overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=800&q=80&auto=format&fit=crop"
-                alt="Community gathering and voter registration"
+                src={missionHands}
+                alt="Nigerian community joining hands with green wristbands for voter registration"
                 className="w-full h-80 object-cover"
+                width={1024}
+                height={832}
                 loading="lazy"
               />
             </div>
