@@ -157,11 +157,11 @@ const JoinForm = () => {
       .select("id")
       .maybeSingle();
 
-    // ALWAYS write to the append-only signup log — even on failure — so we
-    // never lose a registration even if the members row is later deleted.
+    // ALWAYS write to the append-only signup log — strip name-part fields not in log schema
+    const { first_name: _fn, middle_name: _mn, surname: _sn, ...logPayload } = payload;
     try {
       await supabase.from("member_signup_log").insert({
-        ...payload,
+        ...logPayload,
         member_id: inserted?.id ?? null,
         succeeded: !error,
         error_message: error?.message ?? null,
@@ -175,6 +175,10 @@ const JoinForm = () => {
     if (error) {
       toast({ title: "Something went wrong", description: error.message, variant: "destructive" });
       return;
+    }
+    // Persist owner-id so MemberPage knows this browser belongs to this member.
+    if (inserted?.id && typeof window !== "undefined") {
+      try { localStorage.setItem("gp_member_id", inserted.id); } catch { /* ignore */ }
     }
     setSubmitted(true);
   };
@@ -199,7 +203,7 @@ const JoinForm = () => {
               </h3>
               <p className="text-white/50 text-xs mb-4">Digital Membership Card</p>
               <div className="text-white font-semibold text-base mb-1">
-                {formData.fullName || "Green Member"}
+                {joinName({ first: formData.firstName, middle: formData.middleName, surname: formData.surname }) || "Green Member"}
               </div>
               <div className="text-white/50 text-xs">
                 {formData.state || "Nigeria"} · {formData.lga}
@@ -299,21 +303,35 @@ const JoinForm = () => {
           onSubmit={handleSubmit}
           className="max-w-xl mx-auto bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/10 rounded-2xl p-6 md:p-8"
         >
-          <div className="grid sm:grid-cols-2 gap-4 mb-4">
+          <div className="grid sm:grid-cols-3 gap-3 mb-4">
             <div>
-              <label className={labelClass}>Full Name *</label>
-              <input required type="text" maxLength={100} value={formData.fullName}
-                onChange={(e) => { setFormData({ ...formData, fullName: e.target.value }); setErrors(prev => ({ ...prev, fullName: "" })); }}
-                placeholder="Your full name" className={`${inputClass} ${errors.fullName ? inputErrorBorder : ""}`} />
-              {errors.fullName && <p className={errorClass}>{errors.fullName}</p>}
+              <label className={labelClass}>First Name *</label>
+              <input required type="text" maxLength={50} value={formData.firstName}
+                onChange={(e) => { setFormData({ ...formData, firstName: e.target.value }); setErrors(prev => ({ ...prev, firstName: "" })); }}
+                placeholder="First" className={`${inputClass} ${errors.firstName ? inputErrorBorder : ""}`} />
+              {errors.firstName && <p className={errorClass}>{errors.firstName}</p>}
             </div>
             <div>
-              <label className={labelClass}>Phone/WhatsApp *</label>
-              <input required type="tel" maxLength={15} value={formData.phone}
-                onChange={(e) => { setFormData({ ...formData, phone: e.target.value }); setErrors(prev => ({ ...prev, phone: "" })); }}
-                placeholder="080XXXXXXXX" className={`${inputClass} ${errors.phone ? inputErrorBorder : ""}`} />
-              {errors.phone && <p className={errorClass}>{errors.phone}</p>}
+              <label className={labelClass}>Middle Name</label>
+              <input type="text" maxLength={50} value={formData.middleName}
+                onChange={(e) => { setFormData({ ...formData, middleName: e.target.value }); setErrors(prev => ({ ...prev, middleName: "" })); }}
+                placeholder="Middle (optional)" className={`${inputClass} ${errors.middleName ? inputErrorBorder : ""}`} />
+              {errors.middleName && <p className={errorClass}>{errors.middleName}</p>}
             </div>
+            <div>
+              <label className={labelClass}>Surname *</label>
+              <input required type="text" maxLength={50} value={formData.surname}
+                onChange={(e) => { setFormData({ ...formData, surname: e.target.value }); setErrors(prev => ({ ...prev, surname: "" })); }}
+                placeholder="Surname" className={`${inputClass} ${errors.surname ? inputErrorBorder : ""}`} />
+              {errors.surname && <p className={errorClass}>{errors.surname}</p>}
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className={labelClass}>Phone/WhatsApp *</label>
+            <input required type="tel" maxLength={15} value={formData.phone}
+              onChange={(e) => { setFormData({ ...formData, phone: e.target.value }); setErrors(prev => ({ ...prev, phone: "" })); }}
+              placeholder="080XXXXXXXX" className={`${inputClass} ${errors.phone ? inputErrorBorder : ""}`} />
+            {errors.phone && <p className={errorClass}>{errors.phone}</p>}
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
