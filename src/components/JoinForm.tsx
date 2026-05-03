@@ -256,7 +256,7 @@ const JoinForm = () => {
               href={`/${formData.phone.replace(/\D/g, "")}`}
               className="inline-flex items-center gap-2 bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-foreground/20 transition-all whitespace-nowrap mb-3"
             >
-              🌱 Visit Your GreenSeeds Page
+              🏛️ Visit Your Member Page
             </a>
 
             <div>
