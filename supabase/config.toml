@@ -1,1 +1,7 @@
 project_id = "okrvrysebqkgteyubjfd"
+
+[functions.generate-quiz]
+verify_jwt = false
+
+[functions.green-guide]
+verify_jwt = false
