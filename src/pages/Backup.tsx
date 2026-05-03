@@ -25,7 +25,8 @@ const BackupContent = () => {
     (async () => {
       const out: Record<string, number> = {};
       for (const t of TABLES) {
-        const { count } = await supabase.from(t).select("*", { count: "exact", head: true });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { count } = await (supabase as any).from(t).select("*", { count: "exact", head: true });
         out[t] = count ?? 0;
       }
       setCounts(out);
@@ -37,7 +38,8 @@ const BackupContent = () => {
     try {
       const dump: Record<string, unknown[]> = {};
       for (const t of TABLES) {
-        const { data, error } = await supabase.from(t).select("*");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data, error } = await (supabase as any).from(t).select("*");
         if (error) console.warn(t, error);
         dump[t] = data ?? [];
       }
@@ -54,7 +56,8 @@ const BackupContent = () => {
   };
 
   const downloadTable = async (t: string) => {
-    const { data, error } = await supabase.from(t).select("*");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any).from(t).select("*");
     if (error || !data) return toast({ title: `Failed: ${t}`, variant: "destructive" });
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
