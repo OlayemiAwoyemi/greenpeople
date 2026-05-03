@@ -17,31 +17,32 @@
     --popover: 0 0% 100%;
     --popover-foreground: 120 10% 15%;
 
-    --primary: 88 50% 47%;
+    /* Brand greens — only #7cb43c (light) and #255625 (dark) plus shades/tints */
+    --primary: 82 50% 47%;          /* #7cb43c */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 90 15% 94%;
+    --secondary: 90 30% 94%;
     --secondary-foreground: 120 10% 15%;
 
-    --muted: 90 10% 94%;
-    --muted-foreground: 120 5% 45%;
+    --muted: 90 15% 94%;
+    --muted-foreground: 120 8% 40%;
 
-    --accent: 120 40% 24%;
+    --accent: 120 40% 24%;          /* #255625 */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 75% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 90 10% 90%;
-    --input: 90 10% 90%;
-    --ring: 88 50% 47%;
+    --border: 82 15% 88%;
+    --input: 82 15% 88%;
+    --ring: 82 50% 47%;
 
     --radius: 0.5rem;
 
     /* Custom tokens */
-    --green-light: 88 50% 47%;
-    --green-dark: 120 40% 24%;
-    --green-muted: 90 20% 92%;
+    --green-light: 82 50% 47%;      /* #7cb43c */
+    --green-dark: 120 40% 24%;      /* #255625 */
+    --green-muted: 82 30% 92%;
     --warm-white: 0 0% 100%;
 
     --sidebar-background: 0 0% 98%;
@@ -69,6 +70,19 @@
 
   html {
     scroll-behavior: smooth;
+  }
+
+  /* Native <select> chevron — properly padded so it never touches the edge */
+  select.gp-select,
+  select:not([multiple]):not([size]) {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23255625' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    background-size: 12px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 2.25rem;
   }
 }
 
@@ -99,12 +113,8 @@
     transform: translateY(0) rotate(0deg) translateX(0);
     opacity: 0;
   }
-  10% {
-    opacity: 0.4;
-  }
-  90% {
-    opacity: 0.2;
-  }
+  10% { opacity: 0.4; }
+  90% { opacity: 0.2; }
   100% {
     transform: translateY(100vh) rotate(360deg) translateX(80px);
     opacity: 0;
