@@ -198,6 +198,60 @@ export type Database = {
         }
         Relationships: []
       }
+      lesson_quizzes: {
+        Row: {
+          correct_index: number
+          created_at: string
+          id: string
+          item_id: string
+          options: Json
+          position: number
+          question: string
+        }
+        Insert: {
+          correct_index: number
+          created_at?: string
+          id?: string
+          item_id: string
+          options: Json
+          position?: number
+          question: string
+        }
+        Update: {
+          correct_index?: number
+          created_at?: string
+          id?: string
+          item_id?: string
+          options?: Json
+          position?: number
+          question?: string
+        }
+        Relationships: []
+      }
+      member_referrals: {
+        Row: {
+          created_at: string
+          id: string
+          points_awarded: number
+          referred_member_id: string
+          referrer_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          points_awarded?: number
+          referred_member_id: string
+          referrer_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          points_awarded?: number
+          referred_member_id?: string
+          referrer_id?: string
+        }
+        Relationships: []
+      }
       member_signup_log: {
         Row: {
           age_group: string
@@ -253,62 +307,134 @@ export type Database = {
         Row: {
           age_group: string
           created_at: string
+          first_name: string | null
           full_name: string
           gender: string
           has_pvc: string
           id: string
           lga: string
+          middle_name: string | null
           phone: string
           reason: string | null
+          referrer_id: string | null
           state: string
+          surname: string | null
         }
         Insert: {
           age_group: string
           created_at?: string
+          first_name?: string | null
           full_name: string
           gender: string
           has_pvc: string
           id?: string
           lga: string
+          middle_name?: string | null
           phone: string
           reason?: string | null
+          referrer_id?: string | null
           state: string
+          surname?: string | null
         }
         Update: {
           age_group?: string
           created_at?: string
+          first_name?: string | null
           full_name?: string
           gender?: string
           has_pvc?: string
           id?: string
           lga?: string
+          middle_name?: string | null
           phone?: string
           reason?: string | null
+          referrer_id?: string | null
           state?: string
+          surname?: string | null
+        }
+        Relationships: []
+      }
+      page_visits: {
+        Row: {
+          created_at: string
+          host_member_id: string
+          id: string
+          points_awarded: number
+          visitor_hash: string
+        }
+        Insert: {
+          created_at?: string
+          host_member_id: string
+          id?: string
+          points_awarded?: number
+          visitor_hash: string
+        }
+        Update: {
+          created_at?: string
+          host_member_id?: string
+          id?: string
+          points_awarded?: number
+          visitor_hash?: string
+        }
+        Relationships: []
+      }
+      quiz_attempts: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          member_id: string
+          points_awarded: number
+          score: number
+          total: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          member_id: string
+          points_awarded?: number
+          score: number
+          total: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          member_id?: string
+          points_awarded?: number
+          score?: number
+          total?: number
         }
         Relationships: []
       }
       social_clicks: {
         Row: {
           created_at: string
+          host_member_id: string | null
           id: string
           member_id: string
           points_awarded: number
           post_id: string
+          visitor_hash: string | null
         }
         Insert: {
           created_at?: string
+          host_member_id?: string | null
           id?: string
           member_id: string
           points_awarded?: number
           post_id: string
+          visitor_hash?: string | null
         }
         Update: {
           created_at?: string
+          host_member_id?: string | null
           id?: string
           member_id?: string
           points_awarded?: number
           post_id?: string
+          visitor_hash?: string | null
         }
         Relationships: [
           {
