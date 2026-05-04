@@ -420,7 +420,7 @@ const MemberPage = () => {
               const isOpen = activeQuiz === it.id;
               return (
                 <div key={it.id} className={`bg-card border rounded-xl ${done ? "border-primary/40" : "border-border"}`}>
-                  <button onClick={() => handleRead(it)} className="w-full text-left p-3 flex items-start gap-2.5 sm:gap-3 hover:bg-secondary/50 rounded-xl min-w-0">
+                  <button onClick={() => startLesson(it)} className="w-full text-left p-3 flex items-start gap-2.5 sm:gap-3 hover:bg-secondary/50 rounded-xl min-w-0">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${done ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
                       <FontAwesomeIcon icon={done ? faCheck : faBookOpen} className="w-3.5 h-3.5" />
                     </div>
