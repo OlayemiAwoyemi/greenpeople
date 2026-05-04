@@ -80,9 +80,11 @@ const HQContent = () => {
   const togglePost = async (id: string, active: boolean) => { await supabase.from("social_posts").update({ active: !active }).eq("id", id); refresh(); };
   const deletePost = async (id: string) => { await supabase.from("social_posts").delete().eq("id", id); refresh(); };
 
-  const generateQuizForItem = async (itemId: string, title: string, description: string | null, url: string | null) => {
+  const stripHtml = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+
+  const generateQuizForItem = async (itemId: string, title: string, contentForAI: string | null, url: string | null) => {
     const { data, error } = await supabase.functions.invoke("generate-quiz", {
-      body: { title, description, url },
+      body: { title, description: contentForAI, url },
     });
     if (error || !data?.questions) {
       toast({ title: "Quiz generation failed", description: error?.message ?? "Try again", variant: "destructive" });
@@ -92,7 +94,6 @@ const HQContent = () => {
       item_id: itemId, question: q.question, options: q.options, correct_index: q.correct_index, position: idx,
     }));
     if (rows.length > 0) {
-      // Replace existing quiz
       await supabase.from("lesson_quizzes").delete().eq("item_id", itemId);
       const { error: insErr } = await supabase.from("lesson_quizzes").insert(rows);
       if (insErr) toast({ title: "Saved lesson, quiz failed", description: insErr.message, variant: "destructive" });
@@ -101,12 +102,14 @@ const HQContent = () => {
 
   const addCurriculum = async () => {
     if (!cTitle.trim()) return toast({ title: "Title required", variant: "destructive" });
-    if (cDesc.trim().length < 60 && autoGen) {
-      return toast({ title: "Add a longer description", description: "Lessons need ≥ 60 characters for the quiz generator to work well.", variant: "destructive" });
+    const plain = stripHtml(cContent);
+    if (plain.length < 60 && autoGen) {
+      return toast({ title: "Add longer lesson content", description: "Lessons need ≥ 60 characters for the quiz generator to work well.", variant: "destructive" });
     }
     const { data, error } = await supabase.from("curriculum_items").insert({
       title: cTitle.trim(),
       description: cDesc.trim() || null,
+      content: cContent.trim() || null,
       url: cUrl.trim() || null,
       category: cCat,
       active: true,
@@ -115,11 +118,11 @@ const HQContent = () => {
 
     if (autoGen) {
       setGenerating(true);
-      try { await generateQuizForItem(data.id, cTitle.trim(), cDesc.trim() || null, cUrl.trim() || null); }
+      try { await generateQuizForItem(data.id, cTitle.trim(), plain || null, cUrl.trim() || null); }
       finally { setGenerating(false); }
     }
     toast({ title: "Lesson added to Green Classroom" });
-    setCTitle(""); setCDesc(""); setCUrl("");
+    setCTitle(""); setCDesc(""); setCContent(""); setCUrl("");
     refresh();
   };
 
