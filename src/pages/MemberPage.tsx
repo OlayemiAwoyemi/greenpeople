@@ -476,6 +476,53 @@ const MemberPage = () => {
           </div>
         </section>
       </div>
+
+      {/* Lesson reader modal */}
+      {openLesson && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4" role="dialog" aria-modal="true">
+          <div className="bg-background w-full sm:max-w-2xl sm:rounded-2xl rounded-t-2xl max-h-[90vh] flex flex-col border border-border shadow-2xl">
+            <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-border">
+              <div className="flex-1 min-w-0">
+                <div className="text-[10px] uppercase tracking-widest font-bold text-primary mb-1">{openLesson.category.replace("_", " ")}</div>
+                <h3 className="text-base sm:text-lg font-bold text-foreground break-words">{openLesson.title}</h3>
+              </div>
+              <button onClick={() => setOpenLesson(null)} className="text-muted-foreground hover:text-foreground p-2 -m-2 flex-shrink-0" aria-label="Close lesson">
+                <FontAwesomeIcon icon={faXmark} className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+              {lessonBits.length === 0 ? (
+                <p className="text-sm text-muted-foreground">This lesson has no written content yet.</p>
+              ) : (
+                <article
+                  className="prose prose-sm sm:prose-base max-w-none text-foreground prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary prose-li:marker:text-primary"
+                  dangerouslySetInnerHTML={{ __html: lessonBits[lessonStep] }}
+                />
+              )}
+              {openLesson.url && lessonStep === lessonBits.length - 1 && (
+                <a href={openLesson.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mt-4 text-xs font-semibold text-primary hover:underline">
+                  <FontAwesomeIcon icon={faUpRightFromSquare} className="w-3 h-3" /> Open reference
+                </a>
+              )}
+            </div>
+            <div className="border-t border-border p-3 sm:p-4 flex items-center gap-3">
+              <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
+                <div className="h-full bg-primary transition-all" style={{ width: `${((lessonStep + 1) / Math.max(1, lessonBits.length)) * 100}%` }} />
+              </div>
+              <div className="text-[11px] text-muted-foreground whitespace-nowrap font-medium">{lessonStep + 1} / {lessonBits.length}</div>
+              {lessonStep < lessonBits.length - 1 ? (
+                <button onClick={() => setLessonStep((s) => s + 1)} className="bg-primary text-primary-foreground rounded-xl px-4 py-2 text-sm font-semibold inline-flex items-center gap-2 whitespace-nowrap">
+                  Continue <FontAwesomeIcon icon={faArrowRight} className="w-3 h-3" />
+                </button>
+              ) : (
+                <button onClick={() => setOpenLesson(null)} className="bg-primary text-primary-foreground rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap">
+                  Done
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
