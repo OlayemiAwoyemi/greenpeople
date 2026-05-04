@@ -18,7 +18,7 @@ const Updates = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Navbar />
       <main className="pt-20 pb-16">
         <div className="section-container">
@@ -27,7 +27,7 @@ const Updates = () => {
               <h1 className="text-3xl font-bold mb-2" style={{ color: "hsl(var(--foreground))" }}>Updates</h1>
               <p className="text-sm" style={{ color: "hsl(var(--muted-foreground))" }}>News and stories from the Green People Movement</p>
             </div>
-            <Link to="/write" className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 flex items-center gap-2 whitespace-nowrap">
+            <Link to="/write" className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 flex items-center gap-2 whitespace-nowrap shadow-sm">
               <FontAwesomeIcon icon={faPen} className="w-3 h-3" />
               Write
             </Link>
@@ -41,7 +41,7 @@ const Updates = () => {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.map((post) => (
-              <Link key={post.id} to={`/updates/${post.slug}`} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-md transition-shadow block">
+              <Link key={post.id} to={`/updates/${post.slug}`} className="glass-card overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all block border-white/10">
                   {post.cover_image && (
                     <img src={post.cover_image} alt={post.title} className="w-full h-48 object-cover" loading="lazy" />
                   )}

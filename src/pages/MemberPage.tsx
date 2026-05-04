@@ -347,11 +347,11 @@ const MemberPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background pb-16 overflow-x-hidden">
+    <div className="min-h-screen pb-16 overflow-x-hidden">
       <Navbar />
       <div className="pt-24 max-w-3xl mx-auto px-4 sm:px-5">
         {/* Profile card */}
-        <div className="bg-gradient-to-br from-primary/10 via-secondary/40 to-background border border-border rounded-2xl p-4 sm:p-6 mb-5">
+        <div className="glass-effect rounded-2xl p-4 sm:p-6 mb-5">
           <div className="flex items-center gap-3 mb-4 min-w-0">
             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-xl flex-shrink-0">
               {member.full_name.charAt(0)}
@@ -371,7 +371,7 @@ const MemberPage = () => {
             <span className="text-xs sm:text-sm text-muted-foreground">{POINTS_LABEL}</span>
             <span className={`ml-auto text-[11px] sm:text-xs font-bold ${tier.color} truncate max-w-[55%] text-right`}>{tier.name}</span>
           </div>
-          <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
+          <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
             <div className="h-full bg-primary transition-all" style={{ width: `${progress}%` }} />
           </div>
           {next ? (
@@ -387,7 +387,7 @@ const MemberPage = () => {
 
         {/* Join CTA for visitors */}
         {!isOwnPage && (
-          <Link to="/#join" className="flex items-center justify-center gap-2 mb-5 bg-accent text-accent-foreground rounded-xl px-4 py-3 text-sm font-bold shadow-md hover:opacity-90 whitespace-nowrap">
+          <Link to="/#join" className="flex items-center justify-center gap-2 mb-5 bg-primary text-primary-foreground rounded-xl px-4 py-3 text-sm font-bold shadow-md hover:opacity-90 whitespace-nowrap">
             <FontAwesomeIcon icon={faUserPlus} className="w-4 h-4" />
             Join Green People — Get Your Own Page
           </Link>
@@ -397,12 +397,12 @@ const MemberPage = () => {
         <section className="mb-8">
           <h2 className="text-[11px] sm:text-sm font-bold text-foreground uppercase tracking-widest mb-3">Subscribe · Like · Comment · Share</h2>
           {groupedPosts.every((g) => g.items.length === 0) && (
-            <p className="text-sm text-muted-foreground bg-secondary/40 border border-border rounded-xl p-6 text-center">No social posts yet. Check back soon.</p>
+            <p className="text-sm text-muted-foreground bg-white/10 border border-white/20 rounded-xl p-6 text-center">No social posts yet. Check back soon.</p>
           )}
           {groupedPosts.map(({ platform, items: list }) => list.length > 0 && (
             <div key={platform} className="mb-4">
               <div className="flex items-center gap-2 mb-2">
-                <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${platformMeta[platform].color}`}>
+                <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${platformMeta[platform].color} shadow-sm`}>
                   <FontAwesomeIcon icon={platformMeta[platform].icon} className="w-3.5 h-3.5" />
                 </div>
                 <h3 className="font-semibold text-sm text-foreground">{platformMeta[platform].label}</h3>
@@ -415,9 +415,9 @@ const MemberPage = () => {
                     <button
                       key={p.id}
                       onClick={() => handleSocialClick(p)}
-                      className={`group text-left bg-card border rounded-xl p-3 flex items-center gap-2.5 sm:gap-3 hover:bg-secondary/50 transition-all min-w-0 ${done ? "border-primary/40 opacity-70" : "border-border"}`}
+                      className={`group text-left glass-card p-3 flex items-center gap-2.5 sm:gap-3 hover:bg-white/20 transition-all min-w-0 ${done ? "border-primary/40 opacity-70" : "border-white/10"}`}
                     >
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${done ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${done ? "bg-primary text-primary-foreground" : "bg-white/10 text-muted-foreground"}`}>
                         <FontAwesomeIcon icon={done ? faCheck : faUpRightFromSquare} className="w-3.5 h-3.5" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -443,7 +443,7 @@ const MemberPage = () => {
             <h2 className="text-[11px] sm:text-sm font-bold text-foreground uppercase tracking-widest">Green Classroom</h2>
           </div>
           {items.length === 0 && (
-            <p className="text-sm text-muted-foreground bg-secondary/40 border border-border rounded-xl p-6 text-center">No lessons yet. Check back soon.</p>
+            <p className="text-sm text-muted-foreground bg-white/10 border border-white/20 rounded-xl p-6 text-center">No lessons yet. Check back soon.</p>
           )}
           <div className="grid gap-2">
             {items.map((it) => {
@@ -452,9 +452,9 @@ const MemberPage = () => {
               const list = quizzesByItem[it.id] || [];
               const isOpen = activeQuiz === it.id;
               return (
-                <div key={it.id} className={`bg-card border rounded-xl ${done ? "border-primary/40" : "border-border"}`}>
-                  <button onClick={() => startLesson(it)} className="w-full text-left p-3 flex items-start gap-2.5 sm:gap-3 hover:bg-secondary/50 rounded-xl min-w-0">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${done ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
+                <div key={it.id} className={`glass-card overflow-hidden ${done ? "border-primary/40" : "border-white/10"}`}>
+                  <button onClick={() => startLesson(it)} className="w-full text-left p-3 flex items-start gap-2.5 sm:gap-3 hover:bg-white/20 transition-all min-w-0">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${done ? "bg-primary text-primary-foreground" : "bg-white/10 text-muted-foreground"}`}>
                       <FontAwesomeIcon icon={done ? faCheck : faBookOpen} className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -468,7 +468,7 @@ const MemberPage = () => {
                   </button>
 
                   {list.length > 0 && (
-                    <div className="border-t border-border p-3">
+                    <div className="border-t border-white/10 p-3">
                       {quizDone ? (
                         <div className="text-[11px] text-primary font-semibold inline-flex items-center gap-1.5">
                           <FontAwesomeIcon icon={faCheck} className="w-3 h-3" /> Quiz completed
@@ -476,18 +476,18 @@ const MemberPage = () => {
                       ) : !isOpen ? (
                         <button
                           onClick={() => { setActiveQuiz(it.id); setQuizAnswers({}); }}
-                          className="text-[11px] sm:text-xs font-semibold bg-primary/10 text-primary px-3 py-1.5 rounded-lg whitespace-nowrap"
+                          className="text-[11px] sm:text-xs font-semibold bg-primary/20 text-primary px-3 py-1.5 rounded-lg whitespace-nowrap border border-primary/20"
                         >
                           Take the quiz · earn up to +{list.length * QUIZ_POINTS_PER_CORRECT} pts
                         </button>
                       ) : (
                         <div className="space-y-3">
                           {list.map((q, qi) => (
-                            <div key={q.id} className="bg-secondary/40 rounded-lg p-3">
+                            <div key={q.id} className="bg-white/10 rounded-lg p-3 border border-white/5">
                               <div className="text-[12px] sm:text-sm font-semibold text-foreground mb-2 break-words">{qi + 1}. {q.question}</div>
                               <div className="grid gap-1.5">
                                 {q.options.map((opt, idx) => (
-                                  <label key={idx} className={`flex items-start gap-2 text-[11px] sm:text-xs cursor-pointer p-2 rounded-md border ${quizAnswers[q.id] === idx ? "border-primary bg-primary/5" : "border-border"}`}>
+                                  <label key={idx} className={`flex items-start gap-2 text-[11px] sm:text-xs cursor-pointer p-2 rounded-md border transition-all ${quizAnswers[q.id] === idx ? "border-primary bg-primary/10" : "border-white/10 bg-white/5 hover:bg-white/10"}`}>
                                     <input type="radio" name={q.id} className="mt-0.5" checked={quizAnswers[q.id] === idx} onChange={() => setQuizAnswers((s) => ({ ...s, [q.id]: idx }))} />
                                     <span className="break-words flex-1 min-w-0">{opt}</span>
                                   </label>
@@ -496,8 +496,8 @@ const MemberPage = () => {
                             </div>
                           ))}
                           <div className="flex gap-2">
-                            <button onClick={() => submitQuiz(it)} className="flex-1 bg-primary text-primary-foreground rounded-lg py-2 text-xs font-semibold whitespace-nowrap">Submit</button>
-                            <button onClick={() => setActiveQuiz(null)} className="px-3 bg-secondary text-foreground rounded-lg py-2 text-xs font-semibold whitespace-nowrap">Cancel</button>
+                            <button onClick={() => submitQuiz(it)} className="flex-1 bg-primary text-primary-foreground rounded-lg py-2 text-xs font-semibold whitespace-nowrap shadow-sm hover:opacity-90">Submit</button>
+                            <button onClick={() => setActiveQuiz(null)} className="px-3 bg-white/10 text-foreground rounded-lg py-2 text-xs font-semibold whitespace-nowrap border border-white/10 hover:bg-white/20">Cancel</button>
                           </div>
                         </div>
                       )}
@@ -512,9 +512,9 @@ const MemberPage = () => {
 
       {/* Lesson reader modal */}
       {openLesson && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
-          <div className="bg-background w-full max-w-2xl rounded-2xl max-h-[90vh] flex flex-col border border-border shadow-2xl">
-            <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-border">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md p-4" role="dialog" aria-modal="true">
+          <div className="glass-effect w-full max-w-2xl rounded-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            <div className="flex items-start justify-between gap-3 p-4 sm:p-6 border-b border-white/10">
               <div className="flex-1 min-w-0">
                 <div className="text-[10px] uppercase tracking-widest font-bold text-primary mb-1">{openLesson.category.replace("_", " ")}</div>
                 <h3 className="text-base sm:text-lg font-bold text-foreground break-words">{openLesson.title}</h3>
@@ -523,32 +523,32 @@ const MemberPage = () => {
                 <FontAwesomeIcon icon={faXmark} className="w-4 h-4" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 break-words">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-8 break-words custom-scrollbar">
               {lessonBits.length === 0 ? (
                 <p className="text-sm text-muted-foreground">This lesson has no written content yet.</p>
               ) : (
                 <article
-                  className="prose prose-sm sm:prose-base max-w-none w-full break-words text-foreground prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary prose-a:break-all prose-li:marker:text-primary"
+                  className="prose prose-sm sm:prose-base max-w-none w-full break-words text-foreground/90 prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary prose-a:break-all prose-li:marker:text-primary"
                   dangerouslySetInnerHTML={{ __html: lessonBits[lessonStep] }}
                 />
               )}
               {openLesson.url && lessonStep === lessonBits.length - 1 && (
-                <a href={openLesson.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mt-4 text-xs font-semibold text-primary hover:underline">
+                <a href={openLesson.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mt-6 text-xs font-semibold text-primary hover:underline">
                   <FontAwesomeIcon icon={faUpRightFromSquare} className="w-3 h-3" /> Open reference
                 </a>
               )}
             </div>
-            <div className="border-t border-border p-3 sm:p-4 flex items-center gap-3">
-              <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
-                <div className="h-full bg-primary transition-all" style={{ width: `${((lessonStep + 1) / Math.max(1, lessonBits.length)) * 100}%` }} />
+            <div className="border-t border-white/10 p-4 sm:p-6 flex items-center gap-4 bg-white/5">
+              <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                <div className="h-full bg-primary transition-all shadow-[0_0_8px_rgba(var(--primary),0.4)]" style={{ width: `${((lessonStep + 1) / Math.max(1, lessonBits.length)) * 100}%` }} />
               </div>
               <div className="text-[11px] text-muted-foreground whitespace-nowrap font-medium">{lessonStep + 1} / {lessonBits.length}</div>
               {lessonStep < lessonBits.length - 1 ? (
-                <button onClick={() => setLessonStep((s) => s + 1)} className="bg-primary text-primary-foreground rounded-xl px-4 py-2 text-sm font-semibold inline-flex items-center gap-2 whitespace-nowrap">
+                <button onClick={() => setLessonStep((s) => s + 1)} className="bg-primary text-primary-foreground rounded-xl px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2 whitespace-nowrap shadow-sm hover:opacity-90">
                   Continue <FontAwesomeIcon icon={faArrowRight} className="w-3 h-3" />
                 </button>
               ) : (
-                <button onClick={() => setOpenLesson(null)} className="bg-primary text-primary-foreground rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap">
+                <button onClick={() => setOpenLesson(null)} className="bg-primary text-primary-foreground rounded-xl px-6 py-2.5 text-sm font-semibold whitespace-nowrap shadow-sm hover:opacity-90">
                   Done
                 </button>
               )}

@@ -107,11 +107,11 @@ const Ranks = () => {
   const medal = (i: number) => i === 0 ? "text-yellow-500" : i === 1 ? "text-gray-400" : i === 2 ? "text-amber-700" : "text-muted-foreground";
 
   return (
-    <div className="min-h-screen bg-background pb-16 overflow-x-hidden">
+    <div className="min-h-screen pb-16 overflow-x-hidden">
       <Navbar />
       <div className="pt-24 max-w-3xl mx-auto px-4 sm:px-5">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-3">
+          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-3 border border-white/20">
             <FontAwesomeIcon icon={faLandmark} className="w-3 h-3" />
             {POINTS_LABEL} — public leaderboard
           </div>
@@ -123,24 +123,24 @@ const Ranks = () => {
 
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 mb-6">
           {TIERS.map((t) => (
-            <div key={t.name} className="bg-secondary/50 border border-border rounded-lg p-2 text-center min-w-0">
+            <div key={t.name} className="glass-card p-2 text-center min-w-0 bg-white/20 backdrop-blur-md rounded-xl">
               <div className={`font-bold text-[11px] truncate ${t.color}`}>{t.short}</div>
               <div className="text-[9px] text-muted-foreground mt-0.5">{t.min.toLocaleString()}+</div>
             </div>
           ))}
         </div>
 
-        <div className="bg-card border border-border rounded-2xl overflow-hidden">
+        <div className="glass-card overflow-hidden">
           {loading ? (
             <div className="p-12 text-center text-muted-foreground text-sm">Loading…</div>
           ) : rows.length === 0 ? (
             <div className="p-12 text-center text-muted-foreground text-sm">No members yet.</div>
           ) : (
-            <div className="divide-y divide-border">
+            <div className="divide-y divide-white/10">
               {rows.map((r, i) => {
                 const tier = tierFor(r.points);
                 return (
-                  <Link key={r.id} to={`/${r.phone.replace(/\D/g, "")}`} className="flex items-center gap-2.5 sm:gap-3 p-3 sm:p-4 hover:bg-secondary/40 transition-colors min-w-0">
+                  <Link key={r.id} to={`/${r.phone.replace(/\D/g, "")}`} className="flex items-center gap-2.5 sm:gap-3 p-3 sm:p-4 hover:bg-white/20 transition-all min-w-0">
                     <div className={`w-7 sm:w-8 text-center font-bold ${medal(i)} flex-shrink-0`}>
                       {i < 3 ? <FontAwesomeIcon icon={i === 0 ? faTrophy : faMedal} className="w-4 h-4" /> : `#${i + 1}`}
                     </div>

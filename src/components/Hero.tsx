@@ -23,7 +23,7 @@ const Hero = () => {
           alt="Green People Movement"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-accent/95 via-accent/85 to-accent/70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-accent/80 via-accent/60 to-accent/40" />
       </div>
 
       <div className="relative z-20 section-container py-28 md:py-36">
@@ -33,7 +33,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 rounded-full px-3 py-1.5 mb-5"
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-1.5 mb-5"
             >
               <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
               <span className="text-primary-foreground/90 text-xs font-medium whitespace-nowrap">
@@ -77,7 +77,7 @@ const Hero = () => {
                 href="https://cvr.inecnigeria.org/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/30 text-primary-foreground px-6 py-3 rounded-lg text-sm font-semibold hover:bg-primary-foreground/20 transition-all flex items-center gap-2 whitespace-nowrap"
+                className="group bg-white/10 backdrop-blur-md border border-white/20 text-primary-foreground px-6 py-3 rounded-lg text-sm font-semibold hover:bg-white/20 transition-all flex items-center gap-2 whitespace-nowrap"
               >
                 <FontAwesomeIcon icon={faCheckToSlot} className="w-3.5 h-3.5" />
                 Register to Vote
@@ -108,7 +108,7 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + i * 0.1 }}
-                className="bg-primary-foreground/8 backdrop-blur-sm border border-primary-foreground/15 rounded-xl p-4 hover:bg-primary-foreground/12 transition-all"
+                className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4 hover:bg-white/15 transition-all"
               >
                 <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center mb-2">
                   <FontAwesomeIcon icon={v.icon} className="w-3.5 h-3.5 text-primary" />

@@ -56,7 +56,7 @@ const WhyNow = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.4, delay: 0.1 + i * 0.1 }}
-              className="bg-secondary/50 border border-border rounded-xl p-6 text-center hover:shadow-md transition-shadow"
+              className="glass-card p-6 text-center hover:shadow-lg hover:-translate-y-1 transition-all"
             >
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
                 <FontAwesomeIcon icon={feature.icon} className="w-5 h-5 text-primary" />
