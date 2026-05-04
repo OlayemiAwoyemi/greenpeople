@@ -45,12 +45,13 @@ export const getVisitorHash = (): string => {
   return h;
 };
 
-// Rate-limit gate (1 click per minute per visitor).
+// Rate-limit gate (1 click per 10 seconds per visitor).
 const RATE_KEY = "gp_last_click_at";
+export const RATE_LIMIT_MS = 10 * 1000;
 export const checkRateLimit = (): boolean => {
   if (typeof window === "undefined") return true;
   const last = parseInt(localStorage.getItem(RATE_KEY) || "0", 10);
-  if (Date.now() - last < 60 * 1000) return false;
+  if (Date.now() - last < RATE_LIMIT_MS) return false;
   localStorage.setItem(RATE_KEY, String(Date.now()));
   return true;
 };
