@@ -356,20 +356,7 @@ const MemberPage = () => {
             <p className="text-[11px] text-primary mt-2 font-semibold">Top office reached. Keep mobilising.</p>
           )}
 
-          <div className="grid grid-cols-3 gap-2 mt-4 text-center">
-            <div className="bg-background/60 rounded-lg py-2 px-1">
-              <div className="text-sm font-bold text-foreground">{Math.round(ownPostPoints)}</div>
-              <div className="text-[9px] sm:text-[10px] text-muted-foreground">Actions</div>
-            </div>
-            <div className="bg-background/60 rounded-lg py-2 px-1">
-              <div className="text-sm font-bold text-foreground">{Math.round(hostBonus * HOST_MULTIPLIER)}</div>
-              <div className="text-[9px] sm:text-[10px] text-muted-foreground">Visitors</div>
-            </div>
-            <div className="bg-background/60 rounded-lg py-2 px-1">
-              <div className="text-sm font-bold text-foreground">{referralBonus}</div>
-              <div className="text-[9px] sm:text-[10px] text-muted-foreground">Referrals</div>
-            </div>
-          </div>
+
         </div>
 
         {/* Join CTA for visitors */}
