@@ -225,7 +225,13 @@ const HQContent = () => {
               <h3 className="font-semibold text-foreground mb-4 text-sm sm:text-base">Add Lesson (Byte-sized)</h3>
               <div className="grid gap-3">
                 <input value={cTitle} onChange={(e) => setCTitle(e.target.value)} placeholder="Lesson title" className={inputCls} />
-                <textarea value={cDesc} onChange={(e) => setCDesc(e.target.value)} rows={8} placeholder="Write the full byte-sized lesson here. The quiz generator will read this content. Aim for 100–600 words — clear, focused, easy to score." className={`${inputCls} resize-y min-h-[180px]`} />
+                <textarea value={cDesc} onChange={(e) => setCDesc(e.target.value)} rows={2} placeholder="Short summary (1–2 lines, shown on lesson card)" className={`${inputCls} resize-y min-h-[60px]`} />
+                <div>
+                  <label className="text-xs font-medium text-foreground mb-1.5 block">Lesson content (rich text)</label>
+                  <div className="rounded-xl overflow-hidden border border-border bg-background [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-border [&_.ql-toolbar]:bg-secondary/30 [&_.ql-container]:border-0 [&_.ql-container]:min-h-[220px] [&_.ql-editor]:text-sm [&_.ql-editor]:text-foreground">
+                    <ReactQuill theme="snow" value={cContent} onChange={setCContent} placeholder="Write the full lesson here. It will be split into digestible bits with a Continue button between each on members' pages." />
+                  </div>
+                </div>
                 <input value={cUrl} onChange={(e) => setCUrl(e.target.value)} placeholder="Optional reference URL (e.g. video link)" className={inputCls} />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <select value={cCat} onChange={(e) => setCCat(e.target.value as Category)} className={`${inputCls} capitalize`}>
