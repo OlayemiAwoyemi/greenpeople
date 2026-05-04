@@ -206,8 +206,12 @@ const MemberPage = () => {
       }
     } else {
       // Visitor on someone else's page — credits the host. Each unique visitor counts once per post.
+      // We use a random UUID for member_id to avoid violating the (member_id, post_id) unique constraint 
+      // if the host has already clicked this post. The (host_member_id, post_id, visitor_hash) 
+      // constraint still prevents the same visitor from clicking multiple times.
+      const visitorMemberId = crypto.randomUUID();
       const { error } = await supabase.from("social_clicks").insert({
-        member_id: member.id, post_id: p.id, points_awarded: points,
+        member_id: visitorMemberId, post_id: p.id, points_awarded: points,
         host_member_id: member.id, visitor_hash: visitorHash,
       });
       if (error) setClickedAt((s) => { const n = new Map(s); n.delete(p.id); return n; });
@@ -222,8 +226,9 @@ const MemberPage = () => {
     const isOwner = typeof window !== "undefined" && localStorage.getItem("gp_member_id") === member.id;
     setReadSet((s) => new Set(s).add(it.id));
     if (isOwner) setTrueReadSet((s) => new Set(s).add(it.id));
+    const visitorMemberId = isOwner ? member.id : crypto.randomUUID();
     const { error } = await supabase.from("curriculum_reads").insert({
-      member_id: member.id, item_id: it.id, points_awarded: LESSON_BASE_POINTS,
+      member_id: visitorMemberId, item_id: it.id, points_awarded: LESSON_BASE_POINTS,
       host_member_id: isOwner ? null : member.id,
       visitor_hash: isOwner ? null : visitorHash,
     });
