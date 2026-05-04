@@ -86,7 +86,7 @@ const MemberPage = () => {
         ? supabase.from("curriculum_reads").select("item_id").eq("member_id", m.id).is("host_member_id", null)
         : Promise.resolve({ data: null });
 
-      const [{ data: sp }, { data: ci }, { data: sc }, { data: cr }, { data: qa }, { data: hostClicks }, { data: pv }, { data: refs }, { data: htc }, { data: htr }] = await Promise.all([
+      const [{ data: sp }, { data: ci }, { data: sc }, { data: cr }, { data: qa }, { data: hostClicks }, { data: pv }, { data: refs }, { data: htc }, { data: htr }, { data: hostReads }] = await Promise.all([
         supabase.from("social_posts").select("*").eq("active", true).order("created_at", { ascending: false }),
         supabase.from("curriculum_items").select("*").eq("active", true).order("created_at", { ascending: false }),
         myClicksQuery,
@@ -97,6 +97,7 @@ const MemberPage = () => {
         supabase.from("member_referrals").select("points_awarded").eq("referrer_id", m.id),
         hostTrueClicksQuery,
         hostTrueReadsQuery,
+        supabase.from("curriculum_reads").select("points_awarded").eq("host_member_id", m.id),
       ]);
 
       setPosts((sp ?? []) as Post[]);
@@ -115,7 +116,8 @@ const MemberPage = () => {
 
       const visitorPts = (pv ?? []).reduce((s, x) => s + (x.points_awarded ?? 0), 0);
       const hostClickPts = (hostClicks ?? []).reduce((s, x) => s + (x.points_awarded ?? 0), 0);
-      setHostBonus(visitorPts + hostClickPts);
+      const hostReadPts = (hostReads ?? []).reduce((s, x) => s + (x.points_awarded ?? 0), 0);
+      setHostBonus(visitorPts + hostClickPts + hostReadPts);
       setReferralBonus((refs ?? []).reduce((s, x) => s + (x.points_awarded ?? 0), 0));
 
       // Load quizzes
