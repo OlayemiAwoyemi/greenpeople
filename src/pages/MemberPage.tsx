@@ -40,6 +40,8 @@ const MemberPage = () => {
   const [quizzesByItem, setQuizzesByItem] = useState<Record<string, Quiz[]>>({});
   const [clickedAt, setClickedAt] = useState<Map<string, string>>(new Map()); // postId -> ISO
   const [readSet, setReadSet] = useState<Set<string>>(new Set());
+  const [trueClickedAt, setTrueClickedAt] = useState<Map<string, string>>(new Map());
+  const [trueReadSet, setTrueReadSet] = useState<Set<string>>(new Set());
   const [quizDoneSet, setQuizDoneSet] = useState<Set<string>>(new Set()); // item_ids
   const [hostBonus, setHostBonus] = useState(0); // total page-visit + visitor-driven points credited
   const [referralBonus, setReferralBonus] = useState(0);
@@ -77,7 +79,14 @@ const MemberPage = () => {
         ? supabase.from("curriculum_reads").select("item_id").eq("member_id", m.id).is("host_member_id", null)
         : supabase.from("curriculum_reads").select("item_id").eq("host_member_id", m.id).eq("visitor_hash", visitorHash);
 
-      const [{ data: sp }, { data: ci }, { data: sc }, { data: cr }, { data: qa }, { data: hostClicks }, { data: pv }, { data: refs }] = await Promise.all([
+      const hostTrueClicksQuery = !isOwner
+        ? supabase.from("social_clicks").select("post_id, created_at").eq("member_id", m.id).is("host_member_id", null)
+        : Promise.resolve({ data: null });
+      const hostTrueReadsQuery = !isOwner
+        ? supabase.from("curriculum_reads").select("item_id").eq("member_id", m.id).is("host_member_id", null)
+        : Promise.resolve({ data: null });
+
+      const [{ data: sp }, { data: ci }, { data: sc }, { data: cr }, { data: qa }, { data: hostClicks }, { data: pv }, { data: refs }, { data: htc }, { data: htr }] = await Promise.all([
         supabase.from("social_posts").select("*").eq("active", true).order("created_at", { ascending: false }),
         supabase.from("curriculum_items").select("*").eq("active", true).order("created_at", { ascending: false }),
         myClicksQuery,
@@ -86,6 +95,8 @@ const MemberPage = () => {
         supabase.from("social_clicks").select("points_awarded").eq("host_member_id", m.id),
         supabase.from("page_visits").select("points_awarded").eq("host_member_id", m.id),
         supabase.from("member_referrals").select("points_awarded").eq("referrer_id", m.id),
+        hostTrueClicksQuery,
+        hostTrueReadsQuery,
       ]);
 
       setPosts((sp ?? []) as Post[]);
@@ -96,6 +107,11 @@ const MemberPage = () => {
       setClickedAt(cMap);
       setReadSet(new Set((cr ?? []).map((r) => r.item_id)));
       setQuizDoneSet(new Set((qa ?? []).map((q) => q.item_id)));
+
+      const tCMap = new Map<string, string>();
+      (isOwner ? (sc ?? []) : (htc ?? [])).forEach((c) => tCMap.set(c.post_id, c.created_at));
+      setTrueClickedAt(tCMap);
+      setTrueReadSet(new Set((isOwner ? (cr ?? []) : (htr ?? [])).map((r) => r.item_id)));
 
       const visitorPts = (pv ?? []).reduce((s, x) => s + (x.points_awarded ?? 0), 0);
       const hostClickPts = (hostClicks ?? []).reduce((s, x) => s + (x.points_awarded ?? 0), 0);
@@ -146,13 +162,13 @@ const MemberPage = () => {
   const ownPostPoints = useMemo(() => {
     let total = 0;
     posts.forEach((p) => {
-      const at = clickedAt.get(p.id);
+      const at = trueClickedAt.get(p.id);
       if (at) total += socialActionPoints(p.points, p.created_at, at);
     });
     return total;
-  }, [posts, clickedAt]);
+  }, [posts, trueClickedAt]);
 
-  const ownLessonPoints = readSet.size * LESSON_BASE_POINTS;
+  const ownLessonPoints = trueReadSet.size * LESSON_BASE_POINTS;
   const ownQuizPoints = useMemo(() => quizDoneSet.size * QUIZ_POINTS_PER_CORRECT * 5, [quizDoneSet]);
 
   const totalPoints = Math.round(ownPostPoints + ownLessonPoints + ownQuizPoints + hostBonus * HOST_MULTIPLIER + referralBonus);
@@ -181,7 +197,11 @@ const MemberPage = () => {
       const { error } = await supabase.from("social_clicks").insert({
         member_id: member.id, post_id: p.id, points_awarded: points, visitor_hash: visitorHash,
       });
-      if (error) setClickedAt((s) => { const n = new Map(s); n.delete(p.id); return n; });
+      if (error) {
+        setClickedAt((s) => { const n = new Map(s); n.delete(p.id); return n; });
+      } else {
+        setTrueClickedAt((s) => new Map(s).set(p.id, new Date().toISOString()));
+      }
     } else {
       // Visitor on someone else's page — credits the host. Each unique visitor counts once per post.
       const { error } = await supabase.from("social_clicks").insert({
@@ -199,13 +219,18 @@ const MemberPage = () => {
     const visitorHash = getVisitorHash();
     const isOwner = typeof window !== "undefined" && localStorage.getItem("gp_member_id") === member.id;
     setReadSet((s) => new Set(s).add(it.id));
+    if (isOwner) setTrueReadSet((s) => new Set(s).add(it.id));
     const { error } = await supabase.from("curriculum_reads").insert({
       member_id: member.id, item_id: it.id, points_awarded: LESSON_BASE_POINTS,
       host_member_id: isOwner ? null : member.id,
       visitor_hash: isOwner ? null : visitorHash,
     });
-    if (error) setReadSet((s) => { const n = new Set(s); n.delete(it.id); return n; });
-    else if (!isOwner) setHostBonus((b) => b + LESSON_BASE_POINTS);
+    if (error) {
+      setReadSet((s) => { const n = new Set(s); n.delete(it.id); return n; });
+      if (isOwner) setTrueReadSet((s) => { const n = new Set(s); n.delete(it.id); return n; });
+    } else if (!isOwner) {
+      setHostBonus((b) => b + LESSON_BASE_POINTS);
+    }
   };
 
   const submitQuiz = async (it: Item) => {
