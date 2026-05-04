@@ -25,7 +25,7 @@ const platformMeta: Record<Platform, { label: string; icon: typeof faXTwitter; c
 };
 
 type Post = { id: string; platform: Platform; url: string; title: string | null; points: number; created_at: string };
-type Item = { id: string; title: string; description: string | null; url: string | null; category: Category };
+type Item = { id: string; title: string; description: string | null; content: string | null; url: string | null; category: Category };
 type Quiz = { id: string; item_id: string; question: string; options: string[]; correct_index: number; position: number };
 
 const MemberPage = () => {
