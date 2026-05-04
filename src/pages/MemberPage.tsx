@@ -45,6 +45,8 @@ const MemberPage = () => {
   const [referralBonus, setReferralBonus] = useState(0);
   const [activeQuiz, setActiveQuiz] = useState<string | null>(null); // item id
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({}); // quiz id -> chosen
+  const [openLesson, setOpenLesson] = useState<Item | null>(null);
+  const [lessonStep, setLessonStep] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const isOwnPage = useMemo(() => {
