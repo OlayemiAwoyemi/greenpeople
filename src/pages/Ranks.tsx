@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { initialsAfterFirst } from "@/lib/textNormalize";
 import { tierFor, TIERS, POINTS_LABEL } from "@/lib/greenSeeds";
-import { socialActionPoints, HOST_MULTIPLIER } from "@/lib/scoring";
+import { socialActionPoints, HOST_MULTIPLIER, LESSON_BASE_POINTS, QUIZ_POINTS_PER_CORRECT } from "@/lib/scoring";
 import Navbar from "@/components/Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLandmark, faTrophy, faMedal } from "@fortawesome/free-solid-svg-icons";
@@ -18,37 +18,72 @@ const Ranks = () => {
     const load = async () => {
       const [{ data: members }, { data: posts }, { data: clicks }, { data: reads }, { data: pv }, { data: hostClicks }, { data: refs }, { data: quiz }] = await Promise.all([
         supabase.from("members").select("id, full_name, phone, state"),
-        supabase.from("social_posts").select("id, points, created_at"),
-        supabase.from("social_clicks").select("member_id, post_id, points_awarded, created_at, host_member_id"),
-        supabase.from("curriculum_reads").select("member_id, points_awarded"),
+        supabase.from("social_posts").select("id, points, created_at").eq("active", true),
+        supabase.from("social_clicks").select("member_id, post_id, created_at").is("host_member_id", null),
+        supabase.from("curriculum_reads").select("member_id, item_id").is("host_member_id", null),
         supabase.from("page_visits").select("host_member_id, points_awarded"),
-        supabase.from("social_clicks").select("host_member_id, points_awarded"),
+        supabase.from("social_clicks").select("host_member_id, points_awarded").not("host_member_id", "is", null),
         supabase.from("member_referrals").select("referrer_id, points_awarded"),
-        supabase.from("quiz_attempts").select("member_id, points_awarded"),
+        supabase.from("quiz_attempts").select("member_id, item_id"),
       ]);
 
       const postMap = new Map((posts ?? []).map((p) => [p.id, p]));
-      const totals = new Map<string, number>();
-      const add = (id: string, n: number) => totals.set(id, (totals.get(id) ?? 0) + n);
+      
+      const readsMap = new Map<string, Set<string>>();
+      const quizMap = new Map<string, Set<string>>();
+      const ownPostPoints = new Map<string, number>();
+      const hostBonusMap = new Map<string, number>();
+      const referralBonusMap = new Map<string, number>();
 
-      // Self-action points (with promptness recomputed retroactively)
       (clicks ?? []).forEach((c) => {
-        if (c.host_member_id) return; // host-credited handled below
         const post = postMap.get(c.post_id);
-        if (post) add(c.member_id, socialActionPoints(post.points, post.created_at, c.created_at));
-        else add(c.member_id, c.points_awarded ?? 0);
+        if (post) {
+          const pts = socialActionPoints(post.points, post.created_at, c.created_at);
+          ownPostPoints.set(c.member_id, (ownPostPoints.get(c.member_id) ?? 0) + pts);
+        }
       });
-      (reads ?? []).forEach((r) => add(r.member_id, r.points_awarded ?? 0));
-      (quiz ?? []).forEach((q) => add(q.member_id, q.points_awarded ?? 0));
 
-      // Host bonus (visitor-driven)
-      (pv ?? []).forEach((v) => add(v.host_member_id, Math.round((v.points_awarded ?? 0) * HOST_MULTIPLIER)));
-      (hostClicks ?? []).forEach((c) => { if (c.host_member_id) add(c.host_member_id, Math.round((c.points_awarded ?? 0) * HOST_MULTIPLIER)); });
-      (refs ?? []).forEach((r) => add(r.referrer_id, r.points_awarded ?? 0));
+      (reads ?? []).forEach((r) => {
+        if (!readsMap.has(r.member_id)) readsMap.set(r.member_id, new Set());
+        readsMap.get(r.member_id)!.add(r.item_id);
+      });
+
+      (quiz ?? []).forEach((q) => {
+        if (!quizMap.has(q.member_id)) quizMap.set(q.member_id, new Set());
+        quizMap.get(q.member_id)!.add(q.item_id);
+      });
+
+      (pv ?? []).forEach((v) => {
+        if (v.host_member_id) {
+          hostBonusMap.set(v.host_member_id, (hostBonusMap.get(v.host_member_id) ?? 0) + (v.points_awarded ?? 0));
+        }
+      });
+
+      (hostClicks ?? []).forEach((c) => {
+        if (c.host_member_id) {
+          hostBonusMap.set(c.host_member_id, (hostBonusMap.get(c.host_member_id) ?? 0) + (c.points_awarded ?? 0));
+        }
+      });
+
+      (refs ?? []).forEach((r) => {
+        if (r.referrer_id) {
+          referralBonusMap.set(r.referrer_id, (referralBonusMap.get(r.referrer_id) ?? 0) + (r.points_awarded ?? 0));
+        }
+      });
 
       const ranked = (members ?? [])
-        .map((m) => ({ ...m, points: Math.round(totals.get(m.id) ?? 0) }))
+        .map((m) => {
+          const postPts = ownPostPoints.get(m.id) ?? 0;
+          const lessonPts = (readsMap.get(m.id)?.size ?? 0) * LESSON_BASE_POINTS;
+          const quizPts = (quizMap.get(m.id)?.size ?? 0) * QUIZ_POINTS_PER_CORRECT * 5;
+          const hostBonus = hostBonusMap.get(m.id) ?? 0;
+          const refBonus = referralBonusMap.get(m.id) ?? 0;
+
+          const total = Math.round(postPts + lessonPts + quizPts + hostBonus * HOST_MULTIPLIER + refBonus);
+          return { ...m, points: total };
+        })
         .sort((a, b) => b.points - a.points);
+
       setRows(ranked);
       setLoading(false);
     };
