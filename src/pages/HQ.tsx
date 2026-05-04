@@ -7,6 +7,8 @@ import { faPlus, faTrash, faChalkboard, faMoneyBillTrendUp, faShareNodes, faWand
 import AccessGate from "@/components/AccessGate";
 import Navbar from "@/components/Navbar";
 import { POINTS_LABEL_SHORT } from "@/lib/greenSeeds";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 
 type Platform = "x" | "instagram" | "facebook" | "youtube";
 type Category = "leadership" | "politics" | "governance" | "life" | "civic_education";
