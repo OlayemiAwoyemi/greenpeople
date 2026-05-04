@@ -252,35 +252,23 @@ const MemberPage = () => {
     setActiveQuiz(null);
   };
 
-  // Split rich-text/html content into digestible bits.
+  // Split rich-text/html content into digestible bits paragraph by paragraph
   const lessonBits = useMemo(() => {
     if (!openLesson) return [] as string[];
     const raw = (openLesson.content && openLesson.content.trim()) || openLesson.description || "";
     if (!raw) return [];
+    
     const looksHtml = /<\/?(p|h[1-6]|ul|ol|li|blockquote|div|br)/i.test(raw);
     if (looksHtml) {
       const chunks = raw
         .split(/(?=<(?:p|h[1-6]|ul|ol|blockquote)[\s>])/i)
         .map((s) => s.trim())
         .filter(Boolean);
-      const out: string[] = [];
-      let buf = "";
-      for (const c of chunks) {
-        if ((buf + c).length < 380) buf += c;
-        else { if (buf) out.push(buf); buf = c; }
-      }
-      if (buf) out.push(buf);
-      return out.length ? out : [raw];
+      return chunks.length ? chunks : [raw];
     }
+    
     const paras = raw.split(/\n{2,}/).map((s) => s.trim()).filter(Boolean);
-    const out: string[] = [];
-    let buf = "";
-    for (const p of paras) {
-      if ((buf + "\n\n" + p).length < 380) buf = buf ? buf + "\n\n" + p : p;
-      else { if (buf) out.push(buf); buf = p; }
-    }
-    if (buf) out.push(buf);
-    return out.length ? out : [raw];
+    return paras.length ? paras : [raw];
   }, [openLesson]);
 
   const startLesson = (it: Item) => {
@@ -504,8 +492,8 @@ const MemberPage = () => {
 
       {/* Lesson reader modal */}
       {openLesson && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4" role="dialog" aria-modal="true">
-          <div className="bg-background w-full sm:max-w-2xl sm:rounded-2xl rounded-t-2xl max-h-[90vh] flex flex-col border border-border shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+          <div className="bg-background w-full max-w-2xl rounded-2xl max-h-[90vh] flex flex-col border border-border shadow-2xl">
             <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-border">
               <div className="flex-1 min-w-0">
                 <div className="text-[10px] uppercase tracking-widest font-bold text-primary mb-1">{openLesson.category.replace("_", " ")}</div>
