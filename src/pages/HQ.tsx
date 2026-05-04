@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXTwitter, faInstagram, faFacebook, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { faPlus, faTrash, faChalkboard, faMoneyBillTrendUp, faShareNodes, faWandMagicSparkles, faCircleNotch } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTrash, faChalkboard, faMoneyBillTrendUp, faShareNodes, faWandMagicSparkles, faCircleNotch, faPencil, faXmark } from "@fortawesome/free-solid-svg-icons";
 import AccessGate from "@/components/AccessGate";
 import Navbar from "@/components/Navbar";
 import { POINTS_LABEL_SHORT } from "@/lib/greenSeeds";
@@ -39,6 +39,7 @@ const HQContent = () => {
   const [autoGen, setAutoGen] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [items, setItems] = useState<{ id: string; title: string; description: string | null; content: string | null; url: string | null; category: Category; active: boolean }[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [quizCounts, setQuizCounts] = useState<Record<string, number>>({});
 
   const [fKind, setFKind] = useState<"income" | "expenditure">("income");
@@ -100,30 +101,57 @@ const HQContent = () => {
     }
   };
 
-  const addCurriculum = async () => {
+  const saveCurriculum = async () => {
     if (!cTitle.trim()) return toast({ title: "Title required", variant: "destructive" });
     const plain = stripHtml(cContent);
-    if (plain.length < 60 && autoGen) {
+    if (plain.length < 60 && autoGen && !editingId) {
       return toast({ title: "Add longer lesson content", description: "Lessons need ≥ 60 characters for the quiz generator to work well.", variant: "destructive" });
     }
-    const { data, error } = await supabase.from("curriculum_items").insert({
+
+    const payload = {
       title: cTitle.trim(),
       description: cDesc.trim() || null,
       content: cContent.trim() || null,
       url: cUrl.trim() || null,
       category: cCat,
       active: true,
-    }).select("id").maybeSingle();
-    if (error || !data) return toast({ title: "Failed", description: error?.message ?? "", variant: "destructive" });
+    };
 
-    if (autoGen) {
+    let resultId = editingId;
+    if (editingId) {
+      const { error } = await supabase.from("curriculum_items").update(payload).eq("id", editingId);
+      if (error) return toast({ title: "Failed to update", description: error.message, variant: "destructive" });
+      toast({ title: "Lesson updated" });
+    } else {
+      const { data, error } = await supabase.from("curriculum_items").insert(payload).select("id").maybeSingle();
+      if (error || !data) return toast({ title: "Failed to save", description: error?.message ?? "", variant: "destructive" });
+      resultId = data.id;
+      toast({ title: "Lesson added to Green Classroom" });
+    }
+
+    if (autoGen && resultId) {
       setGenerating(true);
-      try { await generateQuizForItem(data.id, cTitle.trim(), plain || null, cUrl.trim() || null); }
+      try { await generateQuizForItem(resultId, cTitle.trim(), plain || null, cUrl.trim() || null); }
       finally { setGenerating(false); }
     }
-    toast({ title: "Lesson added to Green Classroom" });
-    setCTitle(""); setCDesc(""); setCContent(""); setCUrl("");
+
+    setCTitle(""); setCDesc(""); setCContent(""); setCUrl(""); setCCat("leadership"); setEditingId(null);
     refresh();
+  };
+
+  const editItem = (i: (typeof items)[0]) => {
+    setCTitle(i.title);
+    setCDesc(i.description || "");
+    setCContent(i.content || "");
+    setCUrl(i.url || "");
+    setCCat(i.category);
+    setEditingId(i.id);
+    setTab("classroom");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const cancelEdit = () => {
+    setCTitle(""); setCDesc(""); setCContent(""); setCUrl(""); setCCat("leadership"); setEditingId(null);
   };
 
   const regenerate = async (id: string, title: string, description: string | null, url: string | null) => {
@@ -222,7 +250,14 @@ const HQContent = () => {
         {tab === "classroom" && (
           <div className="space-y-6">
             <div className="bg-secondary/50 border border-border rounded-2xl p-4 sm:p-6">
-              <h3 className="font-semibold text-foreground mb-4 text-sm sm:text-base">Add Lesson (Byte-sized)</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-foreground text-sm sm:text-base">{editingId ? "Edit Lesson" : "Add Lesson (Byte-sized)"}</h3>
+                {editingId && (
+                  <button onClick={cancelEdit} className="text-xs font-semibold text-muted-foreground hover:text-foreground flex items-center gap-1.5">
+                    <FontAwesomeIcon icon={faXmark} className="w-3 h-3" /> Cancel Edit
+                  </button>
+                )}
+              </div>
               <div className="grid gap-3">
                 <input value={cTitle} onChange={(e) => setCTitle(e.target.value)} placeholder="Lesson title" className={inputCls} />
                 <textarea value={cDesc} onChange={(e) => setCDesc(e.target.value)} rows={2} placeholder="Short summary (1–2 lines, shown on lesson card)" className={`${inputCls} resize-y min-h-[60px]`} />
@@ -240,12 +275,12 @@ const HQContent = () => {
                   <label className="flex items-center gap-2 text-xs text-foreground bg-background border border-border rounded-xl px-3 py-2.5 cursor-pointer">
                     <input type="checkbox" checked={autoGen} onChange={(e) => setAutoGen(e.target.checked)} />
                     <FontAwesomeIcon icon={faWandMagicSparkles} className="w-3.5 h-3.5 text-primary" />
-                    <span className="truncate">Auto-generate 5 quiz questions</span>
+                    <span className="truncate">{editingId ? "Update & Regenerate Quiz" : "Auto-generate 5 quiz questions"}</span>
                   </label>
                 </div>
-                <button onClick={addCurriculum} disabled={generating} className="bg-primary text-primary-foreground rounded-xl px-4 py-2.5 text-sm font-semibold whitespace-nowrap inline-flex items-center justify-center gap-2 disabled:opacity-50">
-                  {generating ? <FontAwesomeIcon icon={faCircleNotch} className="w-3.5 h-3.5 animate-spin" /> : <FontAwesomeIcon icon={faPlus} className="w-3.5 h-3.5" />}
-                  {generating ? "Generating quiz…" : "Save Lesson"}
+                <button onClick={saveCurriculum} disabled={generating} className="bg-primary text-primary-foreground rounded-xl px-4 py-2.5 text-sm font-semibold whitespace-nowrap inline-flex items-center justify-center gap-2 disabled:opacity-50">
+                  {generating ? <FontAwesomeIcon icon={faCircleNotch} className="w-3.5 h-3.5 animate-spin" /> : <FontAwesomeIcon icon={editingId ? faPencil : faPlus} className="w-3.5 h-3.5" />}
+                  {generating ? "Generating quiz…" : editingId ? "Update Lesson" : "Save Lesson"}
                 </button>
               </div>
             </div>
@@ -263,6 +298,9 @@ const HQContent = () => {
                       <div className="text-[10px] text-muted-foreground mt-1">Quiz: {quizCounts[i.id] ?? 0}/5 questions</div>
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0">
+                      <button onClick={() => editItem(i)} className="text-foreground/60 p-1.5 hover:bg-secondary rounded-md" title="Edit lesson">
+                        <FontAwesomeIcon icon={faPencil} className="w-3 h-3" />
+                      </button>
                       <button onClick={() => regenerate(i.id, i.title, stripHtml(i.content || "") || i.description, i.url)} className="text-primary p-1.5 hover:bg-primary/10 rounded-md" title="Regenerate quiz">
                         <FontAwesomeIcon icon={faWandMagicSparkles} className="w-3 h-3" />
                       </button>
