@@ -263,7 +263,7 @@ const HQContent = () => {
                       <div className="text-[10px] text-muted-foreground mt-1">Quiz: {quizCounts[i.id] ?? 0}/5 questions</div>
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0">
-                      <button onClick={() => regenerate(i.id, i.title, i.description, i.url)} className="text-primary p-1.5 hover:bg-primary/10 rounded-md" title="Regenerate quiz">
+                      <button onClick={() => regenerate(i.id, i.title, stripHtml(i.content || "") || i.description, i.url)} className="text-primary p-1.5 hover:bg-primary/10 rounded-md" title="Regenerate quiz">
                         <FontAwesomeIcon icon={faWandMagicSparkles} className="w-3 h-3" />
                       </button>
                       <button onClick={() => deleteItem(i.id)} className="text-destructive p-1.5 hover:bg-destructive/10 rounded-md">
