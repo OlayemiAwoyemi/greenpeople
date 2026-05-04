@@ -227,6 +227,43 @@ const MemberPage = () => {
     setActiveQuiz(null);
   };
 
+  // Split rich-text/html content into digestible bits.
+  const lessonBits = useMemo(() => {
+    if (!openLesson) return [] as string[];
+    const raw = (openLesson.content && openLesson.content.trim()) || openLesson.description || "";
+    if (!raw) return [];
+    const looksHtml = /<\/?(p|h[1-6]|ul|ol|li|blockquote|div|br)/i.test(raw);
+    if (looksHtml) {
+      const chunks = raw
+        .split(/(?=<(?:p|h[1-6]|ul|ol|blockquote)[\s>])/i)
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const out: string[] = [];
+      let buf = "";
+      for (const c of chunks) {
+        if ((buf + c).length < 380) buf += c;
+        else { if (buf) out.push(buf); buf = c; }
+      }
+      if (buf) out.push(buf);
+      return out.length ? out : [raw];
+    }
+    const paras = raw.split(/\n{2,}/).map((s) => s.trim()).filter(Boolean);
+    const out: string[] = [];
+    let buf = "";
+    for (const p of paras) {
+      if ((buf + "\n\n" + p).length < 380) buf = buf ? buf + "\n\n" + p : p;
+      else { if (buf) out.push(buf); buf = p; }
+    }
+    if (buf) out.push(buf);
+    return out.length ? out : [raw];
+  }, [openLesson]);
+
+  const startLesson = (it: Item) => {
+    setOpenLesson(it);
+    setLessonStep(0);
+    handleRead(it);
+  };
+
   const sharePage = async () => {
     if (!member) return;
     const url = `${window.location.origin}/${member.phone.replace(/\D/g, "")}?ref=${member.id}`;
