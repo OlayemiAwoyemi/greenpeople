@@ -33,11 +33,12 @@ const HQContent = () => {
 
   const [cTitle, setCTitle] = useState("");
   const [cDesc, setCDesc] = useState("");
+  const [cContent, setCContent] = useState("");
   const [cUrl, setCUrl] = useState("");
   const [cCat, setCCat] = useState<Category>("leadership");
   const [autoGen, setAutoGen] = useState(true);
   const [generating, setGenerating] = useState(false);
-  const [items, setItems] = useState<{ id: string; title: string; description: string | null; url: string | null; category: Category; active: boolean }[]>([]);
+  const [items, setItems] = useState<{ id: string; title: string; description: string | null; content: string | null; url: string | null; category: Category; active: boolean }[]>([]);
   const [quizCounts, setQuizCounts] = useState<Record<string, number>>({});
 
   const [fKind, setFKind] = useState<"income" | "expenditure">("income");
