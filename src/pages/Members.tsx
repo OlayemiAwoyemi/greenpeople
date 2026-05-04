@@ -156,6 +156,7 @@ const MembersContent = () => {
                       value={m.has_pvc}
                       disabled={updatingId === m.id}
                       onChange={(e) => updatePvc(m.id, e.target.value)}
+                      style={{ backgroundImage: "none", paddingRight: "1.75rem" }}
                       className={`appearance-none cursor-pointer text-xs font-medium pl-7 pr-7 py-1.5 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50 ${
                         m.has_pvc === "Yes" ? "bg-primary/10 text-primary" : m.has_pvc === "In Progress" ? "bg-yellow-100 text-yellow-700" : "bg-destructive/10 text-destructive"
                       }`}
