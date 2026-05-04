@@ -110,6 +110,7 @@ export type Database = {
         Row: {
           active: boolean
           category: Database["public"]["Enums"]["curriculum_category"]
+          content: string | null
           created_at: string
           description: string | null
           id: string
@@ -119,6 +120,7 @@ export type Database = {
         Insert: {
           active?: boolean
           category?: Database["public"]["Enums"]["curriculum_category"]
+          content?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -128,6 +130,7 @@ export type Database = {
         Update: {
           active?: boolean
           category?: Database["public"]["Enums"]["curriculum_category"]
+          content?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -139,24 +142,30 @@ export type Database = {
       curriculum_reads: {
         Row: {
           created_at: string
+          host_member_id: string | null
           id: string
           item_id: string
           member_id: string
           points_awarded: number
+          visitor_hash: string | null
         }
         Insert: {
           created_at?: string
+          host_member_id?: string | null
           id?: string
           item_id: string
           member_id: string
           points_awarded?: number
+          visitor_hash?: string | null
         }
         Update: {
           created_at?: string
+          host_member_id?: string | null
           id?: string
           item_id?: string
           member_id?: string
           points_awarded?: number
+          visitor_hash?: string | null
         }
         Relationships: [
           {

@@ -173,7 +173,17 @@ const JoinForm = () => {
 
     setLoading(false);
     if (error) {
-      toast({ title: "Something went wrong", description: error.message, variant: "destructive" });
+      const isDup = (error.code === "23505") || /duplicate|members_phone_unique|unique constraint/i.test(error.message);
+      if (isDup) {
+        toast({
+          title: "You're already registered",
+          description: "This phone number is already on the Green People register. Visit your member page instead.",
+          variant: "destructive",
+        });
+        setErrors({ phone: "This phone number is already registered." });
+      } else {
+        toast({ title: "Something went wrong", description: error.message, variant: "destructive" });
+      }
       return;
     }
     // Persist owner-id so MemberPage knows this browser belongs to this member.

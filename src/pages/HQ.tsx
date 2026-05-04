@@ -7,6 +7,8 @@ import { faPlus, faTrash, faChalkboard, faMoneyBillTrendUp, faShareNodes, faWand
 import AccessGate from "@/components/AccessGate";
 import Navbar from "@/components/Navbar";
 import { POINTS_LABEL_SHORT } from "@/lib/greenSeeds";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 
 type Platform = "x" | "instagram" | "facebook" | "youtube";
 type Category = "leadership" | "politics" | "governance" | "life" | "civic_education";
@@ -31,11 +33,12 @@ const HQContent = () => {
 
   const [cTitle, setCTitle] = useState("");
   const [cDesc, setCDesc] = useState("");
+  const [cContent, setCContent] = useState("");
   const [cUrl, setCUrl] = useState("");
   const [cCat, setCCat] = useState<Category>("leadership");
   const [autoGen, setAutoGen] = useState(true);
   const [generating, setGenerating] = useState(false);
-  const [items, setItems] = useState<{ id: string; title: string; description: string | null; url: string | null; category: Category; active: boolean }[]>([]);
+  const [items, setItems] = useState<{ id: string; title: string; description: string | null; content: string | null; url: string | null; category: Category; active: boolean }[]>([]);
   const [quizCounts, setQuizCounts] = useState<Record<string, number>>({});
 
   const [fKind, setFKind] = useState<"income" | "expenditure">("income");
@@ -77,9 +80,11 @@ const HQContent = () => {
   const togglePost = async (id: string, active: boolean) => { await supabase.from("social_posts").update({ active: !active }).eq("id", id); refresh(); };
   const deletePost = async (id: string) => { await supabase.from("social_posts").delete().eq("id", id); refresh(); };
 
-  const generateQuizForItem = async (itemId: string, title: string, description: string | null, url: string | null) => {
+  const stripHtml = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+
+  const generateQuizForItem = async (itemId: string, title: string, contentForAI: string | null, url: string | null) => {
     const { data, error } = await supabase.functions.invoke("generate-quiz", {
-      body: { title, description, url },
+      body: { title, description: contentForAI, url },
     });
     if (error || !data?.questions) {
       toast({ title: "Quiz generation failed", description: error?.message ?? "Try again", variant: "destructive" });
@@ -89,7 +94,6 @@ const HQContent = () => {
       item_id: itemId, question: q.question, options: q.options, correct_index: q.correct_index, position: idx,
     }));
     if (rows.length > 0) {
-      // Replace existing quiz
       await supabase.from("lesson_quizzes").delete().eq("item_id", itemId);
       const { error: insErr } = await supabase.from("lesson_quizzes").insert(rows);
       if (insErr) toast({ title: "Saved lesson, quiz failed", description: insErr.message, variant: "destructive" });
@@ -98,12 +102,14 @@ const HQContent = () => {
 
   const addCurriculum = async () => {
     if (!cTitle.trim()) return toast({ title: "Title required", variant: "destructive" });
-    if (cDesc.trim().length < 60 && autoGen) {
-      return toast({ title: "Add a longer description", description: "Lessons need ≥ 60 characters for the quiz generator to work well.", variant: "destructive" });
+    const plain = stripHtml(cContent);
+    if (plain.length < 60 && autoGen) {
+      return toast({ title: "Add longer lesson content", description: "Lessons need ≥ 60 characters for the quiz generator to work well.", variant: "destructive" });
     }
     const { data, error } = await supabase.from("curriculum_items").insert({
       title: cTitle.trim(),
       description: cDesc.trim() || null,
+      content: cContent.trim() || null,
       url: cUrl.trim() || null,
       category: cCat,
       active: true,
@@ -112,11 +118,11 @@ const HQContent = () => {
 
     if (autoGen) {
       setGenerating(true);
-      try { await generateQuizForItem(data.id, cTitle.trim(), cDesc.trim() || null, cUrl.trim() || null); }
+      try { await generateQuizForItem(data.id, cTitle.trim(), plain || null, cUrl.trim() || null); }
       finally { setGenerating(false); }
     }
     toast({ title: "Lesson added to Green Classroom" });
-    setCTitle(""); setCDesc(""); setCUrl("");
+    setCTitle(""); setCDesc(""); setCContent(""); setCUrl("");
     refresh();
   };
 
@@ -219,7 +225,13 @@ const HQContent = () => {
               <h3 className="font-semibold text-foreground mb-4 text-sm sm:text-base">Add Lesson (Byte-sized)</h3>
               <div className="grid gap-3">
                 <input value={cTitle} onChange={(e) => setCTitle(e.target.value)} placeholder="Lesson title" className={inputCls} />
-                <textarea value={cDesc} onChange={(e) => setCDesc(e.target.value)} rows={8} placeholder="Write the full byte-sized lesson here. The quiz generator will read this content. Aim for 100–600 words — clear, focused, easy to score." className={`${inputCls} resize-y min-h-[180px]`} />
+                <textarea value={cDesc} onChange={(e) => setCDesc(e.target.value)} rows={2} placeholder="Short summary (1–2 lines, shown on lesson card)" className={`${inputCls} resize-y min-h-[60px]`} />
+                <div>
+                  <label className="text-xs font-medium text-foreground mb-1.5 block">Lesson content (rich text)</label>
+                  <div className="rounded-xl overflow-hidden border border-border bg-background [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-border [&_.ql-toolbar]:bg-secondary/30 [&_.ql-container]:border-0 [&_.ql-container]:min-h-[220px] [&_.ql-editor]:text-sm [&_.ql-editor]:text-foreground">
+                    <ReactQuill theme="snow" value={cContent} onChange={setCContent} placeholder="Write the full lesson here. It will be split into digestible bits with a Continue button between each on members' pages." />
+                  </div>
+                </div>
                 <input value={cUrl} onChange={(e) => setCUrl(e.target.value)} placeholder="Optional reference URL (e.g. video link)" className={inputCls} />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <select value={cCat} onChange={(e) => setCCat(e.target.value as Category)} className={`${inputCls} capitalize`}>
@@ -251,7 +263,7 @@ const HQContent = () => {
                       <div className="text-[10px] text-muted-foreground mt-1">Quiz: {quizCounts[i.id] ?? 0}/5 questions</div>
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0">
-                      <button onClick={() => regenerate(i.id, i.title, i.description, i.url)} className="text-primary p-1.5 hover:bg-primary/10 rounded-md" title="Regenerate quiz">
+                      <button onClick={() => regenerate(i.id, i.title, stripHtml(i.content || "") || i.description, i.url)} className="text-primary p-1.5 hover:bg-primary/10 rounded-md" title="Regenerate quiz">
                         <FontAwesomeIcon icon={faWandMagicSparkles} className="w-3 h-3" />
                       </button>
                       <button onClick={() => deleteItem(i.id)} className="text-destructive p-1.5 hover:bg-destructive/10 rounded-md">
