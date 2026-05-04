@@ -62,11 +62,24 @@ const MemberPage = () => {
       if (!m) { setLoading(false); return; }
       setMember(m);
 
+      const visitorHash = getVisitorHash();
+      const isOwner = typeof window !== "undefined" && localStorage.getItem("gp_member_id") === m.id;
+
+      // For "done" state we scope to the current viewer:
+      //  - Owner: their own clicks/reads on this member row
+      //  - Visitor: rows on this host scoped by their visitor_hash
+      const myClicksQuery = isOwner
+        ? supabase.from("social_clicks").select("post_id, created_at").eq("member_id", m.id).is("host_member_id", null)
+        : supabase.from("social_clicks").select("post_id, created_at").eq("host_member_id", m.id).eq("visitor_hash", visitorHash);
+      const myReadsQuery = isOwner
+        ? supabase.from("curriculum_reads").select("item_id").eq("member_id", m.id).is("host_member_id", null)
+        : supabase.from("curriculum_reads").select("item_id").eq("host_member_id", m.id).eq("visitor_hash", visitorHash);
+
       const [{ data: sp }, { data: ci }, { data: sc }, { data: cr }, { data: qa }, { data: hostClicks }, { data: pv }, { data: refs }] = await Promise.all([
         supabase.from("social_posts").select("*").eq("active", true).order("created_at", { ascending: false }),
         supabase.from("curriculum_items").select("*").eq("active", true).order("created_at", { ascending: false }),
-        supabase.from("social_clicks").select("post_id, created_at").eq("member_id", m.id),
-        supabase.from("curriculum_reads").select("item_id").eq("member_id", m.id),
+        myClicksQuery,
+        myReadsQuery,
         supabase.from("quiz_attempts").select("item_id, points_awarded").eq("member_id", m.id),
         supabase.from("social_clicks").select("points_awarded").eq("host_member_id", m.id),
         supabase.from("page_visits").select("points_awarded").eq("host_member_id", m.id),
@@ -100,8 +113,6 @@ const MemberPage = () => {
       }
 
       // Award page-visit credit if visitor != owner
-      const visitorHash = getVisitorHash();
-      const isOwner = typeof window !== "undefined" && localStorage.getItem("gp_member_id") === m.id;
       if (!isOwner) {
         await supabase.from("page_visits").insert({
           host_member_id: m.id,
