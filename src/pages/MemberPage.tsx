@@ -160,41 +160,50 @@ const MemberPage = () => {
 
   const handleSocialClick = useCallback(async (p: Post) => {
     if (!member) return;
+    if (clickedAt.has(p.id)) {
+      // Already done for this viewer — just open the link, no rate-limit, no insert.
+      window.open(p.url, "_blank", "noopener,noreferrer");
+      return;
+    }
     if (!checkRateLimit()) {
-      toast({ title: "Slow down 😊", description: "One click per minute keeps things fair.", variant: "destructive" });
+      toast({ title: "Slow down 😊", description: "One click every 10 seconds keeps things fair.", variant: "destructive" });
       return;
     }
     const visitorHash = getVisitorHash();
     const isOwner = typeof window !== "undefined" && localStorage.getItem("gp_member_id") === member.id;
     const points = socialActionPoints(p.points, p.created_at);
+    // Mark done immediately (optimistic) so the UI moves it to the bottom right away.
+    setClickedAt((s) => new Map(s).set(p.id, new Date().toISOString()));
+    window.open(p.url, "_blank", "noopener,noreferrer");
     if (isOwner) {
-      // own page: credit self
-      if (!clickedAt.has(p.id)) {
-        const { error } = await supabase.from("social_clicks").insert({
-          member_id: member.id, post_id: p.id, points_awarded: points, visitor_hash: visitorHash,
-        });
-        if (!error) setClickedAt((s) => new Map(s).set(p.id, new Date().toISOString()));
-      }
+      const { error } = await supabase.from("social_clicks").insert({
+        member_id: member.id, post_id: p.id, points_awarded: points, visitor_hash: visitorHash,
+      });
+      if (error) setClickedAt((s) => { const n = new Map(s); n.delete(p.id); return n; });
     } else {
-      // visitor on someone else's page → credit host (rate-limited by unique host+visitor+post via app logic; we use visitor_hash + post check)
-      // We'll insert with member_id = visitor placeholder won't work; use host as member to keep schema, but mark host_member_id explicitly.
-      await supabase.from("social_clicks").insert({
+      // Visitor on someone else's page — credits the host. Each unique visitor counts once per post.
+      const { error } = await supabase.from("social_clicks").insert({
         member_id: member.id, post_id: p.id, points_awarded: points,
         host_member_id: member.id, visitor_hash: visitorHash,
       });
+      if (error) setClickedAt((s) => { const n = new Map(s); n.delete(p.id); return n; });
+      else setHostBonus((b) => b + points);
     }
-    window.open(p.url, "_blank", "noopener,noreferrer");
   }, [member, clickedAt, toast]);
 
   const handleRead = async (it: Item) => {
     if (!member) return;
-    if (!readSet.has(it.id)) {
-      const { error } = await supabase.from("curriculum_reads").insert({
-        member_id: member.id, item_id: it.id, points_awarded: LESSON_BASE_POINTS,
-      });
-      if (!error) setReadSet((s) => new Set(s).add(it.id));
-    }
-    if (it.url) window.open(it.url, "_blank", "noopener,noreferrer");
+    if (readSet.has(it.id)) return;
+    const visitorHash = getVisitorHash();
+    const isOwner = typeof window !== "undefined" && localStorage.getItem("gp_member_id") === member.id;
+    setReadSet((s) => new Set(s).add(it.id));
+    const { error } = await supabase.from("curriculum_reads").insert({
+      member_id: member.id, item_id: it.id, points_awarded: LESSON_BASE_POINTS,
+      host_member_id: isOwner ? null : member.id,
+      visitor_hash: isOwner ? null : visitorHash,
+    });
+    if (error) setReadSet((s) => { const n = new Set(s); n.delete(it.id); return n; });
+    else if (!isOwner) setHostBonus((b) => b + LESSON_BASE_POINTS);
   };
 
   const submitQuiz = async (it: Item) => {
