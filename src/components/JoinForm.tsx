@@ -35,9 +35,13 @@ const validateNameWord = (word: string, label: string): string | null => {
   return null;
 };
 
-const validatePhone = (phone: string): string | null => {
+const validatePhone = (phone: string, isNigeriaBased: boolean): string | null => {
   const digits = phone.replace(/\D/g, "");
-  if (digits.length < 10 || digits.length > 14) return "Please enter a valid Nigerian phone number.";
+  if (isNigeriaBased) {
+    if (digits.length < 10 || digits.length > 14) return "Please enter a valid Nigerian phone number.";
+  } else {
+    if (digits.length < 7 || digits.length > 15) return "Please enter a valid phone number with country code.";
+  }
   if (/^(\d)\1{6,}$/.test(digits)) return "That doesn't look like a real phone number.";
   return null;
 };
@@ -69,6 +73,7 @@ const JoinForm = () => {
     gender: "",
     hasPvc: "",
     reason: "",
+    isNigeriaBased: true,
   });
 
   const lgaOptions = formData.state ? nigerianStatesAndLGAs[formData.state] || [] : [];
@@ -110,7 +115,7 @@ const JoinForm = () => {
       const mnErr = validateNameWord(formData.middleName, "Middle name");
       if (mnErr) newErrors.middleName = mnErr;
     }
-    const phoneErr = validatePhone(formData.phone);
+    const phoneErr = validatePhone(formData.phone, formData.isNigeriaBased);
     if (phoneErr) newErrors.phone = phoneErr;
     const reasonErr = validateReason(formData.reason);
     if (reasonErr) newErrors.reason = reasonErr;
@@ -148,6 +153,7 @@ const JoinForm = () => {
       gender: formData.gender,
       has_pvc: formData.hasPvc,
       reason: cleanReason || null,
+      is_nigeria_based: formData.isNigeriaBased,
     };
 
     // Insert into the main members table
@@ -313,6 +319,25 @@ const JoinForm = () => {
           onSubmit={handleSubmit}
           className="max-w-xl mx-auto bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/10 rounded-2xl p-6 md:p-8"
         >
+          {/* Residency Selection */}
+          <div className="mb-6">
+            <label className={labelClass}>Where do you live? *</label>
+            <div className="flex gap-3">
+              {[
+                { id: true, label: "Nigeria" },
+                { id: false, label: "Outside Nigeria" }
+              ].map((opt) => (
+                <button key={opt.label} type="button"
+                  onClick={() => { setFormData({ ...formData, isNigeriaBased: opt.id }); setErrors(prev => ({ ...prev, isNigeriaBased: "" })); }}
+                  className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
+                    formData.isNigeriaBased === opt.id
+                      ? "bg-primary text-primary-foreground border-primary shadow-md"
+                      : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                  }`}>{opt.label}</button>
+              ))}
+            </div>
+          </div>
+
           <div className="grid sm:grid-cols-3 gap-3 mb-4">
             <div>
               <label className={labelClass}>First Name *</label>
@@ -337,16 +362,16 @@ const JoinForm = () => {
             </div>
           </div>
           <div className="mb-4">
-            <label className={labelClass}>Phone/WhatsApp *</label>
-            <input required type="tel" maxLength={15} value={formData.phone}
+            <label className={labelClass}>{formData.isNigeriaBased ? "Phone/WhatsApp *" : "Phone (with country code) *"}</label>
+            <input required type="tel" maxLength={20} value={formData.phone}
               onChange={(e) => { setFormData({ ...formData, phone: e.target.value }); setErrors(prev => ({ ...prev, phone: "" })); }}
-              placeholder="080XXXXXXXX" className={`${inputClass} ${errors.phone ? inputErrorBorder : ""}`} />
+              placeholder={formData.isNigeriaBased ? "080XXXXXXXX" : "+1 234 XXX XXXX"} className={`${inputClass} ${errors.phone ? inputErrorBorder : ""}`} />
             {errors.phone && <p className={errorClass}>{errors.phone}</p>}
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className={labelClass}>State *</label>
+              <label className={labelClass}>{formData.isNigeriaBased ? "State *" : "State of Origin *"}</label>
               <select required value={formData.state}
                 onChange={(e) => { setFormData({ ...formData, state: e.target.value, lga: "" }); setErrors(prev => ({ ...prev, state: "" })); }}
                 className={`${selectClass} ${errors.state ? inputErrorBorder : ""}`}>
@@ -358,7 +383,7 @@ const JoinForm = () => {
               {errors.state && <p className={errorClass}>{errors.state}</p>}
             </div>
             <div>
-              <label className={labelClass}>Local Government *</label>
+              <label className={labelClass}>{formData.isNigeriaBased ? "Local Government *" : "LGA of Origin *"}</label>
               <select required value={formData.lga}
                 onChange={(e) => { setFormData({ ...formData, lga: e.target.value }); setErrors(prev => ({ ...prev, lga: "" })); }}
                 className={`${selectClass} ${errors.lga ? inputErrorBorder : ""}`} disabled={!formData.state}>
