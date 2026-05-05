@@ -336,7 +336,7 @@ const MemberPage = () => {
   };
 
   // DEBUG: If you see this, it means MemberPage is being triggered for a static route.
-  if (phone && ["test", "gp-test", "test-registration", "hq", "members", "ranks", "finance", "backup", "phonenumbers", "updates", "write", "chats"].includes(phone.toLowerCase())) {
+  if (phone && ["test", "hq", "members", "ranks", "finance", "backup", "phonenumbers", "updates", "write", "chats"].includes(phone.toLowerCase())) {
     return (
       <div className="min-h-screen bg-red-950 text-white p-10 flex flex-col items-center justify-center text-center">
         <h1 className="text-4xl font-black mb-4">ROUTING ERROR</h1>
