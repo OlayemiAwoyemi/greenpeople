@@ -30,7 +30,7 @@ const App = () => (
       <BrowserRouter>
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading…</div>}>
           <Routes>
-            <Route path="/gp-test" element={<TestPage />} />
+            <Route path="/test-registration" element={<TestPage />} />
             <Route path="/" element={<Index />} />
             <Route path="/updates" element={<Updates />} />
             <Route path="/updates/:slug" element={<UpdatePost />} />
