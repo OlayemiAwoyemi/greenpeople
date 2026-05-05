@@ -56,7 +56,7 @@ const validateReason = (reason: string): string | null => {
   return null;
 };
 
-const JoinForm = () => {
+const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
   const ref = useRef(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -138,6 +138,14 @@ const JoinForm = () => {
 
     setErrors({});
     setLoading(true);
+
+    if (isTest) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setMemberNumber(12345678);
+      setLoading(false);
+      setSubmitted(true);
+      return;
+    }
 
     const cleanReason = normalizeSentence(formData.reason || "");
     const first = normalizeName(formData.firstName);

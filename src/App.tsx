@@ -18,6 +18,7 @@ const Finance = lazy(() => import("./pages/Finance.tsx"));
 const MemberPage = lazy(() => import("./pages/MemberPage.tsx"));
 const Backup = lazy(() => import("./pages/Backup.tsx"));
 const PhoneNumbers = lazy(() => import("./pages/PhoneNumbers.tsx"));
+const TestPage = lazy(() => import("./pages/TestPage.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/chats" element={<Chats />} />
             <Route path="/members" element={<Members />} />
             <Route path="/hq" element={<HQ />} />
+            <Route path="/test" element={<TestPage />} />
             <Route path="/ranks" element={<Ranks />} />
             <Route path="/finance" element={<Finance />} />
             <Route path="/backup" element={<Backup />} />
