@@ -63,8 +63,10 @@ const MemberPage = () => {
       if (!phone) return;
       
       const digits = phone.replace(/\D/g, "");
-      // Prevent matching non-numeric paths (like /test, /ranks, etc.)
-      if (!digits) {
+      const staticRoutes = ["test", "hq", "members", "ranks", "finance", "backup", "phonenumbers", "updates", "write", "chats"];
+      
+      // Prevent matching non-numeric paths or known static routes
+      if (!digits || staticRoutes.includes(phone.toLowerCase())) {
         setLoading(false);
         return;
       }

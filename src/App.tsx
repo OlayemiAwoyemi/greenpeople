@@ -30,6 +30,7 @@ const App = () => (
       <BrowserRouter>
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading…</div>}>
           <Routes>
+            <Route path="/test" element={<TestPage />} />
             <Route path="/" element={<Index />} />
             <Route path="/updates" element={<Updates />} />
             <Route path="/updates/:slug" element={<UpdatePost />} />
@@ -37,7 +38,6 @@ const App = () => (
             <Route path="/chats" element={<Chats />} />
             <Route path="/members" element={<Members />} />
             <Route path="/hq" element={<HQ />} />
-            <Route path="/test" element={<TestPage />} />
             <Route path="/ranks" element={<Ranks />} />
             <Route path="/finance" element={<Finance />} />
             <Route path="/backup" element={<Backup />} />
