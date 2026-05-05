@@ -432,7 +432,7 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                           </div>
                         </div>
                         <div className="relative z-10">
-                          <div className="text-white font-bold text-sm md:text-lg leading-tight mb-0.5 truncate">
+                          <div className="text-white font-bold text-sm md:text-lg leading-snug mb-2 truncate">
                             {joinName({ first: formData.firstName, middle: formData.middleName, surname: formData.surname }) || "Green Member"}
                           </div>
                           <div className="flex items-center gap-2 text-white/60 text-[9px] md:text-[11px] font-medium">
@@ -441,7 +441,7 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                             <span className="text-primary uppercase tracking-widest font-bold text-[8px]">Verified Member</span>
                           </div>
                         </div>
-                        <div className="flex justify-between items-end relative z-10 pt-3 border-t border-white/5">
+                        <div className="flex justify-between items-end relative z-10 pt-5 border-t border-white/5">
                           <div className="text-[8px] text-white/30 font-mono">
                             GP - {String(memberNumber || 0).padStart(8, '0')}
                           </div>
