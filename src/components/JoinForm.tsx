@@ -431,8 +431,8 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                             <FontAwesomeIcon icon={faAward} className="text-primary w-4 h-4" />
                           </div>
                         </div>
-                        <div className="relative z-10">
-                          <div className="text-white font-bold text-sm md:text-lg leading-normal mb-3 pb-1">
+                        <div className="relative z-10 mt-4">
+                          <div className="text-white font-bold text-sm md:text-lg leading-normal mb-1.5 pb-0.5">
                             {joinName({ first: formData.firstName, middle: formData.middleName, surname: formData.surname }) || "Green Member"}
                           </div>
                           <div className="flex items-center gap-2 text-white/60 text-[9px] md:text-[11px] font-medium">
