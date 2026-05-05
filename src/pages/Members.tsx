@@ -41,6 +41,9 @@ type Member = {
   has_pvc: string;
   reason: string | null;
   created_at: string;
+  first_name?: string;
+  middle_name?: string;
+  surname?: string;
 };
 
 const MembersContent = () => {
@@ -90,6 +93,25 @@ const MembersContent = () => {
     toast({ title: `Exported ${data.length} log entries (full backup)` });
   };
 
+  const exportContacts = () => {
+    if (members.length === 0) {
+      toast({ title: "No members to export" });
+      return;
+    }
+    
+    // Map members to contact format
+    const contactRows = members.map(m => ({
+      "First Name": m.first_name || m.full_name.split(' ')[0] || "",
+      "Middle Name": m.middle_name || "",
+      "Last Name": m.surname || m.full_name.split(' ').slice(1).join(' ') || "",
+      "Organization": "Green People",
+      "Mobile Phone": m.phone
+    }));
+
+    downloadCsv(contactRows as unknown as Record<string, unknown>[], `green-people-contacts-${new Date().toISOString().slice(0, 10)}.csv`);
+    toast({ title: `Exported ${members.length} contacts for Google/iCloud` });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="section-container py-8">
@@ -111,10 +133,18 @@ const MembersContent = () => {
             </Link>
             <button
               onClick={exportMembers}
-              className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors whitespace-nowrap border border-primary/20"
             >
               <FontAwesomeIcon icon={faDownload} className="w-3 h-3" />
               Export CSV
+            </button>
+            <button
+              onClick={exportContacts}
+              className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity whitespace-nowrap"
+              title="Download CSV formatted for Google and iCloud Contacts"
+            >
+              <FontAwesomeIcon icon={faUsers} className="w-3 h-3" />
+              Download Contacts CSV
             </button>
             <button
               onClick={exportSignupLog}
