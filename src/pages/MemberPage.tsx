@@ -61,9 +61,21 @@ const MemberPage = () => {
   useEffect(() => {
     const load = async () => {
       if (!phone) return;
+      
       const digits = phone.replace(/\D/g, "");
+      // Prevent matching non-numeric paths (like /test, /ranks, etc.)
+      if (!digits) {
+        setLoading(false);
+        return;
+      }
+
       const { data: members } = await supabase.from("members").select("id, full_name, phone, state, lga");
-      const m = (members ?? []).find((x) => x.phone.replace(/\D/g, "").endsWith(digits) || digits.endsWith(x.phone.replace(/\D/g, "")));
+      const m = (members ?? []).find((x) => {
+        const memberDigits = x.phone.replace(/\D/g, "");
+        if (!memberDigits) return false;
+        return memberDigits.endsWith(digits) || digits.endsWith(memberDigits);
+      });
+      
       if (!m) { setLoading(false); return; }
       setMember(m);
 
