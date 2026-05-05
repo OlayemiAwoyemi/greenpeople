@@ -11,9 +11,11 @@ import Navbar from "@/components/Navbar";
 import { useToast } from "@/hooks/use-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXTwitter, faInstagram, faFacebook, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { faLandmark, faUpRightFromSquare, faCheck, faBookOpen, faShareNodes, faUserPlus, faArrowRight, faXmark, faDownload, faAward } from "@fortawesome/free-solid-svg-icons";
+import { faLandmark, faUpRightFromSquare, faCheck, faBookOpen, faShareNodes, faUserPlus, faArrowRight, faXmark, faDownload, faAward, faShieldHalved } from "@fortawesome/free-solid-svg-icons";
 import html2canvas from "html2canvas";
 import { useRef } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { nigerianStates } from "@/data/nigerianLGAs";
 
 type Platform = "x" | "instagram" | "facebook" | "youtube";
 type Category = "leadership" | "politics" | "governance" | "life" | "civic_education";
@@ -37,7 +39,7 @@ const MemberPage = () => {
   const referrer = searchParams.get("ref");
   const { toast } = useToast();
 
-  const [member, setMember] = useState<{ id: string; full_name: string; phone: string; state: string; lga: string } | null>(null);
+  const [member, setMember] = useState<{ id: string; full_name: string; phone: string; state: string; lga: string; gender: string; has_pvc: string } | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [quizzesByItem, setQuizzesByItem] = useState<Record<string, Quiz[]>>({});
@@ -54,6 +56,8 @@ const MemberPage = () => {
   const [openLesson, setOpenLesson] = useState<Item | null>(null);
   const [lessonStep, setLessonStep] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [showVerifier, setShowVerifier] = useState(false);
+  const [verifier, setVerifier] = useState<{ q: string; options: string[]; ans: string } | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const isOwnPage = useMemo(() => {
@@ -74,7 +78,7 @@ const MemberPage = () => {
         return;
       }
 
-      const { data: members } = await supabase.from("members").select("id, full_name, phone, state, lga");
+      const { data: members } = await supabase.from("members").select("id, full_name, phone, state, lga, gender, has_pvc");
       const m = (members ?? []).find((x) => {
         const memberDigits = x.phone.replace(/\D/g, "");
         if (!memberDigits) return false;
@@ -351,7 +355,33 @@ const MemberPage = () => {
   }
 
   const handleDownloadCard = useCallback(async () => {
-    if (!cardRef.current || !member) return;
+    if (!member) return;
+
+    if (!verifier) {
+      const pools = [
+        { 
+          q: "Which state did you select during registration?", 
+          ans: member.state,
+          wrong: nigerianStates.filter(s => s !== member.state).sort(() => 0.5 - Math.random()).slice(0, 3)
+        },
+        { 
+          q: "What is your gender?", 
+          ans: member.gender,
+          wrong: [member.gender === 'Male' ? 'Female' : 'Male']
+        },
+        { 
+          q: "What was your PVC status during registration?", 
+          ans: member.has_pvc,
+          wrong: ["Yes", "No", "In Progress"].filter(o => o !== member.has_pvc)
+        }
+      ];
+      const selected = pools[Math.floor(Math.random() * pools.length)];
+      setVerifier({ ...selected, options: [selected.ans, ...selected.wrong].sort(() => 0.5 - Math.random()) });
+      setShowVerifier(true);
+      return;
+    }
+
+    if (!cardRef.current) return;
     try {
       const canvas = await html2canvas(cardRef.current, {
         backgroundColor: "#0a2e1a",
@@ -369,10 +399,22 @@ const MemberPage = () => {
         link.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
       }, "image/png", 0.92);
+      setShowVerifier(false);
+      setVerifier(null);
     } catch {
       toast({ title: "Could not download card", variant: "destructive" });
     }
-  }, [member, toast]);
+  }, [member, toast, verifier]);
+
+  const verifyAndDownload = (choice: string) => {
+    if (choice === verifier?.ans) {
+      handleDownloadCard();
+    } else {
+      toast({ title: "Incorrect answer", description: "Verification failed. Please try again.", variant: "destructive" });
+      setShowVerifier(false);
+      setVerifier(null);
+    }
+  };
 
   if (loading) return (
     <div className="min-h-screen bg-background flex items-center justify-center">
@@ -655,7 +697,29 @@ const MemberPage = () => {
             </div>
           </div>
         </div>
-      )}
+      {/* Verification Modal */}
+      <Dialog open={showVerifier} onOpenChange={setShowVerifier}>
+        <DialogContent className="max-w-sm bg-[#0a2e1a] border-white/10 text-white rounded-3xl">
+          <div className="text-center py-4">
+            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 border border-primary/30">
+              <FontAwesomeIcon icon={faShieldHalved} className="text-primary w-5 h-5" />
+            </div>
+            <h3 className="text-lg font-bold mb-2">Security Verification</h3>
+            <p className="text-white/60 text-xs mb-6">{verifier?.q}</p>
+            <div className="grid gap-2">
+              {verifier?.options.map((opt) => (
+                <button
+                  key={opt}
+                  onClick={() => verifyAndDownload(opt)}
+                  className="w-full bg-white/5 hover:bg-primary/20 border border-white/10 hover:border-primary/40 p-3 rounded-xl text-sm transition-all"
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

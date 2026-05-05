@@ -1,7 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane, faAward, faShareNodes, faCheck, faDownload, faArrowRight, faBullseye, faUserGroup, faLandmark } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faAward, faShareNodes, faCheck, faDownload, faArrowRight, faBullseye, faUserGroup, faLandmark, faShieldHalved } from "@fortawesome/free-solid-svg-icons";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -60,6 +60,8 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [submitted, setSubmitted] = useState(false);
+  const [showVerifier, setShowVerifier] = useState(false);
+  const [verifier, setVerifier] = useState<{ q: string; options: string[]; ans: string } | null>(null);
   const [successStep, setSuccessStep] = useState(1);
   const [memberNumber, setMemberNumber] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
@@ -82,6 +84,30 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
   const lgaOptions = formData.state ? nigerianStatesAndLGAs[formData.state] || [] : [];
 
   const handleDownloadCard = useCallback(async () => {
+    if (!verifier) {
+      const pools = [
+        { 
+          q: "Which state did you select during registration?", 
+          ans: formData.state,
+          wrong: nigerianStates.filter(s => s !== formData.state).sort(() => 0.5 - Math.random()).slice(0, 3)
+        },
+        { 
+          q: "What is your gender?", 
+          ans: formData.gender,
+          wrong: [formData.gender === 'Male' ? 'Female' : 'Male']
+        },
+        { 
+          q: "What was your PVC status during registration?", 
+          ans: formData.hasPvc,
+          wrong: ["Yes", "No", "In Progress"].filter(o => o !== formData.hasPvc)
+        }
+      ];
+      const selected = pools[Math.floor(Math.random() * pools.length)];
+      setVerifier({ ...selected, options: [selected.ans, ...selected.wrong].sort(() => 0.5 - Math.random()) });
+      setShowVerifier(true);
+      return;
+    }
+
     if (!cardRef.current) return;
     try {
       const canvas = await html2canvas(cardRef.current, {
@@ -100,10 +126,22 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
         link.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
       }, "image/png", 0.92);
+      setShowVerifier(false);
+      setVerifier(null);
     } catch {
       toast({ title: "Could not download card", variant: "destructive" });
     }
-  }, [formData.firstName, formData.middleName, formData.surname, toast]);
+  }, [formData.firstName, formData.middleName, formData.surname, formData.state, formData.gender, formData.hasPvc, toast, verifier]);
+
+  const verifyAndDownload = (choice: string) => {
+    if (choice === verifier?.ans) {
+      handleDownloadCard();
+    } else {
+      toast({ title: "Incorrect answer", description: "Verification failed. Please try again.", variant: "destructive" });
+      setShowVerifier(false);
+      setVerifier(null);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -402,11 +440,11 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
       <Dialog open={submitted} onOpenChange={(val) => !val && setSubmitted(false)}>
         <DialogContent className="max-w-xl p-0 overflow-hidden bg-transparent border-0 shadow-none">
           <div className="gradient-green rounded-3xl p-1 shadow-2xl">
-            <div className="bg-[#0a2e1a]/95 backdrop-blur-xl rounded-[22px] p-6 md:p-8 border border-white/10 max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div className="bg-[#0a2e1a]/95 backdrop-blur-xl rounded-[22px] p-5 md:p-7 border border-white/10 max-h-[90vh] overflow-y-auto custom-scrollbar">
               {successStep === 1 && (
-                <div className="space-y-6">
+                <div className="space-y-4">
                   <div className="text-center">
-                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 border border-primary/30">
+                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3 border border-primary/30">
                       <FontAwesomeIcon icon={faCheck} className="w-5 h-5 text-primary" />
                     </div>
                     <h2 className="text-xl font-black text-white mb-1 leading-tight">
@@ -459,29 +497,29 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                     </div>
                   </div>
 
-                  <div className="bg-white/5 border border-white/10 rounded-2xl p-5 text-center">
-                    <h3 className="text-base font-bold text-white mb-2 flex items-center justify-center gap-2">
+                  <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
+                    <h3 className="text-sm font-bold text-white mb-1.5 flex items-center justify-center gap-2">
                       <FontAwesomeIcon icon={faWhatsapp} className="text-[#25D366]" /> Join WhatsApp
                     </h3>
-                    <p className="text-white/60 text-[11px] mb-4">Connect with leaders and fellow members immediately.</p>
+                    <p className="text-white/60 text-[10px] mb-3">Connect with leaders and fellow members immediately.</p>
                     <a href="https://chat.whatsapp.com/GxMI11muoLyA7s4WtywOYS" target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-[#20bd5a] transition-all">
-                      Join Group Now <FontAwesomeIcon icon={faArrowRight} className="w-3.5 h-3.5" />
+                      className="inline-flex items-center gap-2 bg-[#25D366] text-white px-4 py-2 rounded-xl text-[10px] font-bold hover:bg-[#20bd5a] transition-all">
+                      Join Group Now <FontAwesomeIcon icon={faArrowRight} className="w-3 h-3" />
                     </a>
                   </div>
 
-                  <button onClick={() => setSuccessStep(2)} className="w-full bg-primary text-primary-foreground px-6 py-3.5 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2">
+                  <button onClick={() => setSuccessStep(2)} className="w-full bg-primary text-primary-foreground px-6 py-3 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
                     Continue to Mission Briefing <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4" />
                   </button>
                 </div>
               )}
 
               {successStep === 2 && (
-                <div className="space-y-6">
-                  <div className="space-y-6 text-white/80 leading-relaxed text-sm">
-                    <div className="space-y-3">
-                      <p className="font-bold text-white text-base border-l-4 border-primary pl-3">Our Mission</p>
-                      <p className="text-xs">We're working to ensure the next elections truly reflect the will of Nigerians. We're non-partisan and focused on making results manipulation impossible.</p>
+                <div className="space-y-4">
+                  <div className="space-y-4 text-white/80 leading-relaxed text-sm">
+                    <div className="space-y-2">
+                      <p className="font-bold text-white text-sm border-l-4 border-primary pl-3">Our Mission</p>
+                      <p className="text-[11px] leading-snug">We're working to ensure the next elections truly reflect the will of Nigerians. We're non-partisan and focused on making results manipulation impossible.</p>
                     </div>
 
                     <div className="grid grid-cols-1 gap-2.5">
@@ -502,18 +540,18 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                     <p className="text-[10px] italic text-white/50">Our formula: Everyone simply does what the group asks. Clear, simple, and rewarded.</p>
                   </div>
 
-                  <button onClick={() => setSuccessStep(3)} className="w-full bg-primary text-primary-foreground px-6 py-3.5 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2">
+                  <button onClick={() => setSuccessStep(3)} className="w-full bg-primary text-primary-foreground px-6 py-3 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
                     Continue to Your Dashboard <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4" />
                   </button>
                 </div>
               )}
 
               {successStep === 3 && (
-                <div className="space-y-6">
-                  <div className="space-y-6 text-white/80 leading-relaxed text-sm">
-                    <div className="space-y-3">
-                      <p className="font-bold text-white text-base border-l-4 border-primary pl-3">Mandate Points & Ranking</p>
-                      <p className="text-xs">Points show your activity. High points lead to higher Ranks — from Ward Leader to President.</p>
+                <div className="space-y-4">
+                  <div className="space-y-4 text-white/80 leading-relaxed text-sm">
+                    <div className="space-y-2">
+                      <p className="font-bold text-white text-sm border-l-4 border-primary pl-3">Mandate Points & Ranking</p>
+                      <p className="text-[11px] leading-snug">Points show your activity. High points lead to higher Ranks — from Ward Leader to President.</p>
                     </div>
 
                     <div className="bg-primary/10 border border-primary/20 rounded-2xl p-5">
@@ -528,17 +566,41 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-2.5">
-                    <a href={`/${formData.phone.replace(/\D/g, "")}`} className="w-full bg-primary text-primary-foreground px-6 py-3.5 rounded-xl font-bold text-sm text-center shadow-lg transition-transform active:scale-[0.98]">
+                  <div className="flex flex-col gap-2">
+                    <a href={`/${formData.phone.replace(/\D/g, "")}`} className="w-full bg-primary text-primary-foreground px-6 py-3 rounded-xl font-bold text-sm text-center shadow-lg transition-transform active:scale-[0.98]">
                       Go to Your Page & Take Action
                     </a>
-                    <button onClick={() => setSubmitted(false)} className="w-full bg-white/10 text-white px-6 py-3.5 rounded-xl font-bold text-sm hover:bg-white/20 transition-colors">
+                    <button onClick={() => setSubmitted(false)} className="w-full bg-white/10 text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-white/20 transition-colors">
                       Done
                     </button>
                   </div>
                   <p className="text-center text-white/40 text-[9px] pt-4">Thank you for taking action immediately. 🙏</p>
                 </div>
               )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Verification Modal */}
+      <Dialog open={showVerifier} onOpenChange={setShowVerifier}>
+        <DialogContent className="max-w-sm bg-[#0a2e1a] border-white/10 text-white rounded-3xl">
+          <div className="text-center py-4">
+            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 border border-primary/30">
+              <FontAwesomeIcon icon={faShieldHalved} className="text-primary w-5 h-5" />
+            </div>
+            <h3 className="text-lg font-bold mb-2">Security Verification</h3>
+            <p className="text-white/60 text-xs mb-6">{verifier?.q}</p>
+            <div className="grid gap-2">
+              {verifier?.options.map((opt) => (
+                <button
+                  key={opt}
+                  onClick={() => verifyAndDownload(opt)}
+                  className="w-full bg-white/5 hover:bg-primary/20 border border-white/10 hover:border-primary/40 p-3 rounded-xl text-sm transition-all"
+                >
+                  {opt}
+                </button>
+              ))}
             </div>
           </div>
         </DialogContent>
