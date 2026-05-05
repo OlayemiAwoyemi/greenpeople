@@ -31,19 +31,6 @@ type Quiz = { id: string; item_id: string; question: string; options: string[]; 
 const MemberPage = () => {
   const { phone } = useParams<{ phone: string }>();
   
-  // DEBUG: If you see this, it means MemberPage is being triggered.
-  // We'll show a fallback UI if it's a known static route.
-  if (phone && ["test", "gp-test", "test-registration", "hq", "members", "ranks", "finance", "backup", "phonenumbers", "updates", "write", "chats"].includes(phone.toLowerCase())) {
-    return (
-      <div className="min-h-screen bg-red-950 text-white p-10 flex flex-col items-center justify-center text-center">
-        <h1 className="text-4xl font-black mb-4">ROUTING ERROR</h1>
-        <p className="mb-4">MemberPage was triggered for: <strong>{phone}</strong></p>
-        <p className="text-sm opacity-60">This path should have been handled by a different component.</p>
-        <a href="/" className="mt-8 bg-white text-black px-6 py-2 rounded-full font-bold">Back to Home</a>
-      </div>
-    );
-  }
-
   const [searchParams] = useSearchParams();
   const referrer = searchParams.get("ref");
   const { toast } = useToast();
@@ -347,6 +334,18 @@ const MemberPage = () => {
     await navigator.clipboard.writeText(url);
     toast({ title: "Link copied!", description: "Share it anywhere." });
   };
+
+  // DEBUG: If you see this, it means MemberPage is being triggered for a static route.
+  if (phone && ["test", "gp-test", "test-registration", "hq", "members", "ranks", "finance", "backup", "phonenumbers", "updates", "write", "chats"].includes(phone.toLowerCase())) {
+    return (
+      <div className="min-h-screen bg-red-950 text-white p-10 flex flex-col items-center justify-center text-center">
+        <h1 className="text-4xl font-black mb-4">ROUTING ERROR</h1>
+        <p className="mb-4">MemberPage was triggered for: <strong>{phone}</strong></p>
+        <p className="text-sm opacity-60">This path should have been handled by a different component.</p>
+        <a href="/" className="mt-8 bg-white text-black px-6 py-2 rounded-full font-bold">Back to Home</a>
+      </div>
+    );
+  }
 
   if (loading) return (
     <div className="min-h-screen bg-background flex items-center justify-center">
