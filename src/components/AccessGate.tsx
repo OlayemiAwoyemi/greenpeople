@@ -4,15 +4,17 @@ import { faLock } from "@fortawesome/free-solid-svg-icons";
 
 const ACCESS_CODE = "sterces";
 
-const AccessGate = ({ children }: { children: React.ReactNode }) => {
+const AccessGate = ({ children, customCode }: { children: React.ReactNode; customCode?: string }) => {
   const [granted, setGranted] = useState(false);
   const [code, setCode] = useState("");
   const [error, setError] = useState(false);
 
+  const targetCode = customCode || ACCESS_CODE;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (code === ACCESS_CODE) {
-      sessionStorage.setItem("gp_access", ACCESS_CODE);
+    if (code === targetCode) {
+      sessionStorage.setItem("gp_access", targetCode);
       setGranted(true);
     } else {
       setError(true);
