@@ -12,6 +12,7 @@ type Row = { id: string; full_name: string; phone: string; state: string; points
 
 const Ranks = () => {
   const [rows, setRows] = useState<Row[]>([]);
+  const [tierCounts, setTierCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -98,7 +99,14 @@ const Ranks = () => {
         })
         .sort((a, b) => b.points - a.points);
 
+      const counts: Record<string, number> = {};
+      ranked.forEach((r) => {
+        const t = tierFor(r.points);
+        counts[t.name] = (counts[t.name] || 0) + 1;
+      });
+
       setRows(ranked);
+      setTierCounts(counts);
       setLoading(false);
     };
     load();
@@ -123,9 +131,10 @@ const Ranks = () => {
 
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 mb-6">
           {TIERS.map((t) => (
-            <div key={t.name} className="glass-card p-2 text-center min-w-0 bg-white/20 backdrop-blur-md rounded-xl">
-              <div className={`font-bold text-[11px] truncate ${t.color}`}>{t.short}</div>
-              <div className="text-[9px] text-muted-foreground mt-0.5">{t.min.toLocaleString()}+</div>
+            <div key={t.name} className="glass-card p-2 text-center min-w-0 bg-white/10 backdrop-blur-md rounded-xl border border-white/5 flex flex-col justify-center py-3">
+              <div className="text-[14px] font-black text-primary leading-none mb-1.5">{tierCounts[t.name] || 0}</div>
+              <div className={`font-bold text-[10px] truncate leading-none ${t.color}`}>{t.short}</div>
+              <div className="text-[8px] text-muted-foreground mt-1 leading-none">{t.min.toLocaleString()}+</div>
             </div>
           ))}
         </div>
