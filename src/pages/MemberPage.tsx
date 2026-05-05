@@ -11,7 +11,9 @@ import Navbar from "@/components/Navbar";
 import { useToast } from "@/hooks/use-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXTwitter, faInstagram, faFacebook, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { faLandmark, faUpRightFromSquare, faCheck, faBookOpen, faShareNodes, faUserPlus, faArrowRight, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faLandmark, faUpRightFromSquare, faCheck, faBookOpen, faShareNodes, faUserPlus, faArrowRight, faXmark, faDownload, faAward } from "@fortawesome/free-solid-svg-icons";
+import html2canvas from "html2canvas";
+import { useRef } from "react";
 
 type Platform = "x" | "instagram" | "facebook" | "youtube";
 type Category = "leadership" | "politics" | "governance" | "life" | "civic_education";
@@ -52,6 +54,7 @@ const MemberPage = () => {
   const [openLesson, setOpenLesson] = useState<Item | null>(null);
   const [lessonStep, setLessonStep] = useState(0);
   const [loading, setLoading] = useState(true);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const isOwnPage = useMemo(() => {
     if (typeof window === "undefined" || !member) return false;
@@ -347,6 +350,30 @@ const MemberPage = () => {
     );
   }
 
+  const handleDownloadCard = useCallback(async () => {
+    if (!cardRef.current || !member) return;
+    try {
+      const canvas = await html2canvas(cardRef.current, {
+        backgroundColor: "#0a2e1a",
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        removeContainer: true,
+      });
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.download = `GreenPeople-${member.full_name.replace(/\s+/g, "_")}.png`;
+        link.href = url;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }, "image/png", 0.92);
+    } catch {
+      toast({ title: "Could not download card", variant: "destructive" });
+    }
+  }, [member, toast]);
+
   if (loading) return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <Navbar />
@@ -409,7 +436,54 @@ const MemberPage = () => {
           )}
 
 
+          {isOwnPage && (
+            <div className="mt-4 pt-4 border-t border-white/10">
+              <button 
+                onClick={handleDownloadCard}
+                className="w-full bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 px-4 py-3 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+              >
+                <FontAwesomeIcon icon={faDownload} className="w-3.5 h-3.5" /> Download Membership Card
+              </button>
+            </div>
+          )}
         </div>
+
+        {/* Hidden Card for capture */}
+        {isOwnPage && member && (
+          <div className="fixed -left-[2000px] top-0 pointer-events-none">
+            <div
+              ref={cardRef}
+              className="w-[380px] aspect-[1.58/1] bg-gradient-to-br from-[#0a2e1a] via-[#0d3d23] to-[#0a2e1a] border border-white/20 rounded-2xl p-8 flex flex-col justify-between relative overflow-hidden"
+            >
+              <div className="absolute -top-12 -right-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="flex justify-between items-start relative z-10">
+                <div>
+                  <h4 className="text-primary font-black text-xs tracking-tighter leading-normal mb-0.5">GREEN PEOPLE</h4>
+                  <div className="text-white/40 text-[7px] uppercase tracking-[0.2em]">Movement</div>
+                </div>
+                <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center border border-white/10">
+                  <FontAwesomeIcon icon={faAward} className="text-primary w-4 h-4" />
+                </div>
+              </div>
+              <div className="relative z-10 mt-4">
+                <div className="text-white font-bold text-lg leading-normal mb-1.5 pb-0.5">
+                  {member.full_name}
+                </div>
+                <div className="flex items-center gap-2 text-white/60 text-[11px] font-medium">
+                  <span>{member.state} · {member.lga}</span>
+                  <span className="w-1 h-1 bg-white/20 rounded-full" />
+                  <span className="text-primary uppercase tracking-widest font-bold text-[8px]">Verified Member</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-end relative z-10 pt-6 border-t border-white/5">
+                <div className="text-[8px] text-white/30 font-mono uppercase">
+                  GP - {member.phone.replace(/\D/g, "").slice(-8).padStart(8, '0')}
+                </div>
+                <div className="text-[8px] text-white/50 font-bold tracking-widest uppercase">GREENPEOPLE.NG</div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Join CTA for visitors */}
         {!isOwnPage && (

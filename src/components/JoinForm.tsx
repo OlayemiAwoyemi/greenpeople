@@ -449,9 +449,12 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                         </div>
                       </div>
                     </div>
-                    <div className="text-center">
-                      <button onClick={handleDownloadCard} className="text-primary text-xs font-bold inline-flex items-center gap-1.5 hover:underline">
-                        <FontAwesomeIcon icon={faDownload} className="w-3 h-3" /> Download Card
+                    <div className="text-center pt-2">
+                      <button 
+                        onClick={handleDownloadCard} 
+                        className="w-full bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 px-6 py-3 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-primary/5"
+                      >
+                        <FontAwesomeIcon icon={faDownload} className="w-3.5 h-3.5" /> Download Your Membership Card
                       </button>
                     </div>
                   </div>
