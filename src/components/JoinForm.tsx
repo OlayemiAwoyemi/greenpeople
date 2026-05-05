@@ -419,7 +419,7 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                     <div className="relative group perspective-1000">
                       <div
                         ref={cardRef}
-                        className="w-full aspect-[1.58/1] max-w-[380px] mx-auto bg-gradient-to-br from-[#0a2e1a] via-[#0d3d23] to-[#0a2e1a] border border-white/20 rounded-2xl p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between"
+                        className="w-full aspect-[1.58/1] max-w-[380px] mx-auto bg-gradient-to-br from-[#0a2e1a] via-[#0d3d23] to-[#0a2e1a] border border-white/20 rounded-2xl p-8 shadow-2xl relative overflow-hidden flex flex-col justify-between"
                       >
                         <div className="absolute -top-12 -right-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
                         <div className="flex justify-between items-start relative z-10">
@@ -432,7 +432,7 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                           </div>
                         </div>
                         <div className="relative z-10">
-                          <div className="text-white font-bold text-sm md:text-lg leading-snug mb-2 truncate">
+                          <div className="text-white font-bold text-sm md:text-lg leading-normal mb-3 pb-1">
                             {joinName({ first: formData.firstName, middle: formData.middleName, surname: formData.surname }) || "Green Member"}
                           </div>
                           <div className="flex items-center gap-2 text-white/60 text-[9px] md:text-[11px] font-medium">
@@ -441,7 +441,7 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                             <span className="text-primary uppercase tracking-widest font-bold text-[8px]">Verified Member</span>
                           </div>
                         </div>
-                        <div className="flex justify-between items-end relative z-10 pt-5 border-t border-white/5">
+                        <div className="flex justify-between items-end relative z-10 pt-6 border-t border-white/5">
                           <div className="text-[8px] text-white/30 font-mono">
                             GP - {String(memberNumber || 0).padStart(8, '0')}
                           </div>
