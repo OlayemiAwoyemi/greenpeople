@@ -31,6 +31,12 @@ type Quiz = { id: string; item_id: string; question: string; options: string[]; 
 const MemberPage = () => {
   const { phone } = useParams<{ phone: string }>();
   const [searchParams] = useSearchParams();
+  
+  // Early exit for static routes to prevent MemberPage from even attempting to load
+  if (!phone || ["test", "gp-test", "hq", "members", "ranks", "finance", "backup", "phonenumbers", "updates", "write", "chats"].includes(phone.toLowerCase())) {
+    return null; 
+  }
+
   const referrer = searchParams.get("ref"); // referrer member id from shared link
   const { toast } = useToast();
 
@@ -63,10 +69,9 @@ const MemberPage = () => {
       if (!phone) return;
       
       const digits = phone.replace(/\D/g, "");
-      const staticRoutes = ["test", "hq", "members", "ranks", "finance", "backup", "phonenumbers", "updates", "write", "chats"];
       
       // Prevent matching non-numeric paths or known static routes
-      if (!digits || staticRoutes.includes(phone.toLowerCase())) {
+      if (!digits) {
         setLoading(false);
         return;
       }
