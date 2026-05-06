@@ -697,6 +697,8 @@ const MemberPage = () => {
             </div>
           </div>
         </div>
+      )}
+
       {/* Verification Modal */}
       <Dialog open={showVerifier} onOpenChange={setShowVerifier}>
         <DialogContent className="max-w-sm bg-[#0a2e1a] border-white/10 text-white rounded-3xl">
