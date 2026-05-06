@@ -93,23 +93,44 @@ const MembersContent = () => {
     toast({ title: `Exported ${data.length} log entries (full backup)` });
   };
 
-  const exportContacts = () => {
+  const exportGoogleContacts = () => {
     if (members.length === 0) {
       toast({ title: "No members to export" });
       return;
     }
     
-    // Map members to contact format
+    // Google CSV format: https://support.google.com/contacts/answer/1069522
+    const contactRows = members.map(m => ({
+      "Given Name": m.first_name || m.full_name.split(' ')[0] || "",
+      "Additional Name": m.middle_name || "",
+      "Family Name": m.surname || m.full_name.split(' ').slice(1).join(' ') || "",
+      "Organization 1 - Name": "Green People",
+      "Organization 1 - Type": "Work",
+      "Phone 1 - Type": "Mobile",
+      "Phone 1 - Value": m.phone
+    }));
+
+    downloadCsv(contactRows as unknown as Record<string, unknown>[], `google-contacts-${new Date().toISOString().slice(0, 10)}.csv`);
+    toast({ title: `Exported ${members.length} contacts for Google` });
+  };
+
+  const exportICloudContacts = () => {
+    if (members.length === 0) {
+      toast({ title: "No members to export" });
+      return;
+    }
+    
+    // iCloud / Apple Contacts CSV format
     const contactRows = members.map(m => ({
       "First Name": m.first_name || m.full_name.split(' ')[0] || "",
       "Middle Name": m.middle_name || "",
       "Last Name": m.surname || m.full_name.split(' ').slice(1).join(' ') || "",
       "Organization": "Green People",
-      "Mobile Phone": m.phone
+      "Phone": m.phone
     }));
 
-    downloadCsv(contactRows as unknown as Record<string, unknown>[], `green-people-contacts-${new Date().toISOString().slice(0, 10)}.csv`);
-    toast({ title: `Exported ${members.length} contacts for Google/iCloud` });
+    downloadCsv(contactRows as unknown as Record<string, unknown>[], `icloud-contacts-${new Date().toISOString().slice(0, 10)}.csv`);
+    toast({ title: `Exported ${members.length} contacts for iCloud` });
   };
 
   return (
@@ -139,12 +160,20 @@ const MembersContent = () => {
               Export CSV
             </button>
             <button
-              onClick={exportContacts}
+              onClick={exportGoogleContacts}
               className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity whitespace-nowrap"
-              title="Download CSV formatted for Google and iCloud Contacts"
+              title="Download CSV formatted specifically for Google Contacts"
             >
               <FontAwesomeIcon icon={faUsers} className="w-3 h-3" />
-              Download Contacts CSV
+              Google Contacts CSV
+            </button>
+            <button
+              onClick={exportICloudContacts}
+              className="inline-flex items-center gap-1.5 bg-[#007AFF] text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity whitespace-nowrap"
+              title="Download CSV formatted specifically for iCloud/Apple Contacts"
+            >
+              <FontAwesomeIcon icon={faUsers} className="w-3 h-3" />
+              iCloud Contacts CSV
             </button>
             <button
               onClick={exportSignupLog}
