@@ -438,9 +438,9 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
       </section>
 
       <Dialog open={submitted} onOpenChange={(val) => !val && setSubmitted(false)}>
-        <DialogContent className="max-w-xl p-0 overflow-hidden bg-transparent border-0 shadow-none">
-          <div className="gradient-green rounded-3xl p-1 shadow-2xl">
-            <div className="bg-[#0a2e1a]/95 backdrop-blur-xl rounded-[22px] p-5 md:p-7 border border-white/10 max-h-[90vh] overflow-y-auto custom-scrollbar">
+        <DialogContent className="w-[95vw] sm:max-w-xl p-0 overflow-hidden bg-transparent border-0 shadow-none">
+          <div className="gradient-green rounded-[2rem] p-1 shadow-2xl">
+            <div className="bg-[#0a2e1a]/95 backdrop-blur-xl rounded-[1.8rem] p-4 sm:p-7 border border-white/10 max-h-[90vh] overflow-y-auto custom-scrollbar">
               {successStep === 1 && (
                 <div className="space-y-4">
                   <div className="text-center">
