@@ -96,8 +96,7 @@ const UpdatePost = () => {
                 <span>{post.author}</span>
               </div>
               <div
-                className="prose prose-sm max-w-none text-foreground/90 overflow-hidden [&_img]:rounded-xl [&_img]:my-4 [&_p]:mb-4 [&_p]:leading-relaxed"
-                style={{ wordBreak: "normal", overflowWrap: "break-word", hyphens: "none", textAlign: "left", WebkitHyphens: "none", msHyphens: "none" } as React.CSSProperties}
+                className="prose prose-sm max-w-none text-foreground/90 overflow-hidden [&_img]:rounded-xl [&_img]:my-4 [&_p]:mb-4 [&_p]:leading-relaxed text-pretty break-normal"
                 dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
               />
             </article>

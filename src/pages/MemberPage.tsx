@@ -600,8 +600,8 @@ const MemberPage = () => {
                       <FontAwesomeIcon icon={done ? faCheck : faBookOpen} className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-[13px] sm:text-sm text-foreground break-words">{it.title}</div>
-                      {it.description && <div className="text-[11px] sm:text-xs text-muted-foreground line-clamp-2 mt-0.5 break-words">{it.description}</div>}
+                      <div className="font-medium text-[13px] sm:text-sm text-foreground text-pretty">{it.title}</div>
+                      {it.description && <div className="text-[11px] sm:text-xs text-muted-foreground line-clamp-2 mt-0.5 text-pretty">{it.description}</div>}
                     </div>
                     <div className="text-right whitespace-nowrap flex-shrink-0">
                       <div className={`text-sm font-bold ${done ? "text-primary" : "text-foreground"}`}>+5</div>
@@ -626,12 +626,12 @@ const MemberPage = () => {
                         <div className="space-y-3">
                           {list.map((q, qi) => (
                             <div key={q.id} className="bg-white/10 rounded-lg p-3 border border-white/5">
-                              <div className="text-[12px] sm:text-sm font-semibold text-foreground mb-2 break-words">{qi + 1}. {q.question}</div>
+                              <div className="text-[12px] sm:text-sm font-semibold text-foreground mb-2 text-pretty">{qi + 1}. {q.question}</div>
                               <div className="grid gap-1.5">
                                 {q.options.map((opt, idx) => (
                                   <label key={idx} className={`flex items-start gap-2 text-[11px] sm:text-xs cursor-pointer p-2 rounded-md border transition-all ${quizAnswers[q.id] === idx ? "border-primary bg-primary/10" : "border-white/10 bg-white/5 hover:bg-white/10"}`}>
                                     <input type="radio" name={q.id} className="mt-0.5" checked={quizAnswers[q.id] === idx} onChange={() => setQuizAnswers((s) => ({ ...s, [q.id]: idx }))} />
-                                    <span className="break-words flex-1 min-w-0">{opt}</span>
+                                    <span className="text-pretty flex-1 min-w-0">{opt}</span>
                                   </label>
                                 ))}
                               </div>
@@ -659,7 +659,7 @@ const MemberPage = () => {
             <div className="flex items-start justify-between gap-3 p-4 sm:p-6 border-b border-white/10">
               <div className="flex-1 min-w-0">
                 <div className="text-[10px] uppercase tracking-widest font-bold text-primary mb-1">{openLesson.category.replace("_", " ")}</div>
-                <h3 className="text-base sm:text-lg font-bold text-foreground break-words">{openLesson.title}</h3>
+                <h3 className="text-base sm:text-lg font-bold text-foreground text-pretty">{openLesson.title}</h3>
               </div>
               <button onClick={() => setOpenLesson(null)} className="text-muted-foreground hover:text-foreground p-2 -m-2 flex-shrink-0" aria-label="Close lesson">
                 <FontAwesomeIcon icon={faXmark} className="w-4 h-4" />
@@ -670,7 +670,7 @@ const MemberPage = () => {
                 <p className="text-sm text-muted-foreground">This lesson has no written content yet.</p>
               ) : (
                 <article
-                  className="prose prose-sm sm:prose-base max-w-none w-full break-words text-foreground/90 prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary prose-a:break-all prose-li:marker:text-primary"
+                  className="prose prose-sm sm:prose-base max-w-none w-full text-foreground/90 prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary prose-a:break-words prose-li:marker:text-primary text-pretty"
                   dangerouslySetInnerHTML={{ __html: lessonBits[lessonStep] }}
                 />
               )}

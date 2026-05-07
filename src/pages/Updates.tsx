@@ -46,8 +46,8 @@ const Updates = () => {
                     <img src={post.cover_image} alt={post.title} className="w-full h-48 object-cover" loading="lazy" />
                   )}
                   <div className="p-5">
-                    <h2 className="text-lg font-semibold text-foreground mb-2 line-clamp-2">{post.title}</h2>
-                    {post.excerpt && <p className="text-muted-foreground text-sm mb-3 line-clamp-3">{post.excerpt}</p>}
+                    <h2 className="text-lg font-semibold text-foreground mb-2 line-clamp-2 text-pretty">{post.title}</h2>
+                    {post.excerpt && <p className="text-muted-foreground text-sm mb-3 line-clamp-3 text-pretty">{post.excerpt}</p>}
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <FontAwesomeIcon icon={faCalendar} className="w-3 h-3" />
                       {new Date(post.created_at).toLocaleDateString("en-NG", { dateStyle: "medium" })}
