@@ -665,12 +665,12 @@ const MemberPage = () => {
                 <FontAwesomeIcon icon={faXmark} className="w-4 h-4" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-8 break-words custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar">
               {lessonBits.length === 0 ? (
                 <p className="text-sm text-muted-foreground">This lesson has no written content yet.</p>
               ) : (
                 <article
-                  className="prose prose-sm sm:prose-base max-w-none w-full text-foreground/90 prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary prose-a:break-words prose-li:marker:text-primary text-pretty"
+                  className="prose prose-sm sm:prose-base max-w-none w-full text-foreground/90 prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary prose-a:break-words prose-li:marker:text-primary [word-break:normal] [overflow-wrap:anywhere]"
                   dangerouslySetInnerHTML={{ __html: lessonBits[lessonStep] }}
                 />
               )}

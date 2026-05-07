@@ -22,11 +22,12 @@ const ACCESS_CODE = "sterces";
 const formatContent = (html: string) => {
   // If content already has HTML block tags, just return it
   if (/<(p|div|h[1-6]|ul|ol|blockquote)\b/i.test(html)) return html;
-  // Otherwise treat each line break as a paragraph
+  
+  // Otherwise treat double line breaks as paragraphs, single as spaces
   return html
-    .split(/\n+/)
+    .split(/\n{2,}/)
     .filter((line) => line.trim())
-    .map((line) => `<p>${line}</p>`)
+    .map((line) => `<p>${line.replace(/\n/g, " ")}</p>`)
     .join("");
 };
 
