@@ -60,8 +60,6 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [submitted, setSubmitted] = useState(false);
-  const [showVerifier, setShowVerifier] = useState(false);
-  const [verifier, setVerifier] = useState<{ q: string; options: string[]; ans: string } | null>(null);
   const [successStep, setSuccessStep] = useState(1);
   const [memberNumber, setMemberNumber] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
@@ -84,30 +82,6 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
   const lgaOptions = formData.state ? nigerianStatesAndLGAs[formData.state] || [] : [];
 
   const handleDownloadCard = useCallback(async () => {
-    if (!verifier) {
-      const pools = [
-        { 
-          q: "Which state did you select during registration?", 
-          ans: formData.state,
-          wrong: nigerianStates.filter(s => s !== formData.state).sort(() => 0.5 - Math.random()).slice(0, 3)
-        },
-        { 
-          q: "What is your gender?", 
-          ans: formData.gender,
-          wrong: [formData.gender === 'Male' ? 'Female' : 'Male']
-        },
-        { 
-          q: "What was your PVC status during registration?", 
-          ans: formData.hasPvc,
-          wrong: ["Yes", "No", "In Progress"].filter(o => o !== formData.hasPvc)
-        }
-      ];
-      const selected = pools[Math.floor(Math.random() * pools.length)];
-      setVerifier({ ...selected, options: [selected.ans, ...selected.wrong].sort(() => 0.5 - Math.random()) });
-      setShowVerifier(true);
-      return;
-    }
-
     if (!cardRef.current) return;
     try {
       const canvas = await html2canvas(cardRef.current, {
@@ -126,22 +100,10 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
         link.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
       }, "image/png", 0.92);
-      setShowVerifier(false);
-      setVerifier(null);
     } catch {
       toast({ title: "Could not download card", variant: "destructive" });
     }
-  }, [formData.firstName, formData.middleName, formData.surname, formData.state, formData.gender, formData.hasPvc, toast, verifier]);
-
-  const verifyAndDownload = (choice: string) => {
-    if (choice === verifier?.ans) {
-      handleDownloadCard();
-    } else {
-      toast({ title: "Incorrect answer", description: "Verification failed. Please try again.", variant: "destructive" });
-      setShowVerifier(false);
-      setVerifier(null);
-    }
-  };
+  }, [formData.firstName, formData.middleName, formData.surname, toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -583,30 +545,6 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                   <p className="text-center text-white/40 text-[9px] pt-4">Thank you for taking action immediately. 🙏</p>
                 </div>
               )}
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Verification Modal */}
-      <Dialog open={showVerifier} onOpenChange={setShowVerifier}>
-        <DialogContent className="max-w-sm bg-[#0a2e1a] border-white/10 text-white rounded-3xl">
-          <div className="text-center py-4">
-            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 border border-primary/30">
-              <FontAwesomeIcon icon={faShieldHalved} className="text-primary w-5 h-5" />
-            </div>
-            <h3 className="text-lg font-bold mb-2">Security Verification</h3>
-            <p className="text-white/60 text-xs mb-6">{verifier?.q}</p>
-            <div className="grid gap-2">
-              {verifier?.options.map((opt) => (
-                <button
-                  key={opt}
-                  onClick={() => verifyAndDownload(opt)}
-                  className="w-full bg-white/5 hover:bg-primary/20 border border-white/10 hover:border-primary/40 p-3 rounded-xl text-sm transition-all"
-                >
-                  {opt}
-                </button>
-              ))}
             </div>
           </div>
         </DialogContent>
