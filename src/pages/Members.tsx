@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faUsers, faIdCard, faDownload, faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faUsers, faIdCard, faDownload, faClockRotateLeft, faSearch } from "@fortawesome/free-solid-svg-icons";
 import AccessGate from "@/components/AccessGate";
 import { useToast } from "@/hooks/use-toast";
 
@@ -49,6 +49,7 @@ type Member = {
 const MembersContent = () => {
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -186,6 +187,21 @@ const MembersContent = () => {
           </div>
         </div>
 
+        {/* Search Bar */}
+        <div className="mb-6 relative group">
+          <FontAwesomeIcon 
+            icon={faSearch} 
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" 
+          />
+          <input
+            type="text"
+            placeholder="Search by name, phone, state, or LGA..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all"
+          />
+        </div>
+
         {loading ? (
           <div className="text-center py-16 text-muted-foreground text-sm">Loading...</div>
         ) : members.length === 0 ? (
@@ -195,7 +211,17 @@ const MembersContent = () => {
           </div>
         ) : (
           <div className="space-y-3">
-            {members.map((m) => (
+            {members
+              .filter((m) => {
+                const s = searchTerm.toLowerCase();
+                return (
+                  m.full_name.toLowerCase().includes(s) ||
+                  m.phone.includes(s) ||
+                  m.state.toLowerCase().includes(s) ||
+                  m.lga.toLowerCase().includes(s)
+                );
+              })
+              .map((m) => (
               <div key={m.id} className="bg-card border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
