@@ -502,10 +502,16 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                       <FontAwesomeIcon icon={faWhatsapp} className="text-[#25D366]" /> Join WhatsApp
                     </h3>
                     <p className="text-white/60 text-[10px] mb-3">Connect with leaders and fellow members immediately.</p>
-                    <a href="https://chat.whatsapp.com/GxMI11muoLyA7s4WtywOYS" target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-[#25D366] text-white px-4 py-2 rounded-xl text-[10px] font-bold hover:bg-[#20bd5a] transition-all">
-                      Join Group Now <FontAwesomeIcon icon={faArrowRight} className="w-3 h-3" />
-                    </a>
+                    <div className="space-y-3">
+                      <a href="https://chat.whatsapp.com/GxMI11muoLyA7s4WtywOYS" target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 bg-[#25D366] text-white px-4 py-2 rounded-xl text-[10px] font-bold hover:bg-[#20bd5a] transition-all w-full justify-center">
+                        Join Group Now <FontAwesomeIcon icon={faArrowRight} className="w-3 h-3" />
+                      </a>
+                      <p className="text-[9px] text-primary font-bold leading-tight px-2">
+                        ⚠️ PLEASE JOIN WITH THE WHATSAPP ACCOUNT LINKED TO {formData.phone}. 
+                        <span className="block mt-1 font-medium text-white/50 italic">If you have multiple WhatsApp apps, choose the right one when prompted after clicking.</span>
+                      </p>
+                    </div>
                   </div>
 
                   <button onClick={() => setSuccessStep(2)} className="w-full bg-primary text-primary-foreground px-6 py-3 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
