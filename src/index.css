@@ -118,6 +118,14 @@
   .glass-dark {
     @apply bg-black/20 backdrop-blur-md border border-white/10 shadow-sm transition-all duration-300;
   }
+
+  .content-wrap {
+    text-align: justify;
+    text-justify: inter-word;
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
 }
 
 /* Floating leaf animation */

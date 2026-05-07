@@ -60,7 +60,7 @@ const UpdatePost = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="pt-20 pb-16">
-        <div className="section-container max-w-3xl overflow-hidden">
+        <div className="section-container max-w-3xl overflow-x-auto">
           <Link to="/updates" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-8 transition-colors">
             <FontAwesomeIcon icon={faArrowLeft} className="w-3 h-3" />
             Back to Updates
@@ -97,7 +97,7 @@ const UpdatePost = () => {
                 <span>{post.author}</span>
               </div>
               <div
-                className="prose prose-sm max-w-none text-foreground/90 overflow-hidden [&_img]:rounded-xl [&_img]:my-4 [&_p]:mb-4 [&_p]:leading-relaxed text-pretty break-normal"
+                className="prose prose-sm max-w-none text-foreground/90 [&_img]:rounded-xl [&_img]:my-4 [&_p]:mb-4 [&_p]:leading-relaxed content-wrap"
                 dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
               />
             </article>
