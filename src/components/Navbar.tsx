@@ -35,25 +35,27 @@ const Navbar = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100"
-          : "bg-white/50 backdrop-blur-sm"
+          ? "bg-white/40 backdrop-blur-md shadow-sm border-b border-white/20"
+          : "bg-transparent"
       }`}
     >
       <div className="section-container flex items-center justify-between h-14 md:h-16">
         <a href="/" className="flex items-center gap-2">
           <img src={greenLogo} alt="Green People" className="w-8 h-8 rounded-full" />
-          <span className="font-bold text-lg tracking-tight text-foreground">
+          <span className={`font-semibold text-sm tracking-tight transition-colors ${solidNav ? "text-foreground" : "text-primary-foreground"}`}>
             Green People
           </span>
         </a>
 
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {navLinks.map((link) =>
             link.isRoute ? (
               <Link
                 key={link.href}
                 to={link.href}
-                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
+                className={`text-xs font-medium uppercase tracking-wide transition-colors hover:opacity-70 ${
+                  solidNav ? "text-foreground/70" : "text-primary-foreground/80"
+                }`}
               >
                 {link.label}
               </Link>
@@ -67,7 +69,9 @@ const Navbar = () => {
                     window.location.href = `/${link.href}`;
                   }
                 }}
-                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
+                className={`text-xs font-medium uppercase tracking-wide transition-colors hover:opacity-70 ${
+                  solidNav ? "text-foreground/70" : "text-primary-foreground/80"
+                }`}
               >
                 {link.label}
               </a>
@@ -75,7 +79,7 @@ const Navbar = () => {
           )}
           <a
             href="#join"
-            className="bg-primary text-primary-foreground px-6 py-2.5 rounded-full text-sm font-bold hover:shadow-lg hover:shadow-primary/20 transition-all"
+            className="bg-primary text-primary-foreground px-4 py-2 rounded-full text-xs font-semibold hover:opacity-90 transition-opacity uppercase tracking-wide"
           >
             Join Now
           </a>
@@ -83,9 +87,9 @@ const Navbar = () => {
 
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden text-foreground"
+          className={`md:hidden ${solidNav ? "text-foreground" : "text-primary-foreground"}`}
         >
-          <FontAwesomeIcon icon={mobileOpen ? faXmark : faBars} className="w-6 h-6" />
+          <FontAwesomeIcon icon={mobileOpen ? faXmark : faBars} className="w-5 h-5" />
         </button>
       </div>
 

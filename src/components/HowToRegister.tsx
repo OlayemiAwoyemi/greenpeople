@@ -32,7 +32,7 @@ const HowToRegister = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="register" className="py-20 md:py-32 bg-white relative overflow-hidden border-y border-gray-100" ref={ref}>
+    <section id="register" className="py-20 md:py-28 gradient-green relative overflow-hidden" ref={ref}>
       <div className="section-container relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -42,29 +42,29 @@ const HowToRegister = () => {
           <span className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block">
             Take Action
           </span>
-          <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4 leading-tight tracking-tight">
+          <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-3 leading-tight">
             Register to vote in 3 simple steps
           </h2>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-primary-foreground/60 text-sm">
             It takes less than 5 minutes to start. Your PVC is your power.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-14">
+        <div className="grid md:grid-cols-3 gap-6 mb-10">
           {steps.map((step, i) => (
             <motion.div
               key={step.step}
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.1 + i * 0.1 }}
-              className="bg-white border border-gray-100 rounded-[32px] p-10 text-center shadow-[0_8px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_40px_rgba(0,0,0,0.06)] transition-all group"
+              className="bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/10 rounded-xl p-6 text-center"
             >
-              <div className="text-primary font-black text-5xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">{step.step}</div>
-              <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/10 transition-colors">
-                <FontAwesomeIcon icon={step.icon} className="w-6 h-6 text-primary" />
+              <div className="text-primary font-bold text-3xl mb-3">{step.step}</div>
+              <div className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center mx-auto mb-4">
+                <FontAwesomeIcon icon={step.icon} className="w-4 h-4 text-primary" />
               </div>
-              <h3 className="font-bold text-xl text-foreground mb-3">{step.title}</h3>
-              <p className="text-muted-foreground text-base leading-relaxed">{step.description}</p>
+              <h3 className="font-semibold text-sm text-primary-foreground mb-2">{step.title}</h3>
+              <p className="text-primary-foreground/60 text-xs leading-relaxed">{step.description}</p>
             </motion.div>
           ))}
         </div>
@@ -79,10 +79,10 @@ const HowToRegister = () => {
             href="https://cvr.inecnigeria.org/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-10 py-5 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-1 transition-all"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-md text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             Book Your INEC Appointment Now
-            <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="w-4 h-4" />
+            <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="w-3.5 h-3.5" />
           </a>
           <p className="text-primary-foreground/40 text-xs mt-3">
             Official INEC CVR Portal — cvr.inecnigeria.org

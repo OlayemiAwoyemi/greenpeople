@@ -13,60 +13,65 @@ const socialLinks = [
 
 const GreenFooter = () => {
   return (
-    <footer className="bg-white py-20 border-t border-gray-100">
+    <footer className="bg-accent py-14">
       <div className="section-container">
-        <div className="text-center mb-16">
-          <h2 className="text-2xl md:text-4xl font-black text-foreground mb-4 tracking-tight">
-            The future won't wait. <span className="text-primary italic">Will you?</span>
+        <div className="text-center mb-12">
+          <h2 className="text-xl md:text-2xl font-bold text-accent-foreground mb-3">
+            The future won't wait. <span className="text-primary">Will you?</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-md mx-auto mb-8 font-medium">
+          <p className="text-accent-foreground/50 text-sm max-w-md mx-auto mb-6">
             Every Nigerian who joins makes us stronger. This is our time.
           </p>
           <a
             href="#join"
-            className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-10 py-4 rounded-full text-base font-bold hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity whitespace-nowrap"
           >
             Join Green People Now
           </a>
         </div>
 
-        <div className="pt-12 border-t border-gray-100">
-          <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-8">
-            <div className="flex items-center gap-3 justify-center md:justify-start">
-              <img src={greenLogo} alt="Green People" className="w-8 h-8 rounded-full shadow-sm" />
-              <span className="font-bold text-lg text-foreground tracking-tight">Green People</span>
+        <div className="border-t border-accent-foreground/10 pt-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-6">
+            <div className="flex items-center gap-2 justify-center md:justify-start">
+              <img src={greenLogo} alt="Green People" className="w-6 h-6 rounded-full" />
+              <span className="font-semibold text-xs text-accent-foreground">Green People</span>
             </div>
 
-            <div className="flex items-center justify-center gap-4">
+            {/* Social Media Links — centered */}
+            <div className="flex items-center justify-center gap-3">
               {socialLinks.map((s) => (
                 <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-primary hover:bg-primary/5 transition-all border border-gray-100"
+                  className="w-8 h-8 rounded-full bg-accent-foreground/10 flex items-center justify-center text-accent-foreground/50 hover:text-primary hover:bg-primary/10 transition-all"
                   aria-label={s.label}>
-                  <FontAwesomeIcon icon={s.icon} className="w-4 h-4" />
+                  <FontAwesomeIcon icon={s.icon} className="w-3.5 h-3.5" />
                 </a>
               ))}
             </div>
 
-            <div className="flex items-center justify-center md:justify-end gap-6 text-gray-400 text-sm font-medium">
-              <a href="https://wa.me/2348141894696" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
-                <FontAwesomeIcon icon={faWhatsapp} className="w-4 h-4" />
+            <div className="flex items-center justify-center md:justify-end gap-4 text-accent-foreground/40 text-xs">
+              <a href="https://wa.me/2348141894696" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                <FontAwesomeIcon icon={faWhatsapp} className="w-3 h-3" />
                 WhatsApp
               </a>
               <PrivacyModal>
-                <button className="hover:text-primary transition-colors flex items-center gap-2">
-                  <FontAwesomeIcon icon={faShieldHalved} className="w-4 h-4" />
+                <button className="hover:text-primary transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                  <FontAwesomeIcon icon={faShieldHalved} className="w-3 h-3" />
                   Privacy
                 </button>
               </PrivacyModal>
+              <a href="mailto:hello@greenpeople.ng" className="hover:text-primary transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                <FontAwesomeIcon icon={faEnvelope} className="w-3 h-3" />
+                Contact
+              </a>
             </div>
           </div>
 
-          <div className="mt-12 text-center border-t border-gray-50 pt-8">
-            <p className="text-gray-400 text-sm font-medium">
+          <div className="mt-6 text-center">
+            <p className="text-accent-foreground/25 text-xs">
               © {new Date().getFullYear()} Green People Movement — greenpeople.ng
             </p>
-            <p className="text-gray-300 text-xs mt-2 max-w-lg mx-auto leading-relaxed">
-              A people-powered movement for Nigeria's future. Not affiliated with any political party. Registered as a non-profit initiative dedicated to civic engagement.
+            <p className="text-accent-foreground/15 text-[10px] mt-1">
+              A people movement for Nigeria's future. Not affiliated with any political party.
             </p>
           </div>
         </div>

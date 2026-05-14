@@ -29,7 +29,7 @@ const WhyNow = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="why-now" className="py-20 md:py-32 bg-white" ref={ref}>
+    <section id="why-now" className="py-20 md:py-28 bg-background" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -49,20 +49,20 @@ const WhyNow = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6">
           {features.map((feature, i) => (
             <motion.div
               key={feature.title}
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.4, delay: 0.1 + i * 0.1 }}
-              className="glass-card p-10 text-center hover:shadow-2xl hover:-translate-y-2 transition-all border-none"
+              className="glass-card p-6 text-center hover:shadow-lg hover:-translate-y-1 transition-all"
             >
-              <div className="w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center mx-auto mb-6">
-                <FontAwesomeIcon icon={feature.icon} className="w-6 h-6 text-primary" />
+              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <FontAwesomeIcon icon={feature.icon} className="w-5 h-5 text-primary" />
               </div>
-              <h3 className="font-bold text-lg text-foreground mb-4">{feature.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+              <h3 className="font-semibold text-sm text-foreground mb-2">{feature.title}</h3>
+              <p className="text-muted-foreground text-xs leading-relaxed">{feature.description}</p>
             </motion.div>
           ))}
         </div>
