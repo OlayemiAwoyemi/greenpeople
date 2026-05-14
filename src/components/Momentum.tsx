@@ -96,7 +96,7 @@ const Momentum = () => {
   }, [testimonials.length]);
 
   return (
-    <section id="momentum" className="py-20 md:py-28 bg-secondary/30" ref={ref}>
+    <section id="momentum" className="py-20 md:py-32 bg-white" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -106,7 +106,7 @@ const Momentum = () => {
           <span className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block">
             Momentum
           </span>
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3 leading-tight">
+          <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4 leading-tight tracking-tight">
             The movement is growing
           </h2>
         </motion.div>
@@ -126,10 +126,10 @@ const Momentum = () => {
         {/* Real testimonials from form submissions */}
         {testimonials.length > 0 && (
           <div className="max-w-2xl mx-auto">
-            <h3 className="text-center text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-6">
+            <h3 className="text-center text-xs font-bold text-muted-foreground uppercase tracking-widest mb-8">
               Why People Believe in Green People
             </h3>
-            <div className="bg-background border border-border rounded-xl p-6 md:p-8 relative min-h-[140px]">
+            <div className="bg-white border border-gray-100 rounded-[32px] p-8 md:p-12 relative min-h-[180px] shadow-[0_10px_40px_rgba(0,0,0,0.03)]">
               <div className="absolute top-4 left-6 text-4xl text-primary/10 font-bold">"</div>
               {testimonials.map((t, i) => (
                 <motion.div

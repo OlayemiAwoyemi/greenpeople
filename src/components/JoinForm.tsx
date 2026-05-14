@@ -211,28 +211,28 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
     setSubmitted(true);
   };
 
-  const inputClass = "w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-xl px-4 py-3 text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all";
-  const selectClass = "w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-xl px-3.5 py-2.5 pr-10 text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_12px_center]";
-  const labelClass = "text-primary-foreground/70 text-xs font-medium mb-1.5 block";
-  const errorClass = "text-red-400 text-[11px] mt-1";
-  const inputErrorBorder = "border-red-400/60";
+  const inputClass = "w-full bg-white border border-gray-200 rounded-xl px-4 py-4 text-base text-foreground placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/40 transition-all";
+  const selectClass = "w-full bg-white border border-gray-200 rounded-xl px-4 py-4 pr-10 text-base text-foreground placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/40 appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23222%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_16px_center]";
+  const labelClass = "text-foreground font-bold text-sm mb-2 block";
+  const errorClass = "text-red-500 text-xs mt-1 font-medium";
+  const inputErrorBorder = "border-red-200 focus:border-red-400 focus:ring-red-50";
 
   return (
     <>
-      <section id="join" className="py-20 md:py-28 gradient-green relative overflow-hidden" ref={ref}>
+      <section id="join" className="py-20 md:py-32 bg-gray-50/50 relative overflow-hidden" ref={ref}>
         <div className="section-container relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            className="text-center max-w-2xl mx-auto mb-10"
+            className="text-center max-w-2xl mx-auto mb-12"
           >
-            <span className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block">
+            <span className="text-primary font-bold text-xs uppercase tracking-widest mb-4 block">
               Be Part of History
             </span>
-            <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-3 leading-tight">
+            <h2 className="text-3xl md:text-5xl font-black text-foreground mb-4 leading-tight tracking-tight">
               Join the Movement
             </h2>
-            <p className="text-primary-foreground/60 text-sm">
+            <p className="text-muted-foreground text-lg">
               It's free. It takes 60 seconds. And it could change Nigeria forever.
             </p>
           </motion.div>
@@ -242,7 +242,7 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.15 }}
             onSubmit={handleSubmit}
-            className="max-w-xl mx-auto bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/10 rounded-2xl p-6 md:p-8"
+            className="max-w-2xl mx-auto bg-white border border-gray-100 rounded-[32px] p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.05)]"
           >
             {/* Residency Selection */}
             <div className="mb-6">
@@ -254,10 +254,10 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                 ].map((opt) => (
                   <button key={opt.label} type="button"
                     onClick={() => { setFormData({ ...formData, isNigeriaBased: opt.id }); setErrors(prev => ({ ...prev, isNigeriaBased: "" })); }}
-                    className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
+                    className={`flex-1 py-4 rounded-xl text-sm font-bold border transition-all ${
                       formData.isNigeriaBased === opt.id
-                        ? "bg-primary text-primary-foreground border-primary shadow-md"
-                        : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                        ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
+                        : "bg-gray-50 text-gray-500 border-gray-100 hover:border-gray-300"
                     }`}>{opt.label}</button>
                 ))}
               </div>
@@ -330,10 +330,10 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                 {["Male", "Female"].map((g) => (
                   <button key={g} type="button"
                     onClick={() => { setFormData({ ...formData, gender: g }); setErrors(prev => ({ ...prev, gender: "" })); }}
-                    className={`px-5 py-2 rounded-lg text-xs font-medium border transition-all ${
+                    className={`px-6 py-3 rounded-xl text-sm font-bold border transition-all ${
                       formData.gender === g
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                        ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/10"
+                        : "bg-gray-50 text-gray-500 border-gray-100 hover:border-gray-200"
                     }`}>{g}</button>
                 ))}
               </div>
@@ -347,10 +347,10 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                 {ageGroups.map((ag) => (
                   <button key={ag} type="button"
                     onClick={() => { setFormData({ ...formData, ageGroup: ag }); setErrors(prev => ({ ...prev, ageGroup: "" })); }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                    className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all ${
                       formData.ageGroup === ag
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                        ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/10"
+                        : "bg-gray-50 text-gray-500 border-gray-100 hover:border-gray-200"
                     }`}>{ag}</button>
                 ))}
               </div>
@@ -364,10 +364,10 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                 {["Yes", "No", "In Progress"].map((opt) => (
                   <button key={opt} type="button"
                     onClick={() => { setFormData({ ...formData, hasPvc: opt }); setErrors(prev => ({ ...prev, hasPvc: "" })); }}
-                    className={`px-4 py-2 rounded-lg text-xs font-medium border transition-all whitespace-nowrap ${
+                    className={`px-5 py-2.5 rounded-xl text-xs font-bold border transition-all whitespace-nowrap ${
                       formData.hasPvc === opt
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                        ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/10"
+                        : "bg-gray-50 text-gray-500 border-gray-100 hover:border-gray-200"
                     }`}>{opt}</button>
                 ))}
               </div>
@@ -384,8 +384,8 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
             </div>
 
             <button type="submit" disabled={loading}
-              className="w-full bg-primary text-primary-foreground py-3 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 whitespace-nowrap">
-              <FontAwesomeIcon icon={faPaperPlane} className="w-3.5 h-3.5" />
+              className="w-full bg-primary text-primary-foreground py-5 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 disabled:opacity-50 whitespace-nowrap">
+              <FontAwesomeIcon icon={faPaperPlane} className="w-4 h-4" />
               {loading ? "Joining..." : "Join the Movement — It's Free"}
             </button>
 
@@ -400,19 +400,19 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
       </section>
 
       <Dialog open={submitted} onOpenChange={(val) => !val && setSubmitted(false)}>
-        <DialogContent className="w-[95vw] sm:max-w-xl p-0 overflow-hidden bg-transparent border-0 shadow-none">
-          <div className="gradient-green rounded-[2rem] p-1 shadow-2xl">
-            <div className="bg-[#0a2e1a]/95 backdrop-blur-xl rounded-[1.8rem] p-4 sm:p-7 border border-white/10 max-h-[90vh] overflow-y-auto custom-scrollbar">
+        <DialogContent className="w-[95vw] sm:max-w-xl p-0 overflow-hidden bg-white rounded-[2.5rem] border border-gray-100 shadow-2xl">
+          <div className="p-1">
+            <div className="bg-white rounded-[2.3rem] p-6 sm:p-10 max-h-[90vh] overflow-y-auto custom-scrollbar">
               {successStep === 1 && (
                 <div className="space-y-4">
-                  <div className="text-center">
-                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3 border border-primary/30">
-                      <FontAwesomeIcon icon={faCheck} className="w-5 h-5 text-primary" />
+                  <div className="text-center mb-8">
+                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                      <FontAwesomeIcon icon={faCheck} className="w-6 h-6 text-primary" />
                     </div>
-                    <h2 className="text-xl font-black text-white mb-1 leading-tight">
+                    <h2 className="text-3xl font-black text-foreground mb-2 leading-tight">
                       Welcome to the Movement! 🎉
                     </h2>
-                    <p className="text-white/60 text-xs">Your registration is complete.</p>
+                    <p className="text-muted-foreground text-sm font-medium">Your registration is complete.</p>
                   </div>
 
                   <div className="space-y-4">
@@ -449,35 +449,35 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                         </div>
                       </div>
                     </div>
-                    <div className="text-center pt-2">
+                    <div className="text-center pt-4">
                       <button 
                         onClick={handleDownloadCard} 
-                        className="w-full bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 px-6 py-3 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-primary/5"
+                        className="w-full bg-white text-foreground border border-gray-200 px-6 py-4 rounded-2xl text-sm font-bold inline-flex items-center justify-center gap-3 transition-all hover:bg-gray-50 active:scale-[0.98] shadow-sm"
                       >
-                        <FontAwesomeIcon icon={faDownload} className="w-3.5 h-3.5" /> Download Your Membership Card
+                        <FontAwesomeIcon icon={faDownload} className="w-4 h-4 text-primary" /> Download Your Membership Card
                       </button>
                     </div>
                   </div>
 
-                  <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
-                    <h3 className="text-sm font-bold text-white mb-1.5 flex items-center justify-center gap-2">
+                  <div className="bg-green-50 border border-green-100 rounded-2xl p-6 text-center">
+                    <h3 className="text-base font-bold text-foreground mb-2 flex items-center justify-center gap-2">
                       <FontAwesomeIcon icon={faWhatsapp} className="text-[#25D366]" /> Join WhatsApp
                     </h3>
-                    <p className="text-white/60 text-[10px] mb-3">Connect with leaders and fellow members immediately.</p>
-                    <div className="space-y-3">
+                    <p className="text-muted-foreground text-xs mb-4">Connect with leaders and fellow members immediately.</p>
+                    <div className="space-y-4">
                       <a href="https://chat.whatsapp.com/GxMI11muoLyA7s4WtywOYS" target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 bg-[#25D366] text-white px-4 py-2 rounded-xl text-[10px] font-bold hover:bg-[#20bd5a] transition-all w-full justify-center">
-                        Join Group Now <FontAwesomeIcon icon={faArrowRight} className="w-3 h-3" />
+                        className="inline-flex items-center gap-3 bg-[#25D366] text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-[#20bd5a] hover:shadow-lg transition-all w-full justify-center">
+                        Join Group Now <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4" />
                       </a>
-                      <p className="text-[9px] text-primary font-bold leading-tight px-2">
+                      <p className="text-[10px] text-primary font-bold leading-tight px-2">
                         ⚠️ PLEASE JOIN WITH THE WHATSAPP ACCOUNT LINKED TO {formData.phone}. 
-                        <span className="block mt-1 font-medium text-white/50 italic">If you have multiple WhatsApp apps, choose the right one when prompted after clicking.</span>
+                        <span className="block mt-1 font-medium text-gray-500 italic">If you have multiple WhatsApp apps, choose the right one when prompted after clicking.</span>
                       </p>
                     </div>
                   </div>
 
-                  <button onClick={() => setSuccessStep(2)} className="w-full bg-primary text-primary-foreground px-6 py-3 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
-                    Continue to Mission Briefing <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4" />
+                  <button onClick={() => setSuccessStep(2)} className="w-full bg-primary text-primary-foreground px-8 py-4 rounded-full font-bold text-base shadow-xl shadow-primary/20 flex items-center justify-center gap-3 hover:-translate-y-0.5 active:scale-[0.98] transition-all">
+                    Continue to Mission Briefing <FontAwesomeIcon icon={faArrowRight} className="w-5 h-5" />
                   </button>
                 </div>
               )}
@@ -485,22 +485,22 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
               {successStep === 2 && (
                 <div className="space-y-4">
                   <div className="space-y-4 text-white/80 leading-relaxed text-sm">
-                    <div className="space-y-2">
-                      <p className="font-bold text-white text-sm border-l-4 border-primary pl-3">Our Mission</p>
-                      <p className="text-[11px] leading-snug">We're working to ensure the next elections truly reflect the will of Nigerians. We're non-partisan and focused on making results manipulation impossible.</p>
+                    <div className="space-y-3">
+                      <p className="font-bold text-foreground text-lg border-l-4 border-primary pl-4 tracking-tight">Our Mission</p>
+                      <p className="text-muted-foreground text-sm leading-relaxed">We're working to ensure the next elections truly reflect the will of Nigerians. We're non-partisan and focused on making results manipulation impossible.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-2.5">
+                    <div className="grid grid-cols-1 gap-3">
                       {[
                         { icon: faBullseye, text: "Every member must get their PVC and be ready to vote." },
                         { icon: faLandmark, text: "We ensure every member can choose leaders without being tricked." },
                         { icon: faUserGroup, text: "Goal: 10 million members ready to vote before 2027." }
                       ].map((step, i) => (
-                        <div key={i} className="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/10">
-                          <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-                            <FontAwesomeIcon icon={step.icon} className="text-primary text-[10px]" />
+                        <div key={i} className="flex items-center gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                          <div className="w-9 h-9 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0">
+                            <FontAwesomeIcon icon={step.icon} className="text-primary text-xs" />
                           </div>
-                          <p className="text-[10px] leading-tight font-medium">{step.text}</p>
+                          <p className="text-xs text-foreground font-bold leading-snug">{step.text}</p>
                         </div>
                       ))}
                     </div>
@@ -508,37 +508,37 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                     <p className="text-[10px] italic text-white/50">Our formula: Everyone simply does what the group asks. Clear, simple, and rewarded.</p>
                   </div>
 
-                  <button onClick={() => setSuccessStep(3)} className="w-full bg-primary text-primary-foreground px-6 py-3 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
-                    Continue to Your Dashboard <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4" />
+                  <button onClick={() => setSuccessStep(3)} className="w-full bg-primary text-primary-foreground px-8 py-4 rounded-full font-bold text-base shadow-xl shadow-primary/20 flex items-center justify-center gap-3 hover:-translate-y-0.5 active:scale-[0.98] transition-all">
+                    Continue to Your Dashboard <FontAwesomeIcon icon={faArrowRight} className="w-5 h-5" />
                   </button>
                 </div>
               )}
 
               {successStep === 3 && (
                 <div className="space-y-4">
-                  <div className="space-y-4 text-white/80 leading-relaxed text-sm">
+                  <div className="space-y-4 text-muted-foreground leading-relaxed text-sm">
                     <div className="space-y-2">
-                      <p className="font-bold text-white text-sm border-l-4 border-primary pl-3">Mandate Points & Ranking</p>
-                      <p className="text-[11px] leading-snug">Points show your activity. High points lead to higher Ranks — from Ward Leader to President.</p>
+                      <p className="font-bold text-foreground text-lg border-l-4 border-primary pl-4 tracking-tight">Mandate Points & Ranking</p>
+                      <p className="text-sm">Points show your activity. High points lead to higher Ranks — from Ward Leader to President.</p>
                     </div>
 
-                    <div className="bg-primary/10 border border-primary/20 rounded-2xl p-5">
-                      <h4 className="text-primary font-bold text-[10px] mb-3 uppercase tracking-wider">Your Personal Link</h4>
-                      <a href={`/${formData.phone.replace(/\D/g, "")}`} className="block bg-white/10 p-3 rounded-xl text-center font-mono text-[11px] text-primary-foreground border border-white/10 mb-4 truncate">
+                    <div className="bg-green-50 border border-green-100 rounded-[2rem] p-8">
+                      <h4 className="text-primary font-bold text-xs mb-4 uppercase tracking-wider text-center">Your Personal Link</h4>
+                      <a href={`/${formData.phone.replace(/\D/g, "")}`} className="block bg-white p-4 rounded-2xl text-center font-mono text-xs text-foreground border border-green-100 mb-6 truncate shadow-sm">
                         greenpeople.ng/{formData.phone.replace(/\D/g, "")}
                       </a>
 
-                      <div className="space-y-2 text-[10px]">
-                        <p><span className="text-white font-bold">Earn points by:</span> Visiting your page, completing social actions, and sharing with friends. Points decrease over time — <span className="text-primary font-bold">Act Fast!</span></p>
+                      <div className="space-y-3 text-xs text-center px-4">
+                        <p><span className="text-foreground font-bold">Earn points by:</span> Visiting your page, completing social actions, and sharing with friends. Points decrease over time — <span className="text-primary font-bold">Act Fast!</span></p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-2">
-                    <a href={`/${formData.phone.replace(/\D/g, "")}`} className="w-full bg-primary text-primary-foreground px-6 py-3 rounded-xl font-bold text-sm text-center shadow-lg transition-transform active:scale-[0.98]">
+                  <div className="flex flex-col gap-3">
+                    <a href={`/${formData.phone.replace(/\D/g, "")}`} className="w-full bg-primary text-primary-foreground px-8 py-4 rounded-full font-bold text-base text-center shadow-xl shadow-primary/20 transition-all hover:-translate-y-0.5 active:scale-[0.98]">
                       Go to Your Page & Take Action
                     </a>
-                    <button onClick={() => setSubmitted(false)} className="w-full bg-white/10 text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-white/20 transition-colors">
+                    <button onClick={() => setSubmitted(false)} className="w-full bg-gray-50 text-gray-500 px-8 py-4 rounded-full font-bold text-sm hover:bg-gray-100 transition-colors">
                       Done
                     </button>
                   </div>

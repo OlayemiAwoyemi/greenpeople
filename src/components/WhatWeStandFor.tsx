@@ -46,7 +46,7 @@ const WhatWeStandFor = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="values" className="py-20 md:py-28 bg-background" ref={ref}>
+    <section id="values" className="py-20 md:py-32 bg-gray-50/30" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -56,7 +56,7 @@ const WhatWeStandFor = () => {
           <span className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block">
             Our Values
           </span>
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3 leading-tight">
+          <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4 leading-tight tracking-tight">
             What we stand for
           </h2>
           <p className="text-muted-foreground text-sm">
@@ -64,20 +64,20 @@ const WhatWeStandFor = () => {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {values.map((value, i) => (
             <motion.div
               key={value.title}
               initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.05 + i * 0.08 }}
-              className="bg-secondary/50 border border-border rounded-xl p-5 hover:shadow-md transition-shadow"
+              className="bg-white border border-gray-100 rounded-[20px] p-8 hover:shadow-xl hover:shadow-black/[0.02] transition-all group"
             >
-              <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
-                <FontAwesomeIcon icon={value.icon} className="w-4 h-4 text-primary" />
+              <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center mb-5 group-hover:bg-primary/10 transition-colors">
+                <FontAwesomeIcon icon={value.icon} className="w-5 h-5 text-primary" />
               </div>
-              <h3 className="font-semibold text-sm text-foreground mb-1">{value.title}</h3>
-              <p className="text-muted-foreground text-xs leading-relaxed">{value.description}</p>
+              <h3 className="font-bold text-lg text-foreground mb-3">{value.title}</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">{value.description}</p>
             </motion.div>
           ))}
         </div>

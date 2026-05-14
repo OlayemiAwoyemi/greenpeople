@@ -36,7 +36,7 @@ const OurMission = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="mission" className="py-20 md:py-28 bg-secondary/30" ref={ref}>
+    <section id="mission" className="py-20 md:py-32 bg-gray-50/50" ref={ref}>
       <div className="section-container">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
@@ -56,24 +56,24 @@ const OurMission = () => {
               Three goals. <span className="text-gradient-green">One green future.</span>
             </motion.h2>
 
-            <div className="space-y-6">
+            <div className="space-y-8">
               {missions.map((mission, i) => (
                 <motion.div
                   key={mission.title}
                   initial={{ opacity: 0, x: -15 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ delay: 0.15 + i * 0.1 }}
-                  className="flex gap-4 group"
+                  className="flex gap-6 group"
                 >
-                  <div className="shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <FontAwesomeIcon icon={mission.icon} className="w-4 h-4 text-primary" />
+                  <div className="shrink-0 w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center group-hover:shadow-md transition-all border border-gray-100">
+                    <FontAwesomeIcon icon={mission.icon} className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <div className="flex items-baseline gap-2 mb-1">
-                      <h3 className="font-semibold text-sm text-foreground">{mission.title}</h3>
-                      <span className="text-primary font-bold text-xs">{mission.stat}</span>
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <h3 className="font-bold text-lg text-foreground leading-tight">{mission.title}</h3>
+                      <span className="text-primary font-black text-sm">{mission.stat}</span>
                     </div>
-                    <p className="text-muted-foreground text-xs leading-relaxed">
+                    <p className="text-muted-foreground text-sm leading-relaxed max-w-md">
                       {mission.description}
                     </p>
                   </div>
