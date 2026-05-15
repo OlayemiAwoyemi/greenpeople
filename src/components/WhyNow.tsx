@@ -31,7 +31,7 @@ const WhyNow = () => {
       <div className="gp-divider" />
       <div className="section-container pt-16 md:pt-20">
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={false}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
           className="max-w-3xl mb-14"
@@ -50,7 +50,7 @@ const WhyNow = () => {
           {features.map((feature, i) => (
             <motion.div
               key={feature.title}
-              initial={{ opacity: 0, y: 16 }}
+              initial={false}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
               className="gp-card-white"

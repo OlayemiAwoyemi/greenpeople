@@ -199,7 +199,7 @@ const JoinForm = () => {
       <section id="join" className="py-20 md:py-28 gradient-green" ref={ref}>
         <div className="section-container">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={false}
             animate={{ opacity: 1, scale: 1 }}
             className="max-w-md mx-auto text-center"
           >
@@ -291,7 +291,7 @@ const JoinForm = () => {
     <section id="join" className="gp-frame gradient-green relative overflow-hidden py-20 md:py-28" ref={ref}>
       <div className="section-container relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={false}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           className="max-w-3xl mb-10"
         >
@@ -305,7 +305,7 @@ const JoinForm = () => {
         </motion.div>
 
         <motion.form
-          initial={{ opacity: 0, y: 15 }}
+          initial={false}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.15 }}
           onSubmit={handleSubmit}

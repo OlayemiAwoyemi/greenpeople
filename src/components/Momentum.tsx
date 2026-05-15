@@ -95,7 +95,7 @@ const Momentum = () => {
       <div className="gp-divider" />
       <div className="section-container pt-16 md:pt-20">
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={false}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           className="max-w-3xl mb-14"
         >
@@ -106,7 +106,7 @@ const Momentum = () => {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={false}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.15 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6 mb-20"

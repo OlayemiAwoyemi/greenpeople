@@ -22,7 +22,7 @@ const WhatWeStandFor = () => {
       <div className="gp-divider" />
       <div className="section-container pt-16 md:pt-20">
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={false}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           className="max-w-3xl mb-14"
         >
@@ -39,7 +39,7 @@ const WhatWeStandFor = () => {
           {values.map((value, i) => (
             <motion.div
               key={value.title}
-              initial={{ opacity: 0, y: 14 }}
+              initial={false}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.05 + i * 0.05 }}
               className={tints[i]}
