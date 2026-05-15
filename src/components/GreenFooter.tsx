@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWhatsapp, faXTwitter, faInstagram, faFacebook, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { faShieldHalved, faEnvelope, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faShieldHalved, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import greenLogo from "@/assets/green-logo.png";
 import PrivacyModal from "./PrivacyModal";
 
@@ -13,59 +13,67 @@ const socialLinks = [
 
 const GreenFooter = () => {
   return (
-    <footer className="gp-frame bg-background pt-20 pb-12">
-      <div className="gp-divider" />
-      <div className="section-container pt-20">
-        {/* Big CTA */}
-        <div className="max-w-4xl mb-20">
-          <div className="gp-eyebrow mb-5">Join us</div>
-          <h2 className="gp-display text-foreground text-[40px] md:text-[56px] lg:text-[64px] mb-8">
-            The future won't wait. Will you?
+    <footer className="bg-accent py-14">
+      <div className="section-container">
+        <div className="text-center mb-12">
+          <h2 className="text-xl md:text-2xl font-bold text-accent-foreground mb-3">
+            The future won't wait. <span className="text-primary">Will you?</span>
           </h2>
-          <a href="#join" className="gp-pill-primary">
-            Join Green People
-            <FontAwesomeIcon icon={faArrowRight} className="w-3.5 h-3.5 ml-2" />
+          <p className="text-accent-foreground/50 text-sm max-w-md mx-auto mb-6">
+            Every Nigerian who joins makes us stronger. This is our time.
+          </p>
+          <a
+            href="#join"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity whitespace-nowrap"
+          >
+            Join Green People Now
           </a>
         </div>
 
-        <div className="gp-divider mb-10" />
+        <div className="border-t border-accent-foreground/10 pt-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-6">
+            <div className="flex items-center gap-2 justify-center md:justify-start">
+              <img src={greenLogo} alt="Green People" className="w-6 h-6 rounded-full" />
+              <span className="font-semibold text-xs text-accent-foreground">Green People</span>
+            </div>
 
-        <div className="grid md:grid-cols-3 items-center gap-6">
-          <div className="flex items-center gap-2.5">
-            <img src={greenLogo} alt="Green People" className="w-7 h-7 rounded-full" />
-            <span className="font-semibold text-[15px] text-foreground">Green People</span>
-          </div>
+            {/* Social Media Links — centered */}
+            <div className="flex items-center justify-center gap-3">
+              {socialLinks.map((s) => (
+                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
+                  className="w-8 h-8 rounded-full bg-accent-foreground/10 flex items-center justify-center text-accent-foreground/50 hover:text-primary hover:bg-primary/10 transition-all"
+                  aria-label={s.label}>
+                  <FontAwesomeIcon icon={s.icon} className="w-3.5 h-3.5" />
+                </a>
+              ))}
+            </div>
 
-          <div className="flex items-center justify-center gap-3">
-            {socialLinks.map((s) => (
-              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-foreground/5 flex items-center justify-center text-foreground/60 hover:text-accent hover:bg-foreground/10 transition-all"
-                aria-label={s.label}>
-                <FontAwesomeIcon icon={s.icon} className="w-3.5 h-3.5" />
+            <div className="flex items-center justify-center md:justify-end gap-4 text-accent-foreground/40 text-xs">
+              <a href="https://wa.me/2348141894696" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                <FontAwesomeIcon icon={faWhatsapp} className="w-3 h-3" />
+                WhatsApp
               </a>
-            ))}
+              <PrivacyModal>
+                <button className="hover:text-primary transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                  <FontAwesomeIcon icon={faShieldHalved} className="w-3 h-3" />
+                  Privacy
+                </button>
+              </PrivacyModal>
+              <a href="mailto:hello@greenpeople.ng" className="hover:text-primary transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                <FontAwesomeIcon icon={faEnvelope} className="w-3 h-3" />
+                Contact
+              </a>
+            </div>
           </div>
 
-          <div className="flex items-center justify-start md:justify-end gap-5 text-foreground/60 text-[13px]">
-            <a href="https://wa.me/2348141894696" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors flex items-center gap-1.5">
-              <FontAwesomeIcon icon={faWhatsapp} className="w-3 h-3" />
-              WhatsApp
-            </a>
-            <PrivacyModal>
-              <button className="hover:text-foreground transition-colors flex items-center gap-1.5">
-                <FontAwesomeIcon icon={faShieldHalved} className="w-3 h-3" />
-                Privacy
-              </button>
-            </PrivacyModal>
-            <a href="mailto:hello@greenpeople.ng" className="hover:text-foreground transition-colors flex items-center gap-1.5">
-              <FontAwesomeIcon icon={faEnvelope} className="w-3 h-3" />
-              Contact
-            </a>
+          <div className="mt-6 text-center">
+            <p className="text-accent-foreground/25 text-xs">
+              © {new Date().getFullYear()} Green People Movement — greenpeople.ng
+            </p>
+            <p className="text-accent-foreground/15 text-[10px] mt-1">
+              A people movement for Nigeria's future. Not affiliated with any political party.
+            </p>
           </div>
-        </div>
-
-        <div className="mt-10 text-foreground/40 text-[12px]">
-          © {new Date().getFullYear()} Green People Movement — greenpeople.ng · A people movement for Nigeria's future. Not affiliated with any political party.
         </div>
       </div>
     </footer>

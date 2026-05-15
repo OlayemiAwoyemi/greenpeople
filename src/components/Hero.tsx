@@ -1,100 +1,122 @@
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faCheckToSlot } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faCheckToSlot, faShieldHalved, faHeart, faGlobe, faLeaf, faUsers, faScaleBalanced, faEye } from "@fortawesome/free-solid-svg-icons";
+import LiveCounter from "./LiveCounter";
 import greenpeopleBg from "@/assets/green_people_bg.jpg";
+
+const values = [
+  { icon: faShieldHalved, title: "Clean Leadership", desc: "Leaders who serve the people" },
+  { icon: faHeart, title: "Youth & Women", desc: "At the centre of our future" },
+  { icon: faGlobe, title: "One Nigeria", desc: "Beyond tribe and religion" },
+  { icon: faLeaf, title: "Green Future", desc: "Jobs and sustainability" },
+  { icon: faUsers, title: "People Power", desc: "Power belongs to you" },
+  { icon: faScaleBalanced, title: "Justice", desc: "Accountability for all" },
+  { icon: faEye, title: "Open Books", desc: "Total finance transparency" },
+];
 
 const Hero = () => {
   return (
-    <section className="gp-frame bg-background pt-12 md:pt-20 pb-16 md:pb-24">
-      <div className="section-container">
-        <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-          {/* Left: editorial headline */}
-          <div className="lg:col-span-7">
+    <section className="relative min-h-screen flex items-center overflow-hidden">
+      <div className="absolute inset-0">
+        <img
+          src={greenpeopleBg}
+          alt="Green People Movement"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-accent/95 via-accent/85 to-accent/70" />
+      </div>
+
+      <div className="relative z-20 section-container py-28 md:py-36">
+        <div className="grid lg:grid-cols-2 gap-10 items-center">
+          <div>
             <motion.div
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="gp-eyebrow mb-6"
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 rounded-full px-3 py-1.5 mb-5"
             >
-              A People's Movement
+              <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+              <span className="text-primary-foreground/90 text-xs font-medium whitespace-nowrap">
+                The Movement is Live
+              </span>
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.05 }}
-              className="gp-display text-foreground text-[40px] sm:text-5xl md:text-6xl lg:text-[64px] xl:text-[72px] mb-8"
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-foreground leading-tight mb-4"
             >
-              How everyday Nigerians are taking back 2027 — one new voter at a time.
+              Green People Movement
             </motion.h1>
 
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.25 }}
-              className="flex flex-wrap items-center gap-3"
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="text-primary-foreground/80 text-base md:text-lg max-w-lg mb-7 leading-relaxed"
             >
-              <a href="#join" className="gp-pill-primary group">
-                Join the movement
-                <FontAwesomeIcon icon={faArrowRight} className="w-3.5 h-3.5 ml-2 group-hover:translate-x-0.5 transition-transform" />
+              We are registering millions of new voters to own 2027.
+              Join the biggest people-powered movement Nigeria has ever seen.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="flex flex-col sm:flex-row items-start gap-3 mb-7"
+            >
+              <a
+                href="#join"
+                className="group bg-primary text-primary-foreground px-6 py-3 rounded-lg text-sm font-semibold hover:opacity-90 transition-all flex items-center gap-2 whitespace-nowrap"
+              >
+                Join the Movement
+                <FontAwesomeIcon icon={faArrowRight} className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </a>
               <a
                 href="https://cvr.inecnigeria.org/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="gp-pill-ghost border border-border"
+                className="group bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/30 text-primary-foreground px-6 py-3 rounded-lg text-sm font-semibold hover:bg-primary-foreground/20 transition-all flex items-center gap-2 whitespace-nowrap"
               >
-                <FontAwesomeIcon icon={faCheckToSlot} className="w-3.5 h-3.5 mr-2" />
-                Register to vote
+                <FontAwesomeIcon icon={faCheckToSlot} className="w-3.5 h-3.5" />
+                Register to Vote
               </a>
             </motion.div>
+
+            <LiveCounter />
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1, duration: 0.6 }}
+              className="mt-5 text-primary-foreground/50 text-xs"
+            >
+              From Lagos to Kano, Port Harcourt to Maiduguri — one green future for every Nigerian
+            </motion.p>
           </div>
 
-          {/* Right: image card */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="lg:col-span-5"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="hidden lg:grid grid-cols-2 gap-3"
           >
-            <div className="rounded-2xl overflow-hidden bg-secondary aspect-[4/5] sm:aspect-[5/6] lg:aspect-[4/5]">
-              <img
-                src={greenpeopleBg}
-                alt="Green People Movement"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Two pastel info cards */}
-        <div className="grid sm:grid-cols-2 gap-4 mt-12 max-w-3xl">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-            className="gp-card-blue"
-          >
-            <div className="gp-display text-[28px] md:text-[32px] text-foreground mb-2">
-              10M+ <span className="block text-[20px] md:text-[22px] font-semibold">new voters</span>
-            </div>
-            <p className="text-[14px] text-foreground/70 mt-4">
-              Our 2027 target — every village, market and campus.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45 }}
-            className="gp-card-mint"
-          >
-            <div className="gp-display text-[28px] md:text-[32px] text-foreground mb-2">
-              36 + FCT <span className="block text-[20px] md:text-[22px] font-semibold">mobilising</span>
-            </div>
-            <p className="text-[14px] text-foreground/70 mt-4">
-              From Lagos to Kano, Port Harcourt to Maiduguri.
-            </p>
+            {values.map((v, i) => (
+              <motion.div
+                key={v.title}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + i * 0.1 }}
+                className="bg-primary-foreground/8 backdrop-blur-sm border border-primary-foreground/15 rounded-xl p-4 hover:bg-primary-foreground/12 transition-all"
+              >
+                <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center mb-2">
+                  <FontAwesomeIcon icon={v.icon} className="w-3.5 h-3.5 text-primary" />
+                </div>
+                <h3 className="font-semibold text-sm text-primary-foreground mb-0.5">{v.title}</h3>
+                <p className="text-primary-foreground/60 text-xs">{v.desc}</p>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </div>

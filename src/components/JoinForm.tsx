@@ -199,7 +199,7 @@ const JoinForm = () => {
       <section id="join" className="py-20 md:py-28 gradient-green" ref={ref}>
         <div className="section-container">
           <motion.div
-            initial={false}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="max-w-md mx-auto text-center"
           >
@@ -288,24 +288,26 @@ const JoinForm = () => {
   const inputErrorBorder = "border-red-400/60";
 
   return (
-    <section id="join" className="gp-frame gradient-green relative overflow-hidden py-20 md:py-28" ref={ref}>
+    <section id="join" className="py-20 md:py-28 gradient-green relative overflow-hidden" ref={ref}>
       <div className="section-container relative z-10">
         <motion.div
-          initial={false}
+          initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          className="max-w-3xl mb-10"
+          className="text-center max-w-2xl mx-auto mb-10"
         >
-          <div className="text-[13px] text-primary-foreground/60 mb-5">Be part of history</div>
-          <h2 className="gp-display text-primary-foreground text-[34px] md:text-[44px] lg:text-[52px] mb-4">
-            Join the movement.
+          <span className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block">
+            Be Part of History
+          </span>
+          <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-3 leading-tight">
+            Join the Movement
           </h2>
-          <p className="text-primary-foreground/70 text-[16px] md:text-[17px] max-w-xl">
+          <p className="text-primary-foreground/60 text-sm">
             It's free. It takes 60 seconds. And it could change Nigeria forever.
           </p>
         </motion.div>
 
         <motion.form
-          initial={false}
+          initial={{ opacity: 0, y: 15 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.15 }}
           onSubmit={handleSubmit}

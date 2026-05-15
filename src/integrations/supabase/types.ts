@@ -270,7 +270,6 @@ export type Database = {
           gender: string
           has_pvc: string
           id: string
-          is_nigeria_based: boolean | null
           lga: string
           member_id: string | null
           phone: string
@@ -287,7 +286,6 @@ export type Database = {
           gender: string
           has_pvc: string
           id?: string
-          is_nigeria_based?: boolean | null
           lga: string
           member_id?: string | null
           phone: string
@@ -304,7 +302,6 @@ export type Database = {
           gender?: string
           has_pvc?: string
           id?: string
-          is_nigeria_based?: boolean | null
           lga?: string
           member_id?: string | null
           phone?: string
@@ -324,9 +321,7 @@ export type Database = {
           gender: string
           has_pvc: string
           id: string
-          is_nigeria_based: boolean | null
           lga: string
-          member_number: number
           middle_name: string | null
           phone: string
           reason: string | null
@@ -342,9 +337,7 @@ export type Database = {
           gender: string
           has_pvc: string
           id?: string
-          is_nigeria_based?: boolean | null
           lga: string
-          member_number?: number
           middle_name?: string | null
           phone: string
           reason?: string | null
@@ -360,9 +353,7 @@ export type Database = {
           gender?: string
           has_pvc?: string
           id?: string
-          is_nigeria_based?: boolean | null
           lga?: string
-          member_number?: number
           middle_name?: string | null
           phone?: string
           reason?: string | null
@@ -399,36 +390,30 @@ export type Database = {
       quiz_attempts: {
         Row: {
           created_at: string
-          host_member_id: string | null
           id: string
           item_id: string
           member_id: string
           points_awarded: number
           score: number
           total: number
-          visitor_hash: string | null
         }
         Insert: {
           created_at?: string
-          host_member_id?: string | null
           id?: string
           item_id: string
           member_id: string
           points_awarded?: number
           score: number
           total: number
-          visitor_hash?: string | null
         }
         Update: {
           created_at?: string
-          host_member_id?: string | null
           id?: string
           item_id?: string
           member_id?: string
           points_awarded?: number
           score?: number
           total?: number
-          visitor_hash?: string | null
         }
         Relationships: []
       }

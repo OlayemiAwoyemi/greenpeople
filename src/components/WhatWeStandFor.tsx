@@ -1,36 +1,65 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShieldHalved, faHeart, faGlobe, faLeaf, faUsers, faScaleBalanced, faEye } from "@fortawesome/free-solid-svg-icons";
 
 const values = [
-  { kicker: "Leadership", title: "Clean, honest leadership", description: "No more business as usual. We demand leaders who serve the people, not themselves." },
-  { kicker: "People", title: "Youth & women at the centre", description: "The future belongs to young Nigerians and the women who hold our communities together." },
-  { kicker: "Unity", title: "One united Nigeria", description: "Beyond tribe, beyond religion. We are one people, one nation, one destiny." },
-  { kicker: "Future", title: "A green future", description: "Real jobs, clean environment, sustainable opportunity. A Nigeria that prospers for generations." },
-  { kicker: "Power", title: "Power belongs to the people", description: "Not to the elite. Not to the connected. To you. To every ordinary Nigerian who dares to believe." },
-  { kicker: "Justice", title: "Justice & accountability", description: "Equal rights for all. Leaders held to account. No one above the law, no one beneath it." },
-  { kicker: "Trust", title: "Open books, total transparency", description: "Every naira in, every naira out — public for all to see. Trust is built in the open." },
+  {
+    icon: faShieldHalved,
+    title: "Clean, Honest Leadership",
+    description: "No more business as usual. We demand leaders who serve the people, not themselves.",
+  },
+  {
+    icon: faHeart,
+    title: "Youth & Women at the Centre",
+    description: "The future belongs to young Nigerians and the women who hold our communities together.",
+  },
+  {
+    icon: faGlobe,
+    title: "One United Nigeria",
+    description: "Beyond tribe, beyond religion. We are one people, one nation, one destiny.",
+  },
+  {
+    icon: faLeaf,
+    title: "Green Future",
+    description: "Real jobs, clean environment, sustainable opportunity. A Nigeria that prospers for generations.",
+  },
+  {
+    icon: faUsers,
+    title: "Power Belongs to the People",
+    description: "Not to the elite. Not to the connected. To you. To every ordinary Nigerian who dares to believe.",
+  },
+  {
+    icon: faScaleBalanced,
+    title: "Justice & Accountability",
+    description: "Equal rights for all. Leaders held to account. No one above the law, no one beneath it.",
+  },
+  {
+    icon: faEye,
+    title: "Open Books, Total Transparency",
+    description: "Every naira in, every naira out — public for all to see. Trust is built in the open.",
+  },
 ];
-
-const tints = ["gp-card-mint", "gp-card-blue", "gp-card-cream", "gp-card-lilac", "gp-card-mint", "gp-card-blue", "gp-card-cream"];
 
 const WhatWeStandFor = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="values" className="gp-frame bg-background py-20 md:py-28" ref={ref}>
-      <div className="gp-divider" />
-      <div className="section-container pt-16 md:pt-20">
+    <section id="values" className="py-20 md:py-28 bg-background" ref={ref}>
+      <div className="section-container">
         <motion.div
-          initial={false}
+          initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          className="max-w-3xl mb-14"
+          className="text-center max-w-2xl mx-auto mb-14"
         >
-          <div className="gp-eyebrow mb-5">Our values</div>
-          <h2 className="gp-display text-foreground text-[34px] md:text-[44px] lg:text-[52px]">
-            What we stand for.
+          <span className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block">
+            Our Values
+          </span>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3 leading-tight">
+            What we stand for
           </h2>
-          <p className="text-foreground/70 text-[16px] md:text-[17px] mt-6 max-w-xl leading-relaxed">
+          <p className="text-muted-foreground text-sm">
             These are not just words. They are promises we make to every Nigerian.
           </p>
         </motion.div>
@@ -39,14 +68,16 @@ const WhatWeStandFor = () => {
           {values.map((value, i) => (
             <motion.div
               key={value.title}
-              initial={false}
+              initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.05 + i * 0.05 }}
-              className={tints[i]}
+              transition={{ delay: 0.05 + i * 0.08 }}
+              className="bg-secondary/50 border border-border rounded-xl p-5 hover:shadow-md transition-shadow"
             >
-              <div className="gp-eyebrow mb-3">{value.kicker}</div>
-              <h3 className="gp-display text-[20px] md:text-[22px] text-foreground mb-3">{value.title}</h3>
-              <p className="text-foreground/70 text-[14px] leading-relaxed">{value.description}</p>
+              <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
+                <FontAwesomeIcon icon={value.icon} className="w-4 h-4 text-primary" />
+              </div>
+              <h3 className="font-semibold text-sm text-foreground mb-1">{value.title}</h3>
+              <p className="text-muted-foreground text-xs leading-relaxed">{value.description}</p>
             </motion.div>
           ))}
         </div>
