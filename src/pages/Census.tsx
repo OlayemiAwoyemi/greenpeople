@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import AccessGate from "@/components/AccessGate";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import {
