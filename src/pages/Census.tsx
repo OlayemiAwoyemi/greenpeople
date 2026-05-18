@@ -222,4 +222,10 @@ const CensusContent = () => {
   );
 };
 
+const Census = () => (
+  <AccessGate>
+    <CensusContent />
+  </AccessGate>
+);
+
 export default Census;
