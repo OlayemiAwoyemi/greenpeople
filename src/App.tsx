@@ -17,6 +17,7 @@ const Ranks = lazy(() => import("./pages/Ranks.tsx"));
 const Finance = lazy(() => import("./pages/Finance.tsx"));
 const MemberPage = lazy(() => import("./pages/MemberPage.tsx"));
 const Backup = lazy(() => import("./pages/Backup.tsx"));
+const Census = lazy(() => import("./pages/Census.tsx"));
 
 const queryClient = new QueryClient();
 
