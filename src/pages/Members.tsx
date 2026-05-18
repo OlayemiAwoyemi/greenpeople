@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faUsers, faIdCard, faDownload, faClockRotateLeft, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faUsers, faIdCard, faDownload, faClockRotateLeft, faSearch, faFilter } from "@fortawesome/free-solid-svg-icons";
 import AccessGate from "@/components/AccessGate";
 import { useToast } from "@/hooks/use-toast";
 
@@ -52,6 +52,63 @@ const MembersContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const { toast } = useToast();
+
+  const [selectedAge, setSelectedAge] = useState("");
+  const [selectedLga, setSelectedLga] = useState("");
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedPvc, setSelectedPvc] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+
+  const uniqueStates = useMemo(() => {
+    return Array.from(new Set(members.map(m => m.state).filter(Boolean))).sort();
+  }, [members]);
+
+  const uniqueLgas = useMemo(() => {
+    const filtered = selectedState 
+      ? members.filter(m => m.state === selectedState) 
+      : members;
+    return Array.from(new Set(filtered.map(m => m.lga).filter(Boolean))).sort();
+  }, [members, selectedState]);
+
+  const uniqueAgeGroups = useMemo(() => {
+    return Array.from(new Set(members.map(m => m.age_group).filter(Boolean))).sort();
+  }, [members]);
+
+  const uniqueGenders = useMemo(() => {
+    return Array.from(new Set(members.map(m => m.gender).filter(Boolean))).sort();
+  }, [members]);
+
+  const clearFilters = () => {
+    setSelectedAge("");
+    setSelectedLga("");
+    setSelectedState("");
+    setSelectedGender("");
+    setSelectedPvc("");
+    setSelectedCountry("");
+  };
+
+  const filteredMembers = useMemo(() => {
+    return members.filter((m) => {
+      const s = searchTerm.toLowerCase();
+      const matchesSearch = !searchTerm || 
+        m.full_name.toLowerCase().includes(s) ||
+        m.phone.includes(s) ||
+        m.state.toLowerCase().includes(s) ||
+        m.lga.toLowerCase().includes(s);
+
+      const matchesAge = !selectedAge || m.age_group === selectedAge;
+      const matchesLga = !selectedLga || m.lga === selectedLga;
+      const matchesState = !selectedState || m.state === selectedState;
+      const matchesGender = !selectedGender || m.gender === selectedGender;
+      const matchesPvc = !selectedPvc || m.has_pvc === selectedPvc;
+      
+      const matchesCountry = !selectedCountry || 
+        (selectedCountry === "Nigeria" ? m.is_nigeria_based !== false : m.is_nigeria_based === false);
+
+      return matchesSearch && matchesAge && matchesLga && matchesState && matchesGender && matchesPvc && matchesCountry;
+    });
+  }, [members, searchTerm, selectedAge, selectedLga, selectedState, selectedGender, selectedPvc, selectedCountry]);
 
   useEffect(() => {
     supabase.from("members").select("*").order("created_at", { ascending: false })
@@ -143,7 +200,7 @@ const MembersContent = () => {
           </Link>
           <h1 className="text-2xl font-bold text-foreground">Members</h1>
           <span className="bg-primary/10 text-primary text-xs font-semibold px-2.5 py-1 rounded-full">
-            {members.length} total
+            {filteredMembers.length === members.length ? `${members.length} total` : `${filteredMembers.length} filtered / ${members.length} total`}
           </span>
           <div className="w-full sm:w-auto sm:ml-auto flex flex-wrap items-center justify-start gap-2">
             <Link
@@ -202,6 +259,119 @@ const MembersContent = () => {
           />
         </div>
 
+        {/* Filters */}
+        <div className="mb-6 bg-card border border-border rounded-2xl p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xs font-semibold text-accent uppercase tracking-wider flex items-center gap-1.5">
+              <FontAwesomeIcon icon={faFilter} className="w-3.5 h-3.5 text-primary" />
+              Filter Members
+            </h2>
+            {(selectedAge || selectedLga || selectedState || selectedGender || selectedPvc || selectedCountry) && (
+              <button 
+                onClick={clearFilters}
+                className="text-xs font-semibold text-destructive hover:underline"
+              >
+                Clear all filters
+              </button>
+            )}
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {/* State Filter */}
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">State</label>
+              <select
+                value={selectedState}
+                onChange={(e) => {
+                  setSelectedState(e.target.value);
+                  setSelectedLga(""); // Reset LGA on state change
+                }}
+                className="w-full text-xs bg-white/50 border border-border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground"
+              >
+                <option value="">All States</option>
+                {uniqueStates.map((st) => (
+                  <option key={st} value={st}>{st}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* LGA Filter */}
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">LGA</label>
+              <select
+                value={selectedLga}
+                disabled={!selectedState}
+                onChange={(e) => setSelectedLga(e.target.value)}
+                className="w-full text-xs bg-white/50 border border-border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground disabled:opacity-50"
+              >
+                <option value="">{selectedState ? "All LGAs" : "Select State First"}</option>
+                {uniqueLgas.map((lg) => (
+                  <option key={lg} value={lg}>{lg}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Age Group Filter */}
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Age Group</label>
+              <select
+                value={selectedAge}
+                onChange={(e) => setSelectedAge(e.target.value)}
+                className="w-full text-xs bg-white/50 border border-border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground"
+              >
+                <option value="">All Age Groups</option>
+                {uniqueAgeGroups.map((ag) => (
+                  <option key={ag} value={ag}>{ag}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Gender Filter */}
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Gender</label>
+              <select
+                value={selectedGender}
+                onChange={(e) => setSelectedGender(e.target.value)}
+                className="w-full text-xs bg-white/50 border border-border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground"
+              >
+                <option value="">All Genders</option>
+                {uniqueGenders.map((g) => (
+                  <option key={g} value={g}>{g}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* PVC Filter */}
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">PVC Status</label>
+              <select
+                value={selectedPvc}
+                onChange={(e) => setSelectedPvc(e.target.value)}
+                className="w-full text-xs bg-white/50 border border-border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground"
+              >
+                <option value="">All PVC Statuses</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="In Progress">In Progress</option>
+              </select>
+            </div>
+
+            {/* Country of Residence Filter */}
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Residence</label>
+              <select
+                value={selectedCountry}
+                onChange={(e) => setSelectedCountry(e.target.value)}
+                className="w-full text-xs bg-white/50 border border-border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground"
+              >
+                <option value="">All Countries</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Diaspora">Diaspora</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
         {loading ? (
           <div className="text-center py-16 text-muted-foreground text-sm">Loading...</div>
         ) : members.length === 0 ? (
@@ -209,19 +379,20 @@ const MembersContent = () => {
             <FontAwesomeIcon icon={faUsers} className="w-8 h-8 text-muted-foreground/30 mb-3" />
             <p className="text-muted-foreground text-sm">No members yet</p>
           </div>
+        ) : filteredMembers.length === 0 ? (
+          <div className="text-center py-16 bg-card border border-border rounded-2xl p-8">
+            <FontAwesomeIcon icon={faFilter} className="w-8 h-8 text-muted-foreground/30 mb-3" />
+            <p className="text-muted-foreground text-sm">No members match your selected filters</p>
+            <button 
+              onClick={clearFilters}
+              className="text-xs text-primary font-semibold hover:underline mt-2"
+            >
+              Clear all filters
+            </button>
+          </div>
         ) : (
           <div className="space-y-3">
-            {members
-              .filter((m) => {
-                const s = searchTerm.toLowerCase();
-                return (
-                  m.full_name.toLowerCase().includes(s) ||
-                  m.phone.includes(s) ||
-                  m.state.toLowerCase().includes(s) ||
-                  m.lga.toLowerCase().includes(s)
-                );
-              })
-              .map((m) => (
+            {filteredMembers.map((m) => (
               <div key={m.id} className="bg-card border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
@@ -229,7 +400,7 @@ const MembersContent = () => {
                     <span className="text-xs text-muted-foreground">· {m.gender}</span>
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {m.state}, {m.lga} · {m.age_group} · {m.phone}
+                    {m.state}, {m.lga} · {m.age_group} · {m.phone} {m.is_nigeria_based === false && <span className="bg-primary/10 text-primary text-[10px] px-1.5 py-0.5 rounded font-medium ml-1">Diaspora</span>}
                   </div>
                   {m.reason && (
                     <p className="text-xs text-muted-foreground/70 mt-1 italic line-clamp-2">"{m.reason}"</p>
