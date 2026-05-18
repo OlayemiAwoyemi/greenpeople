@@ -52,7 +52,7 @@ const COLORS = [
   "#143a14",
 ];
 
-const Census = () => {
+const CensusContent = () => {
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [dim, setDim] = useState<Dim>("state");
