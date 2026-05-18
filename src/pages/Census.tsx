@@ -98,7 +98,20 @@ const CensusContent = () => {
   }, [members, dim]);
 
   const total = members.length;
-  const topN = counts.slice(0, 20);
+  
+  // Group minor categories beyond top 5 into "Others" for the pie/donut chart
+  const pieData = useMemo(() => {
+    if (counts.length <= 6) return counts;
+    const top5 = counts.slice(0, 5);
+    const remaining = counts.slice(5);
+    const otherValue = remaining.reduce((acc, curr) => acc + curr.value, 0);
+    return [...top5, { name: "Others", value: otherValue }];
+  }, [counts]);
+
+  // Limit bar chart to top 8 items for a clean, spaced presentation
+  const barData = useMemo(() => {
+    return counts.slice(0, 8);
+  }, [counts]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -135,53 +148,88 @@ const CensusContent = () => {
           <div className="text-center py-20 text-muted-foreground">No data yet.</div>
         ) : (
           <div className="grid gap-6 lg:grid-cols-2">
-            {/* Pie */}
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <FontAwesomeIcon icon={faChartPie} className="text-primary" />
-                <h2 className="font-semibold">Share by {DIMS.find((d) => d.key === dim)?.label}</h2>
+            {/* Pie / Donut Chart */}
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm lg:col-span-2">
+              <div className="flex items-center gap-2 mb-6">
+                <FontAwesomeIcon icon={faChartPie} className="text-primary text-lg" />
+                <h2 className="font-bold text-lg text-foreground">Share by {DIMS.find((d) => d.key === dim)?.label}</h2>
               </div>
-              <div className="h-[360px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={topN}
-                      dataKey="value"
-                      nameKey="name"
-                      outerRadius={120}
-                      label={(e: any) => `${e.name} (${((e.value / total) * 100).toFixed(1)}%)`}
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                {/* Donut graphic */}
+                <div className="w-full md:w-2/5 h-[260px] relative flex items-center justify-center">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={pieData}
+                        dataKey="value"
+                        nameKey="name"
+                        innerRadius={65}
+                        outerRadius={90}
+                        paddingAngle={3}
+                        label={false}
+                      >
+                        {pieData.map((_, i) => (
+                          <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip formatter={(v: number) => `${v.toLocaleString()} members`} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  {/* Center Stat Inside Donut */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span className="text-3xl font-extrabold text-foreground tracking-tight">{total.toLocaleString()}</span>
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Members</span>
+                  </div>
+                </div>
+
+                {/* Custom Responsive Legend Grid */}
+                <div className="w-full md:w-3/5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {pieData.map((c, i) => (
+                    <div 
+                      key={c.name} 
+                      className="flex items-center gap-3 bg-muted/30 hover:bg-muted/50 border border-border/50 rounded-2xl p-3 transition-colors shadow-sm"
                     >
-                      {topN.map((_, i) => (
-                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip formatter={(v: number) => `${v.toLocaleString()} members`} />
-                  </PieChart>
-                </ResponsiveContainer>
+                      <span 
+                        className="w-3.5 h-3.5 rounded-full shrink-0 shadow-sm" 
+                        style={{ backgroundColor: COLORS[i % COLORS.length] }} 
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="font-bold text-sm text-foreground truncate">{c.name}</p>
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
+                          <span className="font-semibold text-foreground">{c.value.toLocaleString()}</span>
+                          <span>·</span>
+                          <span>{((c.value / total) * 100).toFixed(1)}%</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* Bar */}
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <FontAwesomeIcon icon={faChartColumn} className="text-primary" />
-                <h2 className="font-semibold">Counts by {DIMS.find((d) => d.key === dim)?.label}</h2>
+            {/* Bar Chart */}
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm lg:col-span-2">
+              <div className="flex items-center gap-2 mb-6">
+                <FontAwesomeIcon icon={faChartColumn} className="text-primary text-lg" />
+                <h2 className="font-bold text-lg text-foreground">Top Counts by {DIMS.find((d) => d.key === dim)?.label}</h2>
               </div>
-              <div className="h-[360px]">
+              <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={topN} margin={{ top: 5, right: 10, left: 0, bottom: 60 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis
-                      dataKey="name"
-                      angle={-35}
-                      textAnchor="end"
-                      interval={0}
-                      height={70}
-                      tick={{ fontSize: 11 }}
+                  <BarChart 
+                    data={barData} 
+                    layout="vertical" 
+                    margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} />
+                    <XAxis type="number" allowDecimals={false} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
+                    <YAxis 
+                      dataKey="name" 
+                      type="category" 
+                      width={100} 
+                      tick={{ fontSize: 11, fontWeight: 600, fill: "hsl(var(--foreground))" }} 
                     />
-                    <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
                     <Tooltip formatter={(v: number) => `${v.toLocaleString()} members`} />
-                    <Bar dataKey="value" fill="#7cb43c" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="value" fill="#7cb43c" radius={[0, 6, 6, 0]} barSize={18} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
