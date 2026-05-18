@@ -98,19 +98,9 @@ const CensusContent = () => {
   }, [members, dim]);
 
   const total = members.length;
-  
-  // Group minor categories beyond top 5 into "Others" for the pie/donut chart
-  const pieData = useMemo(() => {
-    if (counts.length <= 6) return counts;
-    const top5 = counts.slice(0, 5);
-    const remaining = counts.slice(5);
-    const otherValue = remaining.reduce((acc, curr) => acc + curr.value, 0);
-    return [...top5, { name: "Others", value: otherValue }];
-  }, [counts]);
 
-  // Limit bar chart to top 8 items for a clean, spaced presentation
-  const barData = useMemo(() => {
-    return counts.slice(0, 8);
+  const barChartHeight = useMemo(() => {
+    return Math.max(320, counts.length * 32);
   }, [counts]);
 
   return (
@@ -156,19 +146,19 @@ const CensusContent = () => {
               </div>
               <div className="flex flex-col md:flex-row items-center gap-8">
                 {/* Donut graphic */}
-                <div className="w-full md:w-2/5 h-[260px] relative flex items-center justify-center">
+                <div className="w-full md:w-2/5 h-[260px] relative flex items-center justify-center shrink-0">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
-                        data={pieData}
+                        data={counts}
                         dataKey="value"
                         nameKey="name"
                         innerRadius={65}
                         outerRadius={90}
-                        paddingAngle={3}
+                        paddingAngle={1}
                         label={false}
                       >
-                        {pieData.map((_, i) => (
+                        {counts.map((_, i) => (
                           <Cell key={i} fill={COLORS[i % COLORS.length]} />
                         ))}
                       </Pie>
@@ -182,9 +172,9 @@ const CensusContent = () => {
                   </div>
                 </div>
 
-                {/* Custom Responsive Legend Grid */}
-                <div className="w-full md:w-3/5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {pieData.map((c, i) => (
+                {/* Custom Responsive Legend Grid with Scrollable Container */}
+                <div className="w-full md:w-3/5 max-h-[300px] md:max-h-[360px] overflow-y-auto pr-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {counts.map((c, i) => (
                     <div 
                       key={c.name} 
                       className="flex items-center gap-3 bg-muted/30 hover:bg-muted/50 border border-border/50 rounded-2xl p-3 transition-colors shadow-sm"
@@ -211,12 +201,12 @@ const CensusContent = () => {
             <div className="rounded-2xl border border-border bg-card p-5 shadow-sm lg:col-span-2">
               <div className="flex items-center gap-2 mb-6">
                 <FontAwesomeIcon icon={faChartColumn} className="text-primary text-lg" />
-                <h2 className="font-bold text-lg text-foreground">Top Counts by {DIMS.find((d) => d.key === dim)?.label}</h2>
+                <h2 className="font-bold text-lg text-foreground">Counts by {DIMS.find((d) => d.key === dim)?.label}</h2>
               </div>
-              <div className="h-[400px]">
+              <div style={{ height: `${barChartHeight}px` }} className="w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart 
-                    data={barData} 
+                    data={counts} 
                     layout="vertical" 
                     margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
                   >
