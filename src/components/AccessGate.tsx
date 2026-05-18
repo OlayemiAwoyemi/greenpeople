@@ -37,7 +37,7 @@ const AccessGate = ({ children, customCode }: { children: React.ReactNode; custo
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder="Access code"
-          className="w-full bg-secondary/50 border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 mb-3 text-center tracking-widest"
+          className="w-full bg-secondary/50 border border-border rounded-xl px-4 py-3 text-base md:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 mb-3 text-center tracking-widest"
           autoFocus
         />
         {error && <p className="text-destructive text-xs mb-3">Incorrect access code</p>}

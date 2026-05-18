@@ -54,7 +54,7 @@ const PhoneNumbersContent = () => {
                 placeholder="Search or confirm a phone number..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-primary-foreground/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full bg-primary-foreground/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-base md:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
             </div>
             {searchTerm && (

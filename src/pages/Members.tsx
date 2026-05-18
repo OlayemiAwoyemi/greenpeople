@@ -255,7 +255,7 @@ const MembersContent = () => {
             placeholder="Search by name, phone, state, or LGA..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3 text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all"
           />
         </div>
 

@@ -122,7 +122,7 @@ const GreenGuide = () => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
               placeholder="Type a message..."
-              className="flex-1 bg-secondary/50 border border-border rounded-xl px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="flex-1 bg-secondary/50 border border-border rounded-xl px-3.5 py-2.5 text-base md:text-[13px] focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
             <button onClick={send} disabled={loading || !input.trim()}
               className="bg-primary text-primary-foreground w-9 h-9 rounded-xl flex items-center justify-center hover:opacity-90 disabled:opacity-50 shrink-0">
