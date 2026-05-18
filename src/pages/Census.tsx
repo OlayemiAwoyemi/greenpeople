@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import AccessGate from "@/components/AccessGate";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import {
@@ -51,7 +52,7 @@ const COLORS = [
   "#143a14",
 ];
 
-const Census = () => {
+const CensusContent = () => {
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [dim, setDim] = useState<Dim>("state");
@@ -220,5 +221,11 @@ const Census = () => {
     </div>
   );
 };
+
+const Census = () => (
+  <AccessGate>
+    <CensusContent />
+  </AccessGate>
+);
 
 export default Census;
