@@ -276,13 +276,13 @@ const MemberPage = () => {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center">
       <Navbar />
       <div className="text-muted-foreground text-sm">Loading…</div>
     </div>
   );
   if (!member) return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Navbar />
       <div className="pt-32 text-center px-5">
         <h1 className="text-2xl font-bold mb-2">Member not found</h1>
@@ -301,7 +301,7 @@ const MemberPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background pb-16 overflow-x-hidden">
+    <div className="min-h-screen pb-16 overflow-x-hidden">
       <Navbar />
       <div className="pt-24 max-w-3xl mx-auto px-4 sm:px-5">
         {/* Profile card */}
@@ -337,15 +337,15 @@ const MemberPage = () => {
           )}
 
           <div className="grid grid-cols-3 gap-2 mt-4 text-center">
-            <div className="bg-background/60 rounded-lg py-2 px-1">
+            <div className="bg-white/60 rounded-2xl py-2 px-1">
               <div className="text-sm font-bold text-foreground">{Math.round(ownPostPoints)}</div>
               <div className="text-[9px] sm:text-[10px] text-muted-foreground">Actions</div>
             </div>
-            <div className="bg-background/60 rounded-lg py-2 px-1">
+            <div className="bg-white/60 rounded-2xl py-2 px-1">
               <div className="text-sm font-bold text-foreground">{Math.round(hostBonus * HOST_MULTIPLIER)}</div>
               <div className="text-[9px] sm:text-[10px] text-muted-foreground">Visitors</div>
             </div>
-            <div className="bg-background/60 rounded-lg py-2 px-1">
+            <div className="bg-white/60 rounded-2xl py-2 px-1">
               <div className="text-sm font-bold text-foreground">{referralBonus}</div>
               <div className="text-[9px] sm:text-[10px] text-muted-foreground">Referrals</div>
             </div>
@@ -354,7 +354,7 @@ const MemberPage = () => {
 
         {/* Join CTA for visitors */}
         {!isOwnPage && (
-          <Link to="/#join" className="flex items-center justify-center gap-2 mb-5 bg-accent text-accent-foreground rounded-xl px-4 py-3 text-sm font-bold shadow-md hover:opacity-90 whitespace-nowrap">
+          <Link to="/#join" className="flex items-center justify-center gap-2 mb-5 btn-primary whitespace-nowrap">
             <FontAwesomeIcon icon={faUserPlus} className="w-4 h-4" />
             Join Green People — Get Your Own Page
           </Link>
@@ -362,9 +362,9 @@ const MemberPage = () => {
 
         {/* Social posts */}
         <section className="mb-8">
-          <h2 className="text-[11px] sm:text-sm font-bold text-foreground uppercase tracking-widest mb-3">Subscribe · Like · Comment · Share</h2>
+          <h2 className="text-[11px] sm:text-sm font-bold text-foreground mb-3">Subscribe · Like · Comment · Share</h2>
           {groupedPosts.every((g) => g.items.length === 0) && (
-            <p className="text-sm text-muted-foreground bg-secondary/40 border border-border rounded-xl p-6 text-center">No social posts yet. Check back soon.</p>
+            <p className="text-sm text-muted-foreground glass p-6 text-center">No social posts yet. Check back soon.</p>
           )}
           {groupedPosts.map(({ platform, items: list }) => list.length > 0 && (
             <div key={platform} className="mb-4">
@@ -407,10 +407,10 @@ const MemberPage = () => {
         <section>
           <div className="flex items-center gap-2 mb-3">
             <FontAwesomeIcon icon={faBookOpen} className="w-4 h-4 text-primary" />
-            <h2 className="text-[11px] sm:text-sm font-bold text-foreground uppercase tracking-widest">Green Classroom</h2>
+            <h2 className="text-[11px] sm:text-sm font-bold text-foreground">Green Classroom</h2>
           </div>
           {items.length === 0 && (
-            <p className="text-sm text-muted-foreground bg-secondary/40 border border-border rounded-xl p-6 text-center">No lessons yet. Check back soon.</p>
+            <p className="text-sm text-muted-foreground glass p-6 text-center">No lessons yet. Check back soon.</p>
           )}
           <div className="grid gap-2">
             {items.map((it) => {
@@ -435,7 +435,7 @@ const MemberPage = () => {
                   </button>
 
                   {list.length > 0 && (
-                    <div className="border-t border-border p-3">
+                    <div className="border-t border-pale p-3">
                       {quizDone ? (
                         <div className="text-[11px] text-primary font-semibold inline-flex items-center gap-1.5">
                           <FontAwesomeIcon icon={faCheck} className="w-3 h-3" /> Quiz completed
@@ -463,7 +463,7 @@ const MemberPage = () => {
                             </div>
                           ))}
                           <div className="flex gap-2">
-                            <button onClick={() => submitQuiz(it)} className="flex-1 bg-primary text-primary-foreground rounded-lg py-2 text-xs font-semibold whitespace-nowrap">Submit</button>
+                            <button onClick={() => submitQuiz(it)} className="flex-1 btn-primary !min-h-10 !text-sm whitespace-nowrap">Submit</button>
                             <button onClick={() => setActiveQuiz(null)} className="px-3 bg-secondary text-foreground rounded-lg py-2 text-xs font-semibold whitespace-nowrap">Cancel</button>
                           </div>
                         </div>
@@ -479,11 +479,11 @@ const MemberPage = () => {
 
       {/* Lesson reader modal */}
       {openLesson && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-deep/30 backdrop-blur-sm p-0 sm:p-4" role="dialog" aria-modal="true">
           <div className="bg-background w-full sm:max-w-2xl sm:rounded-2xl rounded-t-2xl max-h-[90vh] flex flex-col border border-border shadow-2xl">
-            <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-border">
+            <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-pale">
               <div className="flex-1 min-w-0">
-                <div className="text-[10px] uppercase tracking-widest font-bold text-primary mb-1">{openLesson.category.replace("_", " ")}</div>
+                <div className="text-[10px] font-bold text-primary mb-1">{openLesson.category.replace("_", " ")}</div>
                 <h3 className="text-base sm:text-lg font-bold text-foreground break-words">{openLesson.title}</h3>
               </div>
               <button onClick={() => setOpenLesson(null)} className="text-muted-foreground hover:text-foreground p-2 -m-2 flex-shrink-0" aria-label="Close lesson">
@@ -505,17 +505,17 @@ const MemberPage = () => {
                 </a>
               )}
             </div>
-            <div className="border-t border-border p-3 sm:p-4 flex items-center gap-3">
+            <div className="border-t border-pale p-3 sm:p-4 flex items-center gap-3">
               <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
                 <div className="h-full bg-primary transition-all" style={{ width: `${((lessonStep + 1) / Math.max(1, lessonBits.length)) * 100}%` }} />
               </div>
               <div className="text-[11px] text-muted-foreground whitespace-nowrap font-medium">{lessonStep + 1} / {lessonBits.length}</div>
               {lessonStep < lessonBits.length - 1 ? (
-                <button onClick={() => setLessonStep((s) => s + 1)} className="bg-primary text-primary-foreground rounded-xl px-4 py-2 text-sm font-semibold inline-flex items-center gap-2 whitespace-nowrap">
+                <button onClick={() => setLessonStep((s) => s + 1)} className="btn-primary !min-h-10 !text-sm inline-flex items-center gap-2 whitespace-nowrap">
                   Continue <FontAwesomeIcon icon={faArrowRight} className="w-3 h-3" />
                 </button>
               ) : (
-                <button onClick={() => setOpenLesson(null)} className="bg-primary text-primary-foreground rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap">
+                <button onClick={() => setOpenLesson(null)} className="btn-primary !min-h-10 !text-sm whitespace-nowrap">
                   Done
                 </button>
               )}

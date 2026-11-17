@@ -99,7 +99,7 @@ const CensusContent = () => {
   const topN = counts.slice(0, 20);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Navbar />
       <div className="pt-24 pb-16 section-container">
         <div className="flex items-center gap-3 mb-2">
@@ -134,7 +134,7 @@ const CensusContent = () => {
         ) : (
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Pie */}
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+            <div className="glass p-5">
               <div className="flex items-center gap-2 mb-4">
                 <FontAwesomeIcon icon={faChartPie} className="text-primary" />
                 <h2 className="font-semibold">Share by {DIMS.find((d) => d.key === dim)?.label}</h2>
@@ -160,7 +160,7 @@ const CensusContent = () => {
             </div>
 
             {/* Bar */}
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+            <div className="glass p-5">
               <div className="flex items-center gap-2 mb-4">
                 <FontAwesomeIcon icon={faChartColumn} className="text-primary" />
                 <h2 className="font-semibold">Counts by {DIMS.find((d) => d.key === dim)?.label}</h2>
@@ -186,14 +186,14 @@ const CensusContent = () => {
             </div>
 
             {/* Table */}
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm lg:col-span-2">
+            <div className="glass p-5 lg:col-span-2">
               <h2 className="font-semibold mb-4">
                 Full list — {counts.length} {DIMS.find((d) => d.key === dim)?.label.toLowerCase()} group{counts.length === 1 ? "" : "s"}
               </h2>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-left border-b border-border text-muted-foreground">
+                    <tr className="text-left border-b border-pale text-muted-foreground">
                       <th className="py-2 pr-4">#</th>
                       <th className="py-2 pr-4">{DIMS.find((d) => d.key === dim)?.label}</th>
                       <th className="py-2 pr-4 text-right">Members</th>
@@ -202,7 +202,7 @@ const CensusContent = () => {
                   </thead>
                   <tbody>
                     {counts.map((c, i) => (
-                      <tr key={c.name} className="border-b border-border/40">
+                      <tr key={c.name} className="border-b border-pale/40">
                         <td className="py-2 pr-4 text-muted-foreground">{i + 1}</td>
                         <td className="py-2 pr-4 font-medium">{c.name}</td>
                         <td className="py-2 pr-4 text-right">{c.value.toLocaleString()}</td>

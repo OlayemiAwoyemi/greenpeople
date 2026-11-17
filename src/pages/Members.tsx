@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import AdminShell, { Skeleton, EmptyState, ErrorState, Initials } from "@/components/admin/AdminShell";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faUsers, faIdCard, faDownload, faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
+import { faUsers, faDownload, faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import AccessGate from "@/components/AccessGate";
 import { useToast } from "@/hooks/use-toast";
 
@@ -49,10 +50,27 @@ const MembersContent = () => {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
+  const [loadError, setLoadError] = useState(false);
+  const [query, setQuery] = useState("");
+  const [pvcFilter, setPvcFilter] = useState("all");
+  const [sort, setSort] = useState<{ key: "full_name" | "state" | "created_at" | "has_pvc"; dir: 1 | -1 }>({ key: "created_at", dir: -1 });
+
+  const load = () => {
+    setLoading(true); setLoadError(false);
     supabase.from("members").select("*").order("created_at", { ascending: false })
-      .then(({ data }) => { if (data) setMembers(data); setLoading(false); });
-  }, []);
+      .then(({ data, error }) => { if (error) setLoadError(true); else if (data) setMembers(data); setLoading(false); });
+  };
+  useEffect(load, []);
+
+  const visible = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return members
+      .filter((m) => pvcFilter === "all" || m.has_pvc === pvcFilter)
+      .filter((m) => !q || [m.full_name, m.phone, m.state, m.lga].some((v) => v?.toLowerCase().includes(q)))
+      .sort((a, b) => String(a[sort.key] ?? "").localeCompare(String(b[sort.key] ?? "")) * sort.dir);
+  }, [members, query, pvcFilter, sort]);
+
+  const toggleSort = (key: typeof sort.key) => setSort((s) => ({ key, dir: s.key === key ? (s.dir === 1 ? -1 : 1) : 1 }));
 
   const updatePvc = async (id: string, newStatus: string) => {
     setUpdatingId(id);
@@ -90,94 +108,101 @@ const MembersContent = () => {
     toast({ title: `Exported ${data.length} log entries (full backup)` });
   };
 
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="section-container py-8">
-        <div className="flex flex-wrap items-center gap-3 mb-8">
-          <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
-            <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
-          </Link>
-          <h1 className="text-2xl font-bold text-foreground">Members</h1>
-          <span className="bg-primary/10 text-primary text-xs font-semibold px-2.5 py-1 rounded-full">
-            {members.length} total
-          </span>
-          <div className="w-full sm:w-auto sm:ml-auto flex flex-wrap items-center justify-start gap-2">
-            <Link
-              to="/#join"
-              className="inline-flex items-center gap-1.5 bg-accent text-accent-foreground text-xs font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity whitespace-nowrap"
-            >
-              <FontAwesomeIcon icon={faUsers} className="w-3 h-3" />
-              Join Green People
-            </Link>
-            <button
-              onClick={exportMembers}
-              className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity whitespace-nowrap"
-            >
-              <FontAwesomeIcon icon={faDownload} className="w-3 h-3" />
-              Export CSV
-            </button>
-            <button
-              onClick={exportSignupLog}
-              className="inline-flex items-center gap-1.5 bg-secondary text-foreground text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-secondary/80 transition-colors border border-border whitespace-nowrap"
-              title="Download append-only backup log of every registration attempt"
-            >
-              <FontAwesomeIcon icon={faClockRotateLeft} className="w-3 h-3" />
-              Full Backup Log
-            </button>
-          </div>
-        </div>
+  const SortBtn = ({ k, label }: { k: typeof sort.key; label: string }) => (
+    <button onClick={() => toggleSort(k)} className="inline-flex items-center gap-1 font-semibold hover:text-foreground" aria-label={`Sort by ${label}`}>
+      {label}<span aria-hidden="true">{sort.key === k ? (sort.dir === 1 ? "↑" : "↓") : "↕"}</span>
+    </button>
+  );
+  const fmt = (d: string) => new Date(d).toLocaleDateString("en-NG", { dateStyle: "medium" });
 
-        {loading ? (
-          <div className="text-center py-16 text-muted-foreground text-sm">Loading...</div>
-        ) : members.length === 0 ? (
-          <div className="text-center py-16">
-            <FontAwesomeIcon icon={faUsers} className="w-8 h-8 text-muted-foreground/30 mb-3" />
-            <p className="text-muted-foreground text-sm">No members yet</p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {members.map((m) => (
-              <div key={m.id} className="bg-card border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-3">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-semibold text-sm text-foreground truncate">{m.full_name}</span>
-                    <span className="text-xs text-muted-foreground">· {m.gender}</span>
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {m.state}, {m.lga} · {m.age_group} · {m.phone}
-                  </div>
-                  {m.reason && (
-                    <p className="text-xs text-muted-foreground/70 mt-1 italic line-clamp-2">"{m.reason}"</p>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <div className="relative">
-                    <select
-                      value={m.has_pvc}
-                      disabled={updatingId === m.id}
-                      onChange={(e) => updatePvc(m.id, e.target.value)}
-                      style={{ backgroundImage: "none", paddingRight: "1.75rem" }}
-                      className={`appearance-none cursor-pointer text-xs font-medium pl-7 pr-7 py-1.5 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50 ${
-                        m.has_pvc === "Yes" ? "bg-primary/10 text-primary" : m.has_pvc === "In Progress" ? "bg-yellow-100 text-yellow-700" : "bg-destructive/10 text-destructive"
-                      }`}
-                    >
-                      {PVC_OPTIONS.map((opt) => (
-                        <option key={opt} value={opt} className="text-foreground bg-background">{opt}</option>
-                      ))}
-                    </select>
-                    <FontAwesomeIcon icon={faIdCard} className="w-3 h-3 absolute left-2 top-1/2 -translate-y-1/2 pointer-events-none opacity-70" />
-                    <svg className="w-2.5 h-2.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
-                  </div>
-                  <span className="text-[10px] text-muted-foreground">
-                    {new Date(m.created_at).toLocaleDateString("en-NG", { dateStyle: "medium" })}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+  return (
+    <AdminShell title="Members" subtitle={`${members.length} registered · ${visible.length} shown`}
+      actions={<>
+        <Link to="/#join" className="btn-glass !min-h-10 !px-4 !text-sm"><FontAwesomeIcon icon={faUsers} className="w-3 h-3" />Join Green People</Link>
+        <button onClick={exportMembers} className="btn-primary !min-h-10 !px-4 !text-sm"><FontAwesomeIcon icon={faDownload} className="w-3 h-3" />Export CSV</button>
+        <button onClick={exportSignupLog} className="btn-glass !min-h-10 !px-4 !text-sm" title="Download append-only backup log of every registration attempt"><FontAwesomeIcon icon={faClockRotateLeft} className="w-3 h-3" />Full backup log</button>
+      </>}>
+      <div className="glass p-3 mb-4 flex flex-col sm:flex-row gap-2">
+        <label htmlFor="m-search" className="sr-only">Search members</label>
+        <input id="m-search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search name, phone, state or LGA"
+          className="flex-1 bg-white/70 border border-pale rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60" />
+        <label htmlFor="m-pvc" className="sr-only">Filter by PVC status</label>
+        <select id="m-pvc" value={pvcFilter} onChange={(e) => setPvcFilter(e.target.value)}
+          className="bg-white/70 border border-pale rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60">
+          <option value="all">All PVC statuses</option>
+          {PVC_OPTIONS.map((o) => <option key={o} value={o}>PVC: {o}</option>)}
+        </select>
       </div>
-    </div>
+
+      {loading ? <Skeleton rows={6} /> : loadError ? <ErrorState onRetry={load} /> : members.length === 0 ? (
+        <EmptyState title="No members yet" hint="New registrations will appear here." />
+      ) : visible.length === 0 ? (
+        <EmptyState title="No members match your search" hint="Try a different name, state or filter." />
+      ) : (
+        <>
+          <div className="glass overflow-hidden hidden md:block">
+            <div className="max-h-[70vh] overflow-auto">
+              <table className="w-full text-sm">
+                <thead className="sticky top-0 z-10 bg-white/95 backdrop-blur text-left text-muted-foreground">
+                  <tr>
+                    <th className="p-3 pl-4"><SortBtn k="full_name" label="Name" /></th>
+                    <th className="p-3"><SortBtn k="state" label="Location" /></th>
+                    <th className="p-3">Details</th>
+                    <th className="p-3"><SortBtn k="has_pvc" label="PVC" /></th>
+                    <th className="p-3 pr-4"><SortBtn k="created_at" label="Joined" /></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visible.map((m) => (
+                    <tr key={m.id} className="odd:bg-mist/60 align-top">
+                      <td className="p-3 pl-4"><div className="flex items-center gap-3 min-w-0"><Initials name={m.full_name} />
+                        <div className="min-w-0"><div className="font-semibold text-foreground">{m.full_name}</div>
+                        {m.reason && <p className="text-xs text-muted-foreground italic line-clamp-1 max-w-xs">"{m.reason}"</p>}</div></div></td>
+                      <td className="p-3 text-foreground">{m.state}<div className="text-xs text-muted-foreground">{m.lga}</div></td>
+                      <td className="p-3 text-muted-foreground">{m.gender} · {m.age_group}<div className="text-xs">{m.phone}</div></td>
+                      <td className="p-3"><div className="relative inline-block">
+                      <select aria-label={`PVC status for ${m.full_name}`} value={m.has_pvc} disabled={updatingId === m.id}
+                        onChange={(e) => updatePvc(m.id, e.target.value)} style={{ backgroundImage: "none" }}
+                        className={`appearance-none cursor-pointer text-sm font-semibold pl-3 pr-8 py-1.5 min-h-9 rounded-full border-0 focus:outline-none focus:ring-[3px] focus:ring-primary/60 disabled:opacity-50 ${
+                          m.has_pvc === "Yes" ? "bg-primary/25 text-foreground" : m.has_pvc === "In Progress" ? "bg-pale text-foreground" : "bg-destructive/10 text-destructive"}`}>
+                        {PVC_OPTIONS.map((opt) => <option key={opt} value={opt} className="text-foreground bg-background">{opt}</option>)}
+                      </select>
+                      <svg className="w-2.5 h-2.5 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
+                    </div></td>
+                      <td className="p-3 pr-4 text-muted-foreground whitespace-nowrap">{fmt(m.created_at)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <ul className="md:hidden space-y-3">
+            {visible.map((m) => (
+              <li key={m.id} className="glass p-4">
+                <div className="flex items-start gap-3">
+                  <Initials name={m.full_name} />
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-foreground">{m.full_name}</div>
+                    <div className="text-sm text-muted-foreground">{m.state}, {m.lga}</div>
+                    <div className="text-sm text-muted-foreground">{m.gender} · {m.age_group} · {m.phone}</div>
+                    {m.reason && <p className="text-sm text-muted-foreground italic mt-1 line-clamp-2">"{m.reason}"</p>}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mt-3"><div className="relative inline-block">
+                      <select aria-label={`PVC status for ${m.full_name}`} value={m.has_pvc} disabled={updatingId === m.id}
+                        onChange={(e) => updatePvc(m.id, e.target.value)} style={{ backgroundImage: "none" }}
+                        className={`appearance-none cursor-pointer text-sm font-semibold pl-3 pr-8 py-1.5 min-h-9 rounded-full border-0 focus:outline-none focus:ring-[3px] focus:ring-primary/60 disabled:opacity-50 ${
+                          m.has_pvc === "Yes" ? "bg-primary/25 text-foreground" : m.has_pvc === "In Progress" ? "bg-pale text-foreground" : "bg-destructive/10 text-destructive"}`}>
+                        {PVC_OPTIONS.map((opt) => <option key={opt} value={opt} className="text-foreground bg-background">{opt}</option>)}
+                      </select>
+                      <svg className="w-2.5 h-2.5 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
+                    </div><span className="text-xs text-muted-foreground">{fmt(m.created_at)}</span></div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </AdminShell>
   );
 };
 
