@@ -29,7 +29,7 @@ const WhyNow = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="why-now" className="py-20 md:py-28 bg-background" ref={ref}>
+    <section id="why-now" className="py-20 md:py-28" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -37,13 +37,13 @@ const WhyNow = () => {
           transition={{ duration: 0.5 }}
           className="text-center max-w-2xl mx-auto mb-14"
         >
-          <span className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block">
-            The Time is Now
+          <span className="eyebrow">
+            The time is now
           </span>
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 leading-tight">
+          <h2 className="text-3xl md:text-[2.75rem] font-bold text-foreground mb-4 leading-tight">
             Nigeria is ready for something new
           </h2>
-          <p className="text-muted-foreground text-sm leading-relaxed">
+          <p className="text-muted-foreground text-lg leading-relaxed">
             Our youth want jobs and a future. Our parents want security and good schools.
             Our elders want legacy and peace. <strong className="text-foreground">This is our moment.</strong>
           </p>
@@ -56,13 +56,13 @@ const WhyNow = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.4, delay: 0.1 + i * 0.1 }}
-              className="bg-secondary/50 border border-border rounded-xl p-6 text-center hover:shadow-md transition-shadow"
+              className="glass p-6 text-center hover:shadow-md transition-shadow"
             >
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <FontAwesomeIcon icon={feature.icon} className="w-5 h-5 text-primary" />
+              <div className="icon-chip w-12 h-12 mx-auto mb-4">
+                <FontAwesomeIcon icon={feature.icon} className="w-5 h-5" />
               </div>
-              <h3 className="font-semibold text-sm text-foreground mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground text-xs leading-relaxed">{feature.description}</p>
+              <h3 className="font-semibold text-lg text-foreground mb-2">{feature.title}</h3>
+              <p className="text-muted-foreground text-[15px] leading-relaxed">{feature.description}</p>
             </motion.div>
           ))}
         </div>

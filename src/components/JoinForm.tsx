@@ -201,15 +201,18 @@ const JoinForm = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="max-w-md mx-auto text-center"
+            className="max-w-md mx-auto text-center glass p-6 md:p-8"
           >
+            <motion.div initial={{ scale: 0, rotate: -30 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 260, damping: 14 }} className="w-16 h-16 rounded-full bg-primary flex items-center justify-center mx-auto mb-5 shadow-glow" aria-hidden="true">
+              <FontAwesomeIcon icon={faCheck} className="w-7 h-7 text-primary-foreground" />
+            </motion.div>
             {/* Downloadable card */}
-            <div ref={cardRef} className="bg-[#0a2e1a] border border-primary/20 rounded-xl p-6 mb-4">
+            <div ref={cardRef} className="bg-deep border border-primary/30 rounded-3xl p-6 mb-5">
               <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3">
                 <FontAwesomeIcon icon={faCheck} className="w-5 h-5 text-primary" />
               </div>
               <h3 className="text-lg font-bold text-white mb-1">
-                GREEN PEOPLE MOVEMENT
+                Green People Movement
               </h3>
               <p className="text-white/50 text-xs mb-4">Digital Membership Card</p>
               <div className="text-white font-semibold text-base mb-1">
@@ -227,13 +230,13 @@ const JoinForm = () => {
 
             <button
               onClick={handleDownloadCard}
-              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all mb-6 whitespace-nowrap shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              className="btn-primary font-bold mb-6"
             >
               <FontAwesomeIcon icon={faDownload} className="w-4 h-4" />
               Download Membership Card
             </button>
 
-            <h2 className="text-xl font-bold text-primary-foreground mb-3">
+            <h2 className="text-2xl font-bold text-foreground mb-3">
               Welcome to the Movement! 🎉
             </h2>
 
@@ -242,7 +245,7 @@ const JoinForm = () => {
                 <p className="text-primary-foreground text-sm font-semibold mb-2">
                   🗳️ Get Your PVC — It's Your Power!
                 </p>
-                <p className="text-primary-foreground/70 text-xs mb-3">
+                <p className="text-muted-foreground text-sm mb-3">
                   {formData.hasPvc === "In Progress"
                     ? "Great that you've started! Complete your registration and collect your PVC before 2027."
                     : "You need your Permanent Voter's Card to vote in 2027. Start your registration today — it's free!"}
@@ -258,7 +261,7 @@ const JoinForm = () => {
               </div>
             )}
 
-            <p className="text-primary-foreground/60 text-sm mb-4">
+            <p className="text-muted-foreground text-base mb-4">
               You are now part of something bigger. Share and bring others in.
             </p>
 
@@ -272,7 +275,7 @@ const JoinForm = () => {
             <div>
               <button className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity whitespace-nowrap">
                 <FontAwesomeIcon icon={faShareNodes} className="w-3.5 h-3.5" />
-                Invite Friends
+                Invite friends
               </button>
             </div>
           </motion.div>
@@ -281,11 +284,11 @@ const JoinForm = () => {
     );
   }
 
-  const inputClass = "w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-xl px-3.5 py-2.5 text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 appearance-none";
-  const selectClass = "w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-xl px-3.5 py-2.5 pr-10 text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_12px_center]";
-  const labelClass = "text-primary-foreground/70 text-xs font-medium mb-1.5 block";
-  const errorClass = "text-red-400 text-[11px] mt-1";
-  const inputErrorBorder = "border-red-400/60";
+  const inputClass = "w-full bg-white/70 border border-pale rounded-2xl px-4 py-3 min-h-11 text-[15px] text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-[3px] focus:ring-primary/60 focus:border-primary appearance-none transition-shadow";
+  const selectClass = "w-full bg-white/70 border border-pale rounded-2xl px-4 py-3 min-h-11 pr-10 text-[15px] text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/30 appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_12px_center]";
+  const labelClass = "text-foreground text-sm font-semibold mb-1.5 block";
+  const errorClass = "text-destructive text-xs font-medium mt-1";
+  const inputErrorBorder = "border-destructive/70";
 
   return (
     <section id="join" className="py-20 md:py-28 gradient-green relative overflow-hidden" ref={ref}>
@@ -295,13 +298,13 @@ const JoinForm = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           className="text-center max-w-2xl mx-auto mb-10"
         >
-          <span className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block">
-            Be Part of History
+          <span className="eyebrow">
+            Be part of history
           </span>
-          <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-3 leading-tight">
+          <h2 className="text-3xl md:text-[2.75rem] font-bold text-primary-foreground mb-3 leading-tight">
             Join the Movement
           </h2>
-          <p className="text-primary-foreground/60 text-sm">
+          <p className="text-muted-foreground text-base">
             It's free. It takes 60 seconds. And it could change Nigeria forever.
           </p>
         </motion.div>
@@ -311,18 +314,18 @@ const JoinForm = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.15 }}
           onSubmit={handleSubmit}
-          className="max-w-xl mx-auto bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/10 rounded-2xl p-6 md:p-8"
+          className="max-w-3xl mx-auto glass p-6 md:p-10"
         >
-          <div className="grid sm:grid-cols-3 gap-3 mb-4">
+          <div className="grid md:grid-cols-3 gap-4 mb-4">
             <div>
-              <label className={labelClass}>First Name *</label>
+              <label className={labelClass}>First name *</label>
               <input required type="text" maxLength={50} value={formData.firstName}
                 onChange={(e) => { setFormData({ ...formData, firstName: e.target.value }); setErrors(prev => ({ ...prev, firstName: "" })); }}
                 placeholder="First" className={`${inputClass} ${errors.firstName ? inputErrorBorder : ""}`} />
               {errors.firstName && <p className={errorClass}>{errors.firstName}</p>}
             </div>
             <div>
-              <label className={labelClass}>Middle Name</label>
+              <label className={labelClass}>Middle name</label>
               <input type="text" maxLength={50} value={formData.middleName}
                 onChange={(e) => { setFormData({ ...formData, middleName: e.target.value }); setErrors(prev => ({ ...prev, middleName: "" })); }}
                 placeholder="Middle (optional)" className={`${inputClass} ${errors.middleName ? inputErrorBorder : ""}`} />
@@ -344,7 +347,7 @@ const JoinForm = () => {
             {errors.phone && <p className={errorClass}>{errors.phone}</p>}
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4 mb-4">
+          <div className="grid md:grid-cols-2 gap-4 mb-4">
             <div>
               <label className={labelClass}>State *</label>
               <select required value={formData.state}
@@ -358,7 +361,7 @@ const JoinForm = () => {
               {errors.state && <p className={errorClass}>{errors.state}</p>}
             </div>
             <div>
-              <label className={labelClass}>Local Government *</label>
+              <label className={labelClass}>Local government *</label>
               <select required value={formData.lga}
                 onChange={(e) => { setFormData({ ...formData, lga: e.target.value }); setErrors(prev => ({ ...prev, lga: "" })); }}
                 className={`${selectClass} ${errors.lga ? inputErrorBorder : ""}`} disabled={!formData.state}>
@@ -383,16 +386,16 @@ const JoinForm = () => {
                   className={`px-5 py-2 rounded-lg text-xs font-medium border transition-all ${
                     formData.gender === g
                       ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                      : "bg-white/70 text-foreground border-pale hover:border-primary min-h-11"
                   }`}>{g}</button>
               ))}
             </div>
             {errors.gender && <p className={errorClass}>{errors.gender}</p>}
           </div>
 
-          {/* Age Group */}
+          {/* Age group */}
           <div className="mb-4">
-            <label className={labelClass}>Age Group *</label>
+            <label className={labelClass}>Age group *</label>
             <div className="flex flex-wrap gap-2">
               {ageGroups.map((ag) => (
                 <button key={ag} type="button"
@@ -400,7 +403,7 @@ const JoinForm = () => {
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
                     formData.ageGroup === ag
                       ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                      : "bg-white/70 text-foreground border-pale hover:border-primary min-h-11"
                   }`}>{ag}</button>
               ))}
             </div>
@@ -417,7 +420,7 @@ const JoinForm = () => {
                   className={`px-4 py-2 rounded-lg text-xs font-medium border transition-all whitespace-nowrap ${
                     formData.hasPvc === opt
                       ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                      : "bg-white/70 text-foreground border-pale hover:border-primary min-h-11"
                   }`}>{opt}</button>
               ))}
             </div>
@@ -434,12 +437,12 @@ const JoinForm = () => {
           </div>
 
           <button type="submit" disabled={loading}
-            className="w-full bg-primary text-primary-foreground py-3 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 whitespace-nowrap">
+            className="w-full btn-primary w-full py-3 text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 whitespace-nowrap">
             <FontAwesomeIcon icon={faPaperPlane} className="w-3.5 h-3.5" />
             {loading ? "Joining..." : "Join the Movement — It's Free"}
           </button>
 
-          <p className="text-primary-foreground/30 text-[10px] text-center mt-3">
+          <p className="text-muted-foreground text-xs text-center mt-3">
             Your information is secure.{" "}
             <PrivacyModal>
               <button type="button" className="underline hover:text-primary-foreground/50">Privacy Policy</button>

@@ -73,19 +73,19 @@ const GreenGuide = () => {
       {/* FAB */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:opacity-90 transition-all flex items-center justify-center"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full glass !rounded-full text-foreground hover:-translate-y-0.5 transition-all flex items-center justify-center"
       >
         <FontAwesomeIcon icon={open ? faXmark : faCommentDots} className="w-5 h-5" />
       </button>
 
       {/* Chat panel */}
       {open && (
-        <div className="fixed bottom-24 left-4 right-4 sm:left-auto sm:right-6 sm:w-[360px] z-50 max-h-[480px] bg-background border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-          <div className="bg-accent px-4 py-3 flex items-center gap-3">
+        <div className="fixed bottom-24 left-4 right-4 sm:left-auto sm:right-6 sm:w-[360px] z-50 max-h-[480px] glass flex flex-col overflow-hidden">
+          <div className="bg-white/60 border-b border-pale px-4 py-3 flex items-center gap-3">
             <img src={greenLogo} alt="Green Guide" className="w-9 h-9 rounded-full shrink-0 object-cover" />
             <div className="min-w-0">
-              <div className="text-accent-foreground text-sm font-semibold">Green Guide</div>
-              <div className="text-accent-foreground/50 text-[11px]">Ask me anything about the movement</div>
+              <div className="text-foreground text-sm font-semibold">Green Guide</div>
+              <div className="text-muted-foreground text-xs">Ask me anything about the movement</div>
             </div>
           </div>
 
@@ -122,7 +122,7 @@ const GreenGuide = () => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
               placeholder="Type a message..."
-              className="flex-1 bg-secondary/50 border border-border rounded-xl px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="flex-1 glass px-3.5 py-2.5 text-[13px] focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
             <button onClick={send} disabled={loading || !input.trim()}
               className="bg-primary text-primary-foreground w-9 h-9 rounded-xl flex items-center justify-center hover:opacity-90 disabled:opacity-50 shrink-0">

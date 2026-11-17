@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["Inter Tight", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -55,6 +55,12 @@ export default {
           dark: "hsl(var(--green-dark))",
           muted: "hsl(var(--green-muted))",
         },
+        deep: "hsl(var(--deep))",
+        olive: "hsl(var(--olive))",
+        lime: { DEFAULT: "hsl(var(--lime))", bright: "hsl(var(--lime-bright))" },
+        mist: "hsl(var(--mist))",
+        pale: "hsl(var(--pale))",
+        sage: "hsl(var(--sage))",
         "warm-white": "hsl(var(--warm-white))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -71,7 +77,9 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        glass: "28px",
       },
+      boxShadow: { glass: "var(--shadow-glass)", glow: "var(--shadow-glow)" },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

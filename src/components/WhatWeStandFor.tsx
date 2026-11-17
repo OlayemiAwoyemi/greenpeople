@@ -46,20 +46,20 @@ const WhatWeStandFor = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="values" className="py-20 md:py-28 bg-background" ref={ref}>
+    <section id="values" className="py-20 md:py-28" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           className="text-center max-w-2xl mx-auto mb-14"
         >
-          <span className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block">
-            Our Values
+          <span className="eyebrow">
+            Our values
           </span>
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3 leading-tight">
+          <h2 className="text-3xl md:text-[2.75rem] font-bold text-foreground mb-3 leading-tight">
             What we stand for
           </h2>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-lg">
             These are not just words. They are promises we make to every Nigerian.
           </p>
         </motion.div>
@@ -71,13 +71,13 @@ const WhatWeStandFor = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.05 + i * 0.08 }}
-              className="bg-secondary/50 border border-border rounded-xl p-5 hover:shadow-md transition-shadow"
+              className="glass p-6 transition-transform hover:-translate-y-1"
             >
-              <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
-                <FontAwesomeIcon icon={value.icon} className="w-4 h-4 text-primary" />
+              <div className="icon-chip w-11 h-11 mb-4">
+                <FontAwesomeIcon icon={value.icon} className="w-4 h-4" />
               </div>
-              <h3 className="font-semibold text-sm text-foreground mb-1">{value.title}</h3>
-              <p className="text-muted-foreground text-xs leading-relaxed">{value.description}</p>
+              <h3 className="font-semibold text-lg text-foreground mb-1">{value.title}</h3>
+              <p className="text-muted-foreground text-[15px] leading-relaxed">{value.description}</p>
             </motion.div>
           ))}
         </div>
