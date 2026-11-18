@@ -1,9 +1,8 @@
 {
-  "cleanUrls": true,
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/em", "destination": "/em/index.html" },
+    { "source": "/em/2027", "destination": "/em/2027.html" },
+    { "source": "/em/1960", "destination": "/em/1960.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
