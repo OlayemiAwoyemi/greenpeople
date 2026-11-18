@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
 import { motion, useInView, animate, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -253,6 +253,8 @@ const ProgressBar = () => {
 
 export const EpisodePage = () => {
   const { episode } = useParams<{ episode: string }>();
+  const [params] = useSearchParams();
+  const autoWatch = params.has("watch");
   const ep = episode === "2027" ? EPISODE_2027 : episode === "1960" ? EPISODE_1960 : null;
   const title = ep ? `Election Matters ${ep.number}: ${ep.title} — full breakdown` : "Election Matters";
   usePageMeta(title, ep ? `${ep.strap} Every score, every source and why each point landed.` : "");
@@ -279,7 +281,7 @@ export const EpisodePage = () => {
             <p className="mt-3 text-sm text-muted-foreground">Full breakdown · scores, reasons and sources · as of {AS_OF}</p>
           </Reveal>
           <Reveal delay={0.1} className="mt-6 flex flex-wrap items-center gap-2">
-            <WatchButton id={ep.id} className="btn-primary !min-h-11" label="Watch the episode" />
+            <WatchButton id={ep.id} className="btn-primary !min-h-11" label="Watch the episode" autoOpen={autoWatch} />
             <ShareBar path={ep.sharePath} text={shareText} />
           </Reveal>
         </section>
