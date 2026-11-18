@@ -10,6 +10,7 @@ import { faWhatsapp, faXTwitter } from "@fortawesome/free-brands-svg-icons";
 import Navbar from "@/components/Navbar";
 import GreenFooter from "@/components/GreenFooter";
 import { Reveal, Pop } from "@/components/sky/Reveal";
+import { WatchButton } from "@/components/WatchEpisode";
 import { AS_OF, EPISODES, EPISODE_1960, EPISODE_2027, type Episode, type Person } from "@/data/electionMatters";
 
 /* ---------- helpers ---------- */
@@ -84,37 +85,53 @@ const ShareBar = ({ path, text }: { path: string; text: string }) => {
 
 /* ---------- scoreboard ---------- */
 
+/** Short label like the video: "Obasanjo '99", "Buhari '84", "Tinubu (so far)". */
+const shortName = (p: Person) => {
+  const m = p.name.match(/^(.*?)\s*\((military|civilian|so far)\)$/);
+  if (!m) return p.name;
+  const last = m[1].trim().split(" ").pop();
+  if (m[2] === "so far") return `${last} · so far`;
+  const yr = p.meta.match(/(\d{4})/);
+  return yr ? `${last} '${yr[1].slice(2)}` : `${last}`;
+};
+
 const Scoreboard = ({ ep, order }: { ep: Episode; order: Person[] }) => {
-  const max = Math.max(...ep.people.map((p) => Math.abs(p.final)), 1);
+  const max = Math.max(10, ...ep.people.map((p) => Math.ceil(Math.abs(p.final))));
+  const pos = (v: number) => 50 + (v / max) * 50; // % from left
   return (
-    <div className="glass p-4 sm:p-6" role="img" aria-label={`Final scores: ${order.map((p) => `${p.name} ${fmt(p.final)}`).join(", ")}`}>
-      <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 px-1">
-        <span>Below zero</span><span>Zero</span><span>Above zero</span>
-      </div>
-      <ul className="space-y-2.5">
+    <div className="glass px-4 py-5 sm:px-7 sm:py-7" role="img" aria-label={`Final scores: ${order.map((p) => `${p.name} ${fmt(p.final)}`).join(", ")}`}>
+      <ol className="space-y-1">
         {order.map((p, i) => {
-          const w = (Math.abs(p.final) / max) * 50;
+          const x = pos(p.final);
+          const col = p.final > 0 ? "hsl(var(--olive))" : p.final < 0 ? "hsl(var(--destructive))" : "hsl(var(--deep) / 0.45)";
           return (
             <li key={p.slug}>
-              <a href={`#${p.slug}`} className="group grid grid-cols-[minmax(0,9.5rem)_1fr_3rem] sm:grid-cols-[minmax(0,13rem)_1fr_3.5rem] items-center gap-2 sm:gap-3 rounded-xl px-1 py-0.5 hover:bg-white/50 transition-colors">
-                <span className="truncate text-[13px] sm:text-sm font-semibold text-foreground group-hover:underline">{p.name}</span>
-                <span className="relative h-6 rounded-full bg-white/50 overflow-hidden">
-                  <span className="absolute left-1/2 top-0 bottom-0 w-px bg-deep/30" />
-                  <motion.span
-                    className={`absolute top-1 bottom-1 rounded-full ${p.final >= 0 ? "bg-gradient-to-r from-lime to-olive" : "bg-gradient-to-l from-destructive/60 to-destructive"}`}
-                    style={p.final >= 0 ? { left: "50%" } : { right: "50%" }}
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${Math.max(w, p.final === 0 ? 0.8 : 2)}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.9, ease: "easeOut", delay: 0.05 * i }}
-                  />
+              <a href={`#${p.slug}`} className="group grid grid-cols-[1.25rem_minmax(0,7.5rem)_1fr] sm:grid-cols-[1.5rem_minmax(0,11rem)_1fr] items-center gap-2 sm:gap-4 rounded-lg py-1.5 hover:bg-white/40 transition-colors">
+                <span className="text-[11px] tabular-nums text-muted-foreground/70 text-right">{i + 1}</span>
+                <span className="truncate text-[13px] sm:text-sm font-medium text-foreground/90 text-right group-hover:text-foreground">{shortName(p)}</span>
+                <span className="relative h-6">
+                  <span className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-deep/[0.08]" />
+                  <span className="absolute left-1/2 top-0 bottom-0 w-px bg-deep/20" />
+                  <motion.span className="absolute top-1/2 h-[2px] -translate-y-1/2 rounded-full"
+                    style={{ background: col, left: `${Math.min(50, x)}%` }}
+                    initial={{ width: 0 }} whileInView={{ width: `${Math.abs(x - 50)}%` }} viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: "easeOut", delay: 0.04 * i }} />
+                  <motion.span className="absolute top-1/2 w-3 h-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white"
+                    style={{ boxShadow: `0 0 0 2px ${col}`, left: `${x}%` }}
+                    initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
+                    transition={{ type: "spring", stiffness: 300, damping: 18, delay: 0.04 * i + 0.5 }} />
+                  <span className={`absolute top-1/2 -translate-y-1/2 text-[11px] font-semibold tabular-nums ${tone(p.final)}`}
+                    style={p.final < 0 ? { right: `calc(${100 - x}% + 10px)` } : { left: `calc(${x}% + 10px)` }}>{fmt(p.final)}</span>
                 </span>
-                <span className={`text-right font-bold tabular-nums ${tone(p.final)}`}>{fmt(p.final)}</span>
               </a>
             </li>
           );
         })}
-      </ul>
+      </ol>
+      <div className="mt-2 grid grid-cols-[1.25rem_minmax(0,7.5rem)_1fr] sm:grid-cols-[1.5rem_minmax(0,11rem)_1fr] gap-2 sm:gap-4 text-[10px] tabular-nums text-muted-foreground/70">
+        <span /><span />
+        <span className="flex justify-between"><span>−{max}</span><span>0</span><span>+{max}</span></span>
+      </div>
     </div>
   );
 };
@@ -261,7 +278,10 @@ export const EpisodePage = () => {
             <p className="mt-4 text-lg sm:text-xl text-foreground/80 max-w-2xl">{ep.strap}</p>
             <p className="mt-3 text-sm text-muted-foreground">Full breakdown · scores, reasons and sources · as of {AS_OF}</p>
           </Reveal>
-          <Reveal delay={0.1} className="mt-6"><ShareBar path={ep.sharePath} text={shareText} /></Reveal>
+          <Reveal delay={0.1} className="mt-6 flex flex-wrap items-center gap-2">
+            <WatchButton id={ep.id} className="btn-primary !min-h-11" label="Watch the episode" />
+            <ShareBar path={ep.sharePath} text={shareText} />
+          </Reveal>
         </section>
 
         {/* board */}
@@ -302,6 +322,7 @@ export const EpisodePage = () => {
         <nav aria-label="Jump to a person" className="sticky top-20 z-30 mt-12">
           <div className="max-w-5xl mx-auto px-5">
             <div className="glass !rounded-full px-2 py-2 flex gap-1.5 overflow-x-auto no-scrollbar">
+              <WatchButton id={ep.id} className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-lime px-3.5 py-2 text-[13px] font-semibold text-deep whitespace-nowrap" />
               {cards.map((p) => (
                 <a key={p.slug} href={`#${p.slug}`} className="shrink-0 rounded-full px-3.5 py-2 text-[13px] font-semibold text-foreground hover:bg-white/80 whitespace-nowrap">
                   {p.name.replace(/ \((military|civilian|so far)\)/, (m) => m.replace("(", "· ").replace(")", ""))} <span className={`ml-1 tabular-nums ${tone(p.final)}`}>{fmt(p.final)}</span>
@@ -333,12 +354,15 @@ export const EpisodePage = () => {
 
         {/* next */}
         <section className="max-w-5xl mx-auto px-5 mt-10 grid gap-4 sm:grid-cols-2">
-          <Link to={`/election-matters/${other.id}`} className="glass p-6 group hover:-translate-y-0.5 transition-transform">
+          <div className="glass p-6 group">
             <p className="eyebrow">Episode {other.number}</p>
             <p className="mt-2 text-xl font-bold text-foreground">{other.title}</p>
             <p className="mt-1 text-sm text-muted-foreground">{other.strap}</p>
-            <span className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-olive">Open the breakdown <FontAwesomeIcon icon={faArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" /></span>
-          </Link>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <WatchButton id={other.id} className="btn-primary !min-h-11" />
+              <Link to={`/election-matters/${other.id}`} className="btn-glass !min-h-11">Full breakdown <FontAwesomeIcon icon={faArrowRight} className="w-3 h-3" /></Link>
+            </div>
+          </div>
           <div className="glass p-6">
             <p className="eyebrow">Your vote counts</p>
             <p className="mt-2 text-xl font-bold text-foreground">Don't sell your vote. Check your PVC.</p>
@@ -372,11 +396,11 @@ export const ElectionMattersHub = () => {
             const top = ranked(ep)[0], bottom = ranked(ep).at(-1)!;
             return (
               <Pop key={ep.id} delay={0.08 * i}>
-                <Link to={`/election-matters/${ep.id}`} className="glass block h-full p-6 sm:p-8 group hover:-translate-y-1 transition-transform">
+                <article className="glass h-full p-6 sm:p-8 flex flex-col">
                   <p className="eyebrow">Episode {ep.number}</p>
                   <h2 className="mt-2 text-2xl sm:text-3xl font-bold text-foreground">{ep.title}</h2>
                   <p className="mt-2 text-foreground/75">{ep.strap}</p>
-                  <dl className="mt-5 grid grid-cols-2 gap-3">
+                  <dl className="mt-5 flex-1 grid content-start grid-cols-2 gap-3">
                     <div className="rounded-2xl bg-white/60 p-3">
                       <dt className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Top</dt>
                       <dd className="mt-1 font-semibold text-foreground truncate">{top.name}</dd>
@@ -388,8 +412,11 @@ export const ElectionMattersHub = () => {
                       <dd><Score value={bottom.final} className={`text-3xl font-black tabular-nums ${tone(bottom.final)}`} /></dd>
                     </div>
                   </dl>
-                  <span className="mt-5 inline-flex items-center gap-2 font-semibold text-olive">See the full breakdown <FontAwesomeIcon icon={faArrowRight} className="w-3 h-3 group-hover:translate-x-1 transition-transform" /></span>
-                </Link>
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    <WatchButton id={ep.id} className="btn-primary !min-h-11" />
+                    <Link to={`/election-matters/${ep.id}`} className="btn-glass !min-h-11">Full breakdown <FontAwesomeIcon icon={faArrowRight} className="w-3 h-3" /></Link>
+                  </div>
+                </article>
               </Pop>
             );
           })}
