@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faListCheck } from "@fortawesome/free-solid-svg-icons";
+import { faListCheck } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { Reveal, Pop } from "./sky/Reveal";
+import { WatchButton } from "./WatchEpisode";
 
 const episodes = [
   { no: "Episode 01", id: "2027", title: "The 2027 candidates", desc: "Atiku, Makinde, Tinubu and Obi, scored on their records, promises and integrity. Nobody passed zero." },
@@ -27,9 +28,7 @@ const ElectionMatters = () => (
                 <Link to={`/election-matters/${e.id}`} className="btn-primary" aria-label={`Full breakdown of ${e.no}: ${e.title}`}>
                   <FontAwesomeIcon icon={faListCheck} className="w-3.5 h-3.5" /> Full breakdown
                 </Link>
-                <a href="https://instagram.com/greenpeopleng" target="_blank" rel="noopener noreferrer" className="btn-glass" aria-label={`Watch ${e.no}: ${e.title}`}>
-                  <FontAwesomeIcon icon={faPlay} className="w-3 h-3" /> Watch
-                </a>
+                <WatchButton id={e.id} />
               </div>
             </article>
           </Pop>
