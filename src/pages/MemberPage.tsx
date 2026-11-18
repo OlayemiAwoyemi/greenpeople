@@ -331,7 +331,13 @@ const MemberPage = () => {
   // Split rich-text/html content into digestible bits paragraph by paragraph
   const lessonBits = useMemo(() => {
     if (!openLesson) return [] as string[];
-    const raw = (openLesson.content && openLesson.content.trim()) || openLesson.description || "";
+    // Pasted lessons often carry non-breaking spaces, justify alignment and
+    // inline widths that push words off small screens. Clean them out.
+    const raw = ((openLesson.content && openLesson.content.trim()) || openLesson.description || "")
+      .replace(/&nbsp;|\u00a0/g, " ")
+      .replace(/\s(style|width|height|align)="[^"]*"/gi, "")
+      .replace(/\bql-align-(justify|right|center)\b/g, "")
+      .replace(/<\/?(span|font)[^>]*>/gi, "");
     if (!raw) return [];
     
     const looksHtml = /<\/?(p|h[1-6]|ul|ol|li|blockquote|div|br)/i.test(raw);
@@ -697,12 +703,13 @@ const MemberPage = () => {
                 <FontAwesomeIcon icon={faXmark} className="w-4 h-4" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto overflow-x-auto p-4 sm:p-8 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden p-5 sm:p-8 custom-scrollbar">
               {lessonBits.length === 0 ? (
                 <p className="text-sm text-muted-foreground">This lesson has no written content yet.</p>
               ) : (
                 <article
-                  className="prose prose-sm sm:prose-base max-w-none w-full text-foreground/90 prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary prose-a:break-words prose-li:marker:text-primary content-wrap"
+                  className="prose prose-base max-w-none w-full min-w-0 text-foreground/90 leading-relaxed prose-headings:text-foreground prose-strong:text-foreground prose-a:text-olive prose-li:marker:text-primary [&_*]:!text-left [&_*]:!whitespace-normal [&_*]:!max-w-full [&_img]:!h-auto [&_img]:rounded-xl"
+                  style={{ textAlign: "left", overflowWrap: "anywhere", wordBreak: "normal", hyphens: "manual" } as React.CSSProperties}
                   dangerouslySetInnerHTML={{ __html: lessonBits[lessonStep] }}
                 />
               )}
