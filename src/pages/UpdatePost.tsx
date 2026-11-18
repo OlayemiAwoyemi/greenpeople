@@ -1,3 +1,4 @@
+import { cleanHtml, cleanText } from "@/lib/cleanHtml";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,17 +19,7 @@ type Post = {
   cover_image: string | null;
 };
 
-const formatContent = (html: string) => {
-  // If content already has HTML block tags, just return it
-  if (/<(p|div|h[1-6]|ul|ol|blockquote)\b/i.test(html)) return html;
-  
-  // Otherwise treat double line breaks as paragraphs, single as spaces
-  return html
-    .split(/\n{2,}/)
-    .filter((line) => line.trim())
-    .map((line) => `<p>${line.replace(/\n/g, " ")}</p>`)
-    .join("");
-};
+const formatContent = (html: string) => cleanHtml(html);
 
 const UpdatePost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -73,7 +64,7 @@ const UpdatePost = () => {
                 <img src={post.cover_image} alt={post.title} className="w-full h-64 md:h-80 object-cover rounded-3xl mb-8" width={760} height={320} />
               )}
               <div className="flex items-start justify-between gap-4 mb-4">
-                <h1 className="text-3xl md:text-5xl font-extrabold text-foreground">{post.title}</h1>
+                <h1 className="text-3xl md:text-5xl font-extrabold text-foreground leading-tight text-balance">{cleanText(post.title)}</h1>
                 {hasAccess && (
                   <Link
                     to={`/write?edit=${post.id}`}
@@ -93,8 +84,7 @@ const UpdatePost = () => {
                 <span>{Math.max(1, Math.round((post.content || "").replace(/<[^>]+>/g, " ").split(/\s+/).length / 200))} min read</span>
               </div>
               <div
-                className="prose prose-lg max-w-[680px] text-foreground prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:text-2xl prose-blockquote:font-semibold prose-blockquote:not-italic prose-blockquote:text-foreground overflow-hidden [&_img]:rounded-xl [&_img]:my-4 [&_p]:mb-4 [&_p]:leading-relaxed"
-                style={{ wordBreak: "normal", overflowWrap: "break-word", hyphens: "none", textAlign: "left", WebkitHyphens: "none", msHyphens: "none" } as React.CSSProperties}
+                className="article-body prose prose-lg max-w-[680px] text-foreground prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:text-xl prose-blockquote:font-semibold prose-blockquote:not-italic prose-blockquote:text-foreground"
                 dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
               />
               <div className="mt-10 pt-6 border-t border-pale flex flex-wrap items-center gap-2">

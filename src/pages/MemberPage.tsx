@@ -1,3 +1,4 @@
+import { cleanHtml } from "@/lib/cleanHtml";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { useParams, Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -334,11 +335,7 @@ const MemberPage = () => {
     if (!openLesson) return [] as string[];
     // Pasted lessons often carry non-breaking spaces, justify alignment and
     // inline widths that push words off small screens. Clean them out.
-    const raw = ((openLesson.content && openLesson.content.trim()) || openLesson.description || "")
-      .replace(/&nbsp;|\u00a0/g, " ")
-      .replace(/\s(style|width|height|align)="[^"]*"/gi, "")
-      .replace(/\bql-align-(justify|right|center)\b/g, "")
-      .replace(/<\/?(span|font)[^>]*>/gi, "");
+    const raw = cleanHtml((openLesson.content && openLesson.content.trim()) || openLesson.description || "");
     if (!raw) return [];
     
     const looksHtml = /<\/?(p|h[1-6]|ul|ol|li|blockquote|div|br)/i.test(raw);

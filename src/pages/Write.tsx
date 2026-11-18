@@ -1,3 +1,4 @@
+import { cleanHtml } from "@/lib/cleanHtml";
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -87,7 +88,7 @@ const WriteContent = () => {
       // Update existing post
       const { error } = await supabase.from("blog_posts").update({
         title: form.title.trim(),
-        content: form.content,
+        content: cleanHtml(form.content),
         excerpt: form.excerpt.trim() || null,
         cover_image: form.coverImage.trim() || null,
         author: form.author.trim() || "Green People Team",
@@ -105,7 +106,7 @@ const WriteContent = () => {
       const { error } = await supabase.from("blog_posts").insert({
         title: form.title.trim(),
         slug,
-        content: form.content,
+        content: cleanHtml(form.content),
         excerpt: form.excerpt.trim() || null,
         cover_image: form.coverImage.trim() || null,
         author: form.author.trim() || "Green People Team",

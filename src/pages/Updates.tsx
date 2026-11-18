@@ -1,3 +1,4 @@
+import { cleanText } from "@/lib/cleanHtml";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -43,11 +44,11 @@ const Updates = () => {
               {posts.map((post) => (
               <Link key={post.id} to={`/updates/${post.slug}`} className="glass overflow-hidden block transition-transform hover:-translate-y-1">
                   {post.cover_image && (
-                    <img src={post.cover_image} alt={post.title} className="w-full h-48 object-cover rounded-t-[26px]" loading="lazy" width={600} height={300} />
+                    <img src={post.cover_image} alt={cleanText(post.title)} className="w-full h-48 object-cover rounded-t-[26px]" loading="lazy" width={600} height={300} />
                   )}
                   <div className="p-5">
-                    <h2 className="text-lg font-semibold text-foreground mb-2 line-clamp-2 text-pretty">{post.title}</h2>
-                    {post.excerpt && <p className="text-muted-foreground text-sm mb-3 line-clamp-3 text-pretty">{post.excerpt}</p>}
+                    <h2 className="text-lg font-semibold text-foreground mb-2 line-clamp-2 text-pretty">{cleanText(post.title)}</h2>
+                    {post.excerpt && <p className="text-muted-foreground text-sm mb-3 line-clamp-3 text-pretty">{cleanText(post.excerpt)}</p>}
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <FontAwesomeIcon icon={faCalendar} className="w-3 h-3" />
                       {new Date(post.created_at).toLocaleDateString("en-NG", { dateStyle: "medium" })}
