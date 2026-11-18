@@ -29,7 +29,7 @@ const ChatsContent = () => {
   }, [selectedId]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <div className="section-container py-8">
         <div className="flex items-center gap-3 mb-8">
           <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
@@ -59,7 +59,7 @@ const ChatsContent = () => {
             ))}
           </div>
 
-          <div className="md:col-span-2 bg-secondary/30 border border-border rounded-xl p-6 max-h-[70vh] overflow-y-auto">
+          <div className="md:col-span-2 glass p-6 max-h-[70vh] overflow-y-auto">
             {!selectedId ? (
               <p className="text-muted-foreground text-sm text-center py-16">Select a conversation to view</p>
             ) : (

@@ -119,18 +119,18 @@ const WriteContent = () => {
     }
   };
 
-  const inputClass = "w-full bg-secondary/50 border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30";
+  const inputClass = "w-full bg-white/70 border border-pale rounded-2xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-[3px]";
 
   if (fetching) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <p className="text-muted-foreground">Loading article…</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <div className="section-container py-8 max-w-3xl">
         <div className="flex items-center gap-3 mb-8">
           <Link to="/updates" className="text-muted-foreground hover:text-foreground transition-colors">
@@ -184,7 +184,7 @@ const WriteContent = () => {
 
           <div>
             <label className="text-sm font-medium text-foreground mb-1.5 block">Content *</label>
-            <div className="rounded-xl overflow-hidden border border-border bg-background [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-border [&_.ql-toolbar]:bg-secondary/30 [&_.ql-container]:border-0 [&_.ql-container]:min-h-[300px] [&_.ql-editor]:text-sm [&_.ql-editor]:text-foreground">
+            <div className="rounded-xl overflow-hidden border border-pale bg-white/80 [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-border [&_.ql-toolbar]:bg-secondary/30 [&_.ql-container]:border-0 [&_.ql-container]:min-h-[300px] [&_.ql-editor]:text-sm [&_.ql-editor]:text-foreground">
               <ReactQuill
                 theme="snow"
                 value={form.content}

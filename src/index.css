@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,51 +8,51 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 120 10% 15%;
-
-    --card: 90 20% 97%;
-    --card-foreground: 120 10% 15%;
-
+    /* Election Matters "heavenly glass" palette — white + green scale only */
+    --background: 75 50% 97%;        /* near Mist */
+    --foreground: 183 57% 13%;       /* Deep #0E3133 */
+    --card: 0 0% 100%;
+    --card-foreground: 183 57% 13%;
     --popover: 0 0% 100%;
-    --popover-foreground: 120 10% 15%;
-
-    /* Brand greens — only #7cb43c (light) and #255625 (dark) plus shades/tints */
-    --primary: 82 50% 47%;          /* #7cb43c */
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 90 30% 94%;
-    --secondary-foreground: 120 10% 15%;
-
-    --muted: 90 15% 94%;
-    --muted-foreground: 120 8% 40%;
-
-    --accent: 120 40% 24%;          /* #255625 */
+    --popover-foreground: 183 57% 13%;
+    --primary: 75 73% 44%;           /* Lime #9AC31F */
+    --primary-foreground: 183 57% 13%;
+    --secondary: 79 52% 94%;         /* Mist #F3F7EA */
+    --secondary-foreground: 183 57% 13%;
+    --muted: 79 52% 94%;
+    --muted-foreground: 86 41% 32%;  /* Olive, darkened for AA */
+    --accent: 183 57% 13%;           /* Deep */
     --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 75% 50%;
+    --destructive: 0 70% 45%;
     --destructive-foreground: 0 0% 100%;
+    --border: 81 50% 84%;            /* Pale-ish */
+    --input: 81 50% 84%;
+    --ring: 75 73% 44%;
+    --radius: 1rem;
 
-    --border: 82 15% 88%;
-    --input: 82 15% 88%;
-    --ring: 82 50% 47%;
-
-    --radius: 0.5rem;
-
-    /* Custom tokens */
-    --green-light: 82 50% 47%;      /* #7cb43c */
-    --green-dark: 120 40% 24%;      /* #255625 */
-    --green-muted: 82 30% 92%;
+    --deep: 183 57% 13%;
+    --olive: 86 41% 37%;
+    --lime: 75 73% 44%;
+    --lime-bright: 72 89% 45%;
+    --mist: 79 52% 94%;
+    --pale: 81 50% 84%;
+    --sage: 85 22% 57%;
+    --green-light: 75 73% 44%;
+    --green-dark: 183 57% 13%;
+    --green-muted: 81 50% 84%;
     --warm-white: 0 0% 100%;
 
+    --shadow-glass: 0 20px 50px -20px rgba(40, 70, 20, 0.25);
+    --shadow-glow: 0 10px 30px -8px hsl(75 73% 44% / 0.55);
+
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-foreground: 183 57% 13%;
+    --sidebar-primary: 183 57% 13%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 79 52% 94%;
+    --sidebar-accent-foreground: 183 57% 13%;
+    --sidebar-border: 81 50% 84%;
+    --sidebar-ring: 75 73% 44%;
   }
 }
 
@@ -62,12 +62,28 @@
   }
 
   body {
-    @apply text-foreground antialiased min-h-screen;
-    background: radial-gradient(circle at top right, hsl(var(--green-light) / 0.15), transparent 40%),
-                radial-gradient(circle at bottom left, hsl(var(--green-dark) / 0.1), transparent 40%),
-                hsl(var(--background));
-    background-attachment: fixed;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', system-ui, sans-serif;
+    @apply text-foreground antialiased;
+    background: transparent;
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+  h1 { letter-spacing: -0.035em; }
+
+  :focus-visible {
+    outline: 3px solid hsl(var(--lime));
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -96,29 +112,67 @@
     @apply max-w-6xl mx-auto px-5 sm:px-8;
   }
 
-  .gradient-green {
-    background: linear-gradient(135deg, hsl(var(--green-dark)), hsl(120 35% 20%));
-  }
+  /* Legacy name kept: now a light glass band instead of dark green */
+  .gradient-green { background: transparent; }
 
   .text-gradient-green {
-    background: linear-gradient(135deg, hsl(var(--green-dark)), hsl(var(--green-light)));
+    background: linear-gradient(135deg, hsl(var(--deep)), hsl(var(--olive)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  .glass-card {
-    @apply bg-white/40 backdrop-blur-md border border-white/20 rounded-2xl shadow-sm transition-all duration-300;
+  .glass {
+    position: relative;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1.5px solid rgba(255, 255, 255, 0.95);
+    border-radius: 28px;
+    box-shadow: var(--shadow-glass), inset 0 0 0 1px rgba(214, 230, 196, 0.6);
+  }
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+    }
+  }
+  .glass::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.7), transparent 60%);
+  }
+  .glass > * { position: relative; }
+  .glass-card { @apply glass; }
+
+  .eyebrow {
+    @apply inline-block text-sm font-semibold mb-3;
+    color: hsl(var(--olive));
   }
 
-  .glass-effect {
-    @apply bg-white/30 backdrop-blur-lg border border-white/20 shadow-lg;
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 min-h-11 text-[15px] font-semibold whitespace-nowrap transition-all duration-200;
+    background: hsl(var(--lime)); color: hsl(var(--deep));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 6px 18px -8px hsl(var(--lime) / 0.6);
   }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), var(--shadow-glow); }
+  .btn-glass {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 min-h-11 text-[15px] font-semibold whitespace-nowrap transition-all duration-200 border;
+    background: rgba(255,255,255,0.7); color: hsl(var(--deep)); border-color: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-glass);
+  }
+  .btn-glass:hover { transform: translateY(-2px); background: rgba(255,255,255,0.9); }
+  .icon-chip {
+    @apply flex items-center justify-center rounded-2xl;
+    background: hsl(var(--pale)); color: hsl(var(--deep));
+  }
+}
 
+/* Kept from main (May): utilities still used by registration, member pages and lessons */
+@layer components {
+  .glass-effect { @apply glass; }
   .glass-dark {
     @apply bg-black/20 backdrop-blur-md border border-white/10 shadow-sm transition-all duration-300;
   }
-
   .content-wrap {
     text-align: justify;
     text-justify: inter-word;
@@ -127,6 +181,25 @@
     hyphens: auto;
   }
 }
+
+/* Stop iOS/Android zooming into form fields: inputs must be at least 16px on phones */
+@media (max-width: 767px) {
+  input, select, textarea { font-size: 16px !important; }
+}
+
+/* Sky backdrop */
+@keyframes sky-rotate { to { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes cloud-drift { from { transform: translateX(-30vw); } to { transform: translateX(130vw); } }
+@keyframes mote-rise {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 0.9; } 50% { opacity: 0.4; } 85% { opacity: 0.9; }
+  100% { transform: translateY(-110vh); opacity: 0; }
+}
+@keyframes soft-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+.sky-rays { animation: sky-rotate 60s linear infinite; }
+.sky-cloud { animation: cloud-drift linear infinite; }
+.sky-mote { animation: mote-rise linear infinite; }
+.animate-soft-pulse { animation: soft-pulse 0.8s ease-out 1; }
 
 /* Floating leaf animation */
 @keyframes float-leaf {

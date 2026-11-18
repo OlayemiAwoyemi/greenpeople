@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Skeleton, EmptyState, ErrorState } from "@/components/admin/AdminShell";
+import { CountUp } from "@/components/sky/Reveal";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,17 +18,47 @@ type Entry = {
 const Finance = () => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
+  const [query, setQuery] = useState("");
+  const [kind, setKind] = useState("all");
+  const [sort, setSort] = useState<{ key: "occurred_on" | "amount_naira" | "description"; dir: 1 | -1 }>({ key: "occurred_on", dir: -1 });
 
-  useEffect(() => {
+  const load = () => {
+    setLoading(true); setFailed(false);
     supabase
       .from("finance_entries")
       .select("*")
       .order("occurred_on", { ascending: false })
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) setFailed(true);
         setEntries((data ?? []) as Entry[]);
         setLoading(false);
       });
-  }, []);
+  };
+  useEffect(load, []);
+
+  // Running balance computed chronologically (oldest first) over all entries
+  const running = useMemo(() => {
+    const map = new Map<string, number>(); let bal = 0;
+    [...entries].sort((a, b) => a.occurred_on.localeCompare(b.occurred_on)).forEach((e) => {
+      bal += (e.kind === "income" ? 1 : -1) * Number(e.amount_naira); map.set(e.id, bal);
+    });
+    return map;
+  }, [entries]);
+
+  const visible = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return entries
+      .filter((e) => kind === "all" || e.kind === kind)
+      .filter((e) => !q || e.description.toLowerCase().includes(q) || (e.source_or_payee ?? "").toLowerCase().includes(q))
+      .sort((a, b) => {
+        const av = sort.key === "amount_naira" ? Number(a.amount_naira) : String(a[sort.key]);
+        const bv = sort.key === "amount_naira" ? Number(b.amount_naira) : String(b[sort.key]);
+        return (av < bv ? -1 : av > bv ? 1 : 0) * sort.dir;
+      });
+  }, [entries, query, kind, sort]);
+  const toggle = (key: typeof sort.key) => setSort((s) => ({ key, dir: s.key === key ? (s.dir === 1 ? -1 : 1) : -1 }));
+  const arrow = (key: typeof sort.key) => (sort.key === key ? (sort.dir === 1 ? "↑" : "↓") : "↕");
 
   const income = entries.filter((e) => e.kind === "income").reduce((s, e) => s + Number(e.amount_naira), 0);
   const expenditure = entries.filter((e) => e.kind === "expenditure").reduce((s, e) => s + Number(e.amount_naira), 0);
@@ -39,70 +71,77 @@ const Finance = () => {
       <Navbar />
       <div className="pt-24 max-w-4xl mx-auto px-5">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-3 border border-white/20">
+          <div className="inline-flex items-center gap-2 glass !rounded-full text-foreground text-sm font-semibold px-4 py-1.5 mb-3">
             <FontAwesomeIcon icon={faMoneyBillTrendUp} className="w-3 h-3" />
             Open books — public transparency
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">Our Finances</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">Our finances</h1>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
             Every naira in. Every naira out. Updated live, open to all Nigerians, forever.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
-          <div className="glass-card bg-emerald-500/10 border-emerald-500/20 p-5">
-            <div className="flex items-center gap-2 mb-2">
-              <FontAwesomeIcon icon={faArrowTrendUp} className="w-4 h-4 text-emerald-600" />
-              <span className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">Income</span>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          {[
+            { l: "Income", v: income, icon: faArrowTrendUp, c: "text-olive" },
+            { l: "Expenditure", v: expenditure, icon: faArrowTrendDown, c: "text-destructive" },
+            { l: "Balance", v: balance, icon: faScaleBalanced, c: "text-foreground" },
+          ].map((t) => (
+            <div key={t.l} className="glass p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="icon-chip w-8 h-8"><FontAwesomeIcon icon={t.icon} className="w-3.5 h-3.5" /></span>
+                <span className="text-sm font-semibold text-muted-foreground">{t.l}</span>
+              </div>
+              <div className={`text-2xl font-extrabold tabular-nums ${t.c}`}>
+                {t.v < 0 ? "−" : ""}₦<CountUp value={Math.round(Math.abs(t.v))} />
+              </div>
             </div>
-            <div className="text-2xl font-bold text-emerald-700">{fmt(income)}</div>
-          </div>
-          <div className="glass-card bg-red-500/10 border-red-500/20 p-5">
-            <div className="flex items-center gap-2 mb-2">
-              <FontAwesomeIcon icon={faArrowTrendDown} className="w-4 h-4 text-red-600" />
-              <span className="text-xs font-semibold text-red-700 uppercase tracking-wider">Expenditure</span>
-            </div>
-            <div className="text-2xl font-bold text-red-700">{fmt(expenditure)}</div>
-          </div>
-          <div className="glass-card bg-white/20 border-white/20 p-5">
-            <div className="flex items-center gap-2 mb-2">
-              <FontAwesomeIcon icon={faScaleBalanced} className="w-4 h-4 text-primary" />
-              <span className="text-xs font-semibold text-primary uppercase tracking-wider">Balance</span>
-            </div>
-            <div className="text-2xl font-bold text-foreground">{fmt(balance)}</div>
-          </div>
+          ))}
         </div>
 
-        <div className="glass-card overflow-hidden">
-          <div className="p-4 border-b border-white/10 font-semibold text-sm">All Entries ({entries.length})</div>
-          {loading ? (
-            <div className="p-12 text-center text-muted-foreground text-sm">Loading…</div>
-          ) : entries.length === 0 ? (
-            <div className="p-12 text-center text-muted-foreground text-sm">No entries yet.</div>
-          ) : (
-            <div className="divide-y divide-white/10">
-              {entries.map((e) => (
-                <div key={e.id} className="p-4 flex items-center gap-3 hover:bg-white/10 transition-colors">
-                  <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded whitespace-nowrap border ${e.kind === "income" ? "bg-emerald-500/20 text-emerald-600 border-emerald-500/20" : "bg-red-500/20 text-red-600 border-red-500/20"}`}>
-                    {e.kind}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm text-foreground">{e.description}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {new Date(e.occurred_on).toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" })}
-                      {e.source_or_payee ? ` · ${e.source_or_payee}` : ""}
-                    </div>
-                  </div>
-                  <div className={`font-bold text-sm whitespace-nowrap ${e.kind === "income" ? "text-emerald-600" : "text-red-600"}`}>
-                    {e.kind === "income" ? "+" : "−"}{fmt(Number(e.amount_naira))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+        <div className="glass p-3 mb-4 flex flex-col sm:flex-row gap-2">
+          <label htmlFor="f-search" className="sr-only">Search entries</label>
+          <input id="f-search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search description or payee"
+            className="flex-1 bg-white/70 border border-pale rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60" />
+          <label htmlFor="f-kind" className="sr-only">Filter by type</label>
+          <select id="f-kind" value={kind} onChange={(e) => setKind(e.target.value)}
+            className="bg-white/70 border border-pale rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60">
+            <option value="all">All entries</option><option value="income">Income only</option><option value="expenditure">Expenditure only</option>
+          </select>
         </div>
 
-        <p className="text-center text-xs text-muted-foreground mt-6">
+        {loading ? <Skeleton rows={6} /> : failed ? <ErrorState onRetry={load} /> : entries.length === 0 ? (
+          <EmptyState title="No entries yet" hint="Income and spending will appear here as soon as HQ records them." />
+        ) : visible.length === 0 ? <EmptyState title="No entries match your search" /> : (
+          <div className="glass overflow-hidden">
+            <div className="max-h-[70vh] overflow-auto">
+              <table className="w-full text-sm">
+                <thead className="sticky top-0 z-10 bg-white/95 backdrop-blur text-left text-muted-foreground">
+                  <tr>
+                    <th className="p-3 pl-4"><button className="font-semibold" onClick={() => toggle("occurred_on")} aria-label="Sort by date">Date {arrow("occurred_on")}</button></th>
+                    <th className="p-3"><button className="font-semibold" onClick={() => toggle("description")} aria-label="Sort by description">Description {arrow("description")}</button></th>
+                    <th className="p-3 text-right"><button className="font-semibold" onClick={() => toggle("amount_naira")} aria-label="Sort by amount">Amount {arrow("amount_naira")}</button></th>
+                    <th className="p-3 pr-4 text-right hidden sm:table-cell">Running total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visible.map((e) => (
+                    <tr key={e.id} className="odd:bg-mist/60 align-top">
+                      <td className="p-3 pl-4 whitespace-nowrap text-muted-foreground">{new Date(e.occurred_on).toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" })}</td>
+                      <td className="p-3 text-foreground">{e.description}{e.source_or_payee && <div className="text-xs text-muted-foreground">{e.source_or_payee}</div>}</td>
+                      <td className={`p-3 text-right font-bold whitespace-nowrap tabular-nums ${e.kind === "income" ? "text-olive" : "text-destructive"}`}>
+                        {e.kind === "income" ? "+" : "−"}{fmt(Number(e.amount_naira))}
+                      </td>
+                      <td className="p-3 pr-4 text-right whitespace-nowrap tabular-nums text-foreground hidden sm:table-cell">{fmt(running.get(e.id) ?? 0)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        <p className="text-center text-sm text-muted-foreground mt-6">
           Records are managed by the movement's HQ. Public for all Nigerians, always.
         </p>
       </div>

@@ -417,13 +417,13 @@ const MemberPage = () => {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center">
       <Navbar />
       <div className="text-muted-foreground text-sm">Loading…</div>
     </div>
   );
   if (!member) return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Navbar />
       <div className="pt-32 text-center px-5">
         <h1 className="text-2xl font-bold mb-2">Member not found</h1>
@@ -529,7 +529,7 @@ const MemberPage = () => {
 
         {/* Join CTA for visitors */}
         {!isOwnPage && (
-          <Link to="/#join" className="flex items-center justify-center gap-2 mb-5 bg-primary text-primary-foreground rounded-xl px-4 py-3 text-sm font-bold shadow-md hover:opacity-90 whitespace-nowrap">
+          <Link to="/#join" className="flex items-center justify-center gap-2 mb-5 btn-primary whitespace-nowrap">
             <FontAwesomeIcon icon={faUserPlus} className="w-4 h-4" />
             Join Green People — Get Your Own Page
           </Link>
@@ -537,9 +537,9 @@ const MemberPage = () => {
 
         {/* Social posts */}
         <section className="mb-8">
-          <h2 className="text-[11px] sm:text-sm font-bold text-foreground uppercase tracking-widest mb-3">Subscribe · Like · Comment · Share</h2>
+          <h2 className="text-[11px] sm:text-sm font-bold text-foreground mb-3">Subscribe · Like · Comment · Share</h2>
           {groupedPosts.every((g) => g.items.length === 0) && (
-            <p className="text-sm text-muted-foreground bg-white/10 border border-white/20 rounded-xl p-6 text-center">No social posts yet. Check back soon.</p>
+            <p className="text-sm text-muted-foreground glass p-6 text-center">No social posts yet. Check back soon.</p>
           )}
           {groupedPosts.map(({ platform, items: list }) => list.length > 0 && (
             <div key={platform} className="mb-4">
@@ -582,10 +582,10 @@ const MemberPage = () => {
         <section>
           <div className="flex items-center gap-2 mb-3">
             <FontAwesomeIcon icon={faBookOpen} className="w-4 h-4 text-primary" />
-            <h2 className="text-[11px] sm:text-sm font-bold text-foreground uppercase tracking-widest">Green Classroom</h2>
+            <h2 className="text-[11px] sm:text-sm font-bold text-foreground">Green Classroom</h2>
           </div>
           {items.length === 0 && (
-            <p className="text-sm text-muted-foreground bg-white/10 border border-white/20 rounded-xl p-6 text-center">No lessons yet. Check back soon.</p>
+            <p className="text-sm text-muted-foreground glass p-6 text-center">No lessons yet. Check back soon.</p>
           )}
           <div className="grid gap-2">
             {items.map((it) => {
@@ -610,7 +610,7 @@ const MemberPage = () => {
                   </button>
 
                   {list.length > 0 && (
-                    <div className="border-t border-white/10 p-3">
+                    <div className="border-t border-pale p-3">
                       {quizDone ? (
                         <div className="text-[11px] text-primary font-semibold inline-flex items-center gap-1.5">
                           <FontAwesomeIcon icon={faCheck} className="w-3 h-3" /> Quiz completed
@@ -638,8 +638,8 @@ const MemberPage = () => {
                             </div>
                           ))}
                           <div className="flex gap-2">
-                            <button onClick={() => submitQuiz(it)} className="flex-1 bg-primary text-primary-foreground rounded-lg py-2 text-xs font-semibold whitespace-nowrap shadow-sm hover:opacity-90">Submit</button>
-                            <button onClick={() => setActiveQuiz(null)} className="px-3 bg-white/10 text-foreground rounded-lg py-2 text-xs font-semibold whitespace-nowrap border border-white/10 hover:bg-white/20">Cancel</button>
+                            <button onClick={() => submitQuiz(it)} className="flex-1 btn-primary !min-h-10 !text-sm whitespace-nowrap">Submit</button>
+                            <button onClick={() => setActiveQuiz(null)} className="px-3 bg-secondary text-foreground rounded-lg py-2 text-xs font-semibold whitespace-nowrap">Cancel</button>
                           </div>
                         </div>
                       )}
@@ -654,12 +654,12 @@ const MemberPage = () => {
 
       {/* Lesson reader modal */}
       {openLesson && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md p-4" role="dialog" aria-modal="true">
-          <div className="glass-effect w-full max-w-2xl rounded-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-            <div className="flex items-start justify-between gap-3 p-4 sm:p-6 border-b border-white/10">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-deep/30 backdrop-blur-sm p-0 sm:p-4" role="dialog" aria-modal="true">
+          <div className="bg-background w-full sm:max-w-2xl sm:rounded-2xl rounded-t-2xl max-h-[90vh] flex flex-col border border-border shadow-2xl">
+            <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-pale">
               <div className="flex-1 min-w-0">
-                <div className="text-[10px] uppercase tracking-widest font-bold text-primary mb-1">{openLesson.category.replace("_", " ")}</div>
-                <h3 className="text-base sm:text-lg font-bold text-foreground text-pretty">{openLesson.title}</h3>
+                <div className="text-[10px] font-bold text-primary mb-1">{openLesson.category.replace("_", " ")}</div>
+                <h3 className="text-base sm:text-lg font-bold text-foreground break-words">{openLesson.title}</h3>
               </div>
               <button onClick={() => setOpenLesson(null)} className="text-muted-foreground hover:text-foreground p-2 -m-2 flex-shrink-0" aria-label="Close lesson">
                 <FontAwesomeIcon icon={faXmark} className="w-4 h-4" />
@@ -680,17 +680,17 @@ const MemberPage = () => {
                 </a>
               )}
             </div>
-            <div className="border-t border-white/10 p-4 sm:p-6 flex items-center gap-4 bg-white/5">
-              <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                <div className="h-full bg-primary transition-all shadow-[0_0_8px_rgba(var(--primary),0.4)]" style={{ width: `${((lessonStep + 1) / Math.max(1, lessonBits.length)) * 100}%` }} />
+            <div className="border-t border-pale p-3 sm:p-4 flex items-center gap-3">
+              <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
+                <div className="h-full bg-primary transition-all" style={{ width: `${((lessonStep + 1) / Math.max(1, lessonBits.length)) * 100}%` }} />
               </div>
               <div className="text-[11px] text-muted-foreground whitespace-nowrap font-medium">{lessonStep + 1} / {lessonBits.length}</div>
               {lessonStep < lessonBits.length - 1 ? (
-                <button onClick={() => setLessonStep((s) => s + 1)} className="bg-primary text-primary-foreground rounded-xl px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2 whitespace-nowrap shadow-sm hover:opacity-90">
+                <button onClick={() => setLessonStep((s) => s + 1)} className="btn-primary !min-h-10 !text-sm inline-flex items-center gap-2 whitespace-nowrap">
                   Continue <FontAwesomeIcon icon={faArrowRight} className="w-3 h-3" />
                 </button>
               ) : (
-                <button onClick={() => setOpenLesson(null)} className="bg-primary text-primary-foreground rounded-xl px-6 py-2.5 text-sm font-semibold whitespace-nowrap shadow-sm hover:opacity-90">
+                <button onClick={() => setOpenLesson(null)} className="btn-primary !min-h-10 !text-sm whitespace-nowrap">
                   Done
                 </button>
               )}

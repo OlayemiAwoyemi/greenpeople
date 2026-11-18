@@ -8,6 +8,7 @@ import Index from "./pages/Index.tsx";
 import Updates from "./pages/Updates.tsx";
 import UpdatePost from "./pages/UpdatePost.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import SkyBackdrop from "./components/sky/SkyBackdrop";
 
 const Write = lazy(() => import("./pages/Write.tsx"));
 const Chats = lazy(() => import("./pages/Chats.tsx"));
@@ -28,6 +29,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <SkyBackdrop />
       <BrowserRouter>
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading…</div>}>
           <Routes>

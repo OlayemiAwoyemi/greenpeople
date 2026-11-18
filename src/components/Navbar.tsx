@@ -6,9 +6,9 @@ import { Link, useLocation } from "react-router-dom";
 import greenLogo from "@/assets/green-logo.png";
 
 const navLinks = [
-  { label: "Why Now", href: "#why-now", anchor: true },
-  { label: "Our Mission", href: "#mission", anchor: true },
-  { label: "Values", href: "#values", anchor: true },
+  { label: "Why now", href: "#why-now" },
+  { label: "Our mission", href: "#mission" },
+  { label: "Values", href: "#values" },
   { label: "Updates", href: "/updates", isRoute: true },
   { label: "Ladder", href: "/ranks", isRoute: true },
   { label: "Finance", href: "/finance", isRoute: true },
@@ -19,128 +19,55 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === "/";
-  // On non-home pages, always use "scrolled" (solid) style
-  const solidNav = scrolled || !isHomePage;
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 40);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/40 backdrop-blur-md shadow-sm border-b border-white/20"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="section-container flex items-center justify-between h-14 md:h-16">
-        <a href="/" className="flex items-center gap-2">
-          <img src={greenLogo} alt="Green People" className="w-8 h-8 rounded-full" />
-          <span className={`font-semibold text-sm tracking-tight transition-colors ${solidNav ? "text-foreground" : "text-primary-foreground"}`}>
-            Green People
-          </span>
-        </a>
+  const anchorHref = (h: string) => (isHomePage ? h : `/${h}`);
+  const joinHref = isHomePage ? "#join" : "/#join";
+  const linkCls = "text-sm font-semibold text-foreground/80 hover:text-foreground px-3 py-2 rounded-full hover:bg-white/60 transition-colors whitespace-nowrap";
 
-        <div className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) =>
-            link.isRoute ? (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={`text-xs font-medium uppercase tracking-wide transition-colors hover:opacity-70 ${
-                  solidNav ? "text-foreground/70" : "text-primary-foreground/80"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ) : (
-              <a
-                key={link.href}
-                href={isHomePage ? link.href : `/${link.href}`}
-                onClick={(e) => {
-                  if (!isHomePage) {
-                    e.preventDefault();
-                    window.location.href = `/${link.href}`;
-                  }
-                }}
-                className={`text-xs font-medium uppercase tracking-wide transition-colors hover:opacity-70 ${
-                  solidNav ? "text-foreground/70" : "text-primary-foreground/80"
-                }`}
-              >
-                {link.label}
-              </a>
-            )
-          )}
-          <a
-            href="#join"
-            className="bg-primary text-primary-foreground px-4 py-2 rounded-full text-xs font-semibold hover:opacity-90 transition-opacity uppercase tracking-wide"
-          >
-            Join Now
-          </a>
+  return (
+    <motion.header initial={{ y: -80 }} animate={{ y: 0 }} transition={{ duration: 0.5, ease: "easeOut" }}
+      className="fixed top-0 inset-x-0 z-50 px-3 sm:px-5 pt-3">
+      <nav aria-label="Main" className={`glass !rounded-full mx-auto max-w-6xl flex items-center justify-between transition-all duration-300 ${scrolled ? "h-14 px-3 md:px-4" : "h-16 px-4 md:px-6"}`}>
+        <Link to="/" className="flex items-center gap-2 min-h-11">
+          <img src={greenLogo} alt="" width={32} height={32} className={`rounded-full transition-all ${scrolled ? "w-7 h-7" : "w-8 h-8"}`} />
+          <span className="font-bold text-[15px] tracking-tight text-foreground whitespace-nowrap">Green People</span>
+        </Link>
+
+        <div className="hidden lg:flex items-center gap-1">
+          {navLinks.map((l) => l.isRoute
+            ? <Link key={l.href} to={l.href} className={linkCls}>{l.label}</Link>
+            : <a key={l.href} href={anchorHref(l.href)} className={linkCls}>{l.label}</a>)}
         </div>
 
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className={`md:hidden ${solidNav ? "text-foreground" : "text-primary-foreground"}`}
-        >
+        <a href={joinHref} className="hidden lg:inline-flex btn-primary !min-h-10 !px-5 !text-sm">Join the movement</a>
+
+        <button onClick={() => setMobileOpen(!mobileOpen)} aria-label={mobileOpen ? "Close menu" : "Open menu"} aria-expanded={mobileOpen}
+          className="lg:hidden w-11 h-11 rounded-full flex items-center justify-center text-foreground hover:bg-white/60">
           <FontAwesomeIcon icon={mobileOpen ? faXmark : faBars} className="w-5 h-5" />
         </button>
-      </div>
+      </nav>
 
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white/60 backdrop-blur-xl border-b border-white/20"
-          >
-            <div className="section-container py-4 flex flex-col gap-3">
-              {navLinks.map((link) =>
-                link.isRoute ? (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="text-foreground/70 text-sm font-medium py-1"
-                  >
-                    {link.label}
-                  </Link>
-                ) : (
-                  <a
-                    key={link.href}
-                    href={isHomePage ? link.href : `/${link.href}`}
-                    onClick={(e) => {
-                      setMobileOpen(false);
-                      if (!isHomePage) {
-                        e.preventDefault();
-                        window.location.href = `/${link.href}`;
-                      }
-                    }}
-                    className="text-foreground/70 text-sm font-medium py-1"
-                  >
-                    {link.label}
-                  </a>
-                )
-              )}
-              <a
-                href="#join"
-                onClick={() => setMobileOpen(false)}
-                className="bg-primary text-primary-foreground px-4 py-2.5 rounded-full text-center text-sm font-semibold mt-1"
-              >
-                Join the Movement
-              </a>
+          <motion.div initial={{ opacity: 0, y: -8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            className="lg:hidden glass mx-auto max-w-6xl mt-2 p-3">
+            <div className="flex flex-col">
+              {navLinks.map((l) => l.isRoute
+                ? <Link key={l.href} to={l.href} onClick={() => setMobileOpen(false)} className="text-foreground text-base font-semibold px-4 py-3 rounded-2xl hover:bg-white/70">{l.label}</Link>
+                : <a key={l.href} href={anchorHref(l.href)} onClick={() => setMobileOpen(false)} className="text-foreground text-base font-semibold px-4 py-3 rounded-2xl hover:bg-white/70">{l.label}</a>)}
+              <a href={joinHref} onClick={() => setMobileOpen(false)} className="btn-primary mt-2">Join the movement</a>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </motion.header>
   );
 };
 

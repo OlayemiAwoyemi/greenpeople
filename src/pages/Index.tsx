@@ -8,14 +8,13 @@ import Momentum from "@/components/Momentum";
 
 import JoinForm from "@/components/JoinForm";
 import GreenFooter from "@/components/GreenFooter";
-import FloatingLeaves from "@/components/FloatingLeaves";
+import ElectionMatters from "@/components/ElectionMatters";
 import GreenGuide from "@/components/GreenGuide";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <FloatingLeaves />
       <main>
         <Hero />
         <WhyNow />
@@ -23,6 +22,7 @@ const Index = () => {
         <HowToRegister />
         <WhatWeStandFor />
         <Momentum />
+        <ElectionMatters />
         
         <JoinForm />
       </main>

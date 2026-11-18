@@ -211,26 +211,26 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
     setSubmitted(true);
   };
 
-  const inputClass = "w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-xl px-4 py-3 text-base md:text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all";
-  const selectClass = "w-full bg-primary-foreground/10 border border-primary-foreground/15 rounded-xl px-3.5 py-2.5 pr-10 text-base md:text-sm text-primary-foreground placeholder:text-primary-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_12px_center]";
-  const labelClass = "text-primary-foreground/70 text-xs font-medium mb-1.5 block";
-  const errorClass = "text-red-400 text-[11px] mt-1";
-  const inputErrorBorder = "border-red-400/60";
+  const inputClass = "w-full bg-white/70 border border-pale rounded-2xl px-4 py-3 min-h-11 text-base md:text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-[3px] focus:ring-primary/60 transition-all";
+  const selectClass = "w-full bg-white/70 border border-pale rounded-2xl px-3.5 py-2.5 min-h-11 pr-10 text-base md:text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-[3px] focus:ring-primary/60 appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%230E3133%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_12px_center]";
+  const labelClass = "text-foreground text-sm font-semibold mb-1.5 block";
+  const errorClass = "text-destructive text-xs font-medium mt-1";
+  const inputErrorBorder = "border-destructive";
 
   return (
     <>
-      <section id="join" className="py-20 md:py-28 gradient-green relative overflow-hidden" ref={ref}>
+      <section id="join" className="py-20 md:py-28 relative overflow-hidden" ref={ref}>
         <div className="section-container relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             className="text-center max-w-2xl mx-auto mb-10"
           >
-            <span className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block">
-              Be Part of History
+            <span className="eyebrow">
+              Be part of history
             </span>
             <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-3 leading-tight">
-              Join the Movement
+              Join the movement
             </h2>
             <p className="text-primary-foreground/60 text-sm">
               It's free. It takes 60 seconds. And it could change Nigeria forever.
@@ -242,7 +242,7 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.15 }}
             onSubmit={handleSubmit}
-            className="max-w-xl mx-auto bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/10 rounded-2xl p-6 md:p-8"
+            className="max-w-xl mx-auto glass p-6 md:p-8"
           >
             {/* Residency Selection */}
             <div className="mb-6">
@@ -401,7 +401,7 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
 
       <Dialog open={submitted} onOpenChange={(val) => !val && setSubmitted(false)}>
         <DialogContent className="w-[95vw] sm:max-w-xl p-0 overflow-hidden bg-transparent border-0 shadow-none">
-          <div className="gradient-green rounded-[2rem] p-1 shadow-2xl">
+          <div className="bg-deep rounded-[2rem] p-1 shadow-2xl">
             <div className="bg-[#0a2e1a]/95 backdrop-blur-xl rounded-[1.8rem] p-4 sm:p-7 border border-white/10 max-h-[90vh] overflow-y-auto custom-scrollbar">
               {successStep === 1 && (
                 <div className="space-y-4">
