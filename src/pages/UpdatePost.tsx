@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faCalendar, faPen } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "@/components/Navbar";
 import GreenFooter from "@/components/GreenFooter";
+import { useAdmin } from "@/components/AccessGate";
 
 type Post = {
   id: string;
@@ -16,8 +17,6 @@ type Post = {
   created_at: string;
   cover_image: string | null;
 };
-
-const ACCESS_CODE = "sterces";
 
 const formatContent = (html: string) => {
   // If content already has HTML block tags, just return it
@@ -35,12 +34,7 @@ const UpdatePost = () => {
   const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
-  const [hasAccess, setHasAccess] = useState(false);
-
-  useEffect(() => {
-    const stored = sessionStorage.getItem("gp_access");
-    if (stored === ACCESS_CODE) setHasAccess(true);
-  }, []);
+  const { isAdmin: hasAccess } = useAdmin();
 
   useEffect(() => {
     if (!slug) return;

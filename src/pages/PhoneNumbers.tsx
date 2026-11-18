@@ -96,7 +96,7 @@ const PhoneNumbersContent = () => {
 };
 
 const PhoneNumbers = () => (
-  <AccessGate customCode="GP$$$123">
+  <AccessGate>
     <PhoneNumbersContent />
   </AccessGate>
 );

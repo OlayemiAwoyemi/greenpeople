@@ -9,7 +9,7 @@ import Navbar from "@/components/Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLandmark, faTrophy, faMedal } from "@fortawesome/free-solid-svg-icons";
 
-type Row = { id: string; full_name: string; phone: string; state: string; points: number };
+type Row = { id: string; full_name: string; member_number: number; state: string; points: number };
 
 const Ranks = () => {
   const [rows, setRows] = useState<Row[]>([]);
@@ -35,7 +35,7 @@ const Ranks = () => {
         hostReadsResult,
         hostQuizzesResult,
       ] = await Promise.all([
-        supabase.from("members").select("id, full_name, phone, state"),
+        supabase.rpc("public_member_directory"),
         supabase.from("social_posts").select("id, points, created_at").eq("active", true),
         supabase.from("social_clicks").select("member_id, post_id, created_at").is("host_member_id", null),
         supabase.from("curriculum_reads").select("member_id, item_id").is("host_member_id", null),
@@ -194,7 +194,7 @@ const Ranks = () => {
               {visible.map((r) => { const i = r.rank;
                 const tier = tierFor(r.points);
                 return (
-                  <Link key={r.id} to={`/${r.phone.replace(/\D/g, "")}`} className="flex items-center gap-2.5 sm:gap-3 p-3 sm:p-4 odd:bg-mist/50 hover:bg-white/80 transition-colors min-w-0">
+                  <Link key={r.id} to={`/${r.member_number}`} className="flex items-center gap-2.5 sm:gap-3 p-3 sm:p-4 odd:bg-mist/50 hover:bg-white/80 transition-colors min-w-0">
                     <div className={`w-7 sm:w-8 text-center font-bold ${medal(i)} flex-shrink-0`}>
                       {i < 3 ? <FontAwesomeIcon icon={i === 0 ? faTrophy : faMedal} className="w-4 h-4" /> : `#${i + 1}`}
                     </div>

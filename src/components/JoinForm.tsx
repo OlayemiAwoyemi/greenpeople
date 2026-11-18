@@ -167,11 +167,8 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
       is_nigeria_based: formData.isNigeriaBased,
     };
 
-    const { data: inserted, error } = await supabase
-      .from("members")
-      .insert(payload)
-      .select("id, member_number")
-      .maybeSingle();
+    const { data: insertedRows, error } = await supabase.rpc("register_member", { p: payload });
+    const inserted = insertedRows?.[0];
 
     if (inserted?.member_number) {
       setMemberNumber(inserted.member_number);
@@ -524,8 +521,8 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
 
                     <div className="bg-primary/10 border border-primary/20 rounded-2xl p-5">
                       <h4 className="text-primary font-bold text-[10px] mb-3 uppercase tracking-wider">Your Personal Link</h4>
-                      <a href={`/${formData.phone.replace(/\D/g, "")}`} className="block bg-white/10 p-3 rounded-xl text-center font-mono text-[11px] text-primary-foreground border border-white/10 mb-4 truncate">
-                        greenpeople.ng/{formData.phone.replace(/\D/g, "")}
+                      <a href={`/${memberNumber ?? formData.phone.replace(/\D/g, "")}`} className="block bg-white/10 p-3 rounded-xl text-center font-mono text-[11px] text-primary-foreground border border-white/10 mb-4 truncate">
+                        greenpeople.ng/{memberNumber ?? formData.phone.replace(/\D/g, "")}
                       </a>
 
                       <div className="space-y-2 text-[10px]">
@@ -535,7 +532,7 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <a href={`/${formData.phone.replace(/\D/g, "")}`} className="w-full bg-primary text-primary-foreground px-6 py-3 rounded-xl font-bold text-sm text-center shadow-lg transition-transform active:scale-[0.98]">
+                    <a href={`/${memberNumber ?? formData.phone.replace(/\D/g, "")}`} className="w-full bg-primary text-primary-foreground px-6 py-3 rounded-xl font-bold text-sm text-center shadow-lg transition-transform active:scale-[0.98]">
                       Go to Your Page & Take Action
                     </a>
                     <button onClick={() => setSubmitted(false)} className="w-full bg-white/10 text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-white/20 transition-colors">
