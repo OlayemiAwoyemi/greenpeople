@@ -29,7 +29,7 @@ const HowToRegister = () => (
         {steps.map((s, i) => (
           <li key={s.step} className="relative">
             <Pop delay={i * 0.08} className="flex md:flex-col items-start md:items-center gap-4 md:text-center">
-              <div className="relative z-10 shrink-0 w-14 h-14 rounded-full bg-primary text-primary-foreground font-bold text-xl flex items-center justify-center shadow-glow ring-4 ring-white">
+              <div className="relative z-10 shrink-0 w-14 h-14 rounded-full bg-primary text-primary-foreground font-bold text-xl flex items-center justify-center shadow-[0_8px_24px_-8px_hsl(var(--lime)/0.55)]">
                 {s.step}
               </div>
               <div className="glass p-6 flex-1 w-full">
