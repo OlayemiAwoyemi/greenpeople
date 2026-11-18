@@ -12,8 +12,8 @@ import { useToast } from "@/hooks/use-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXTwitter, faInstagram, faFacebook, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { faLandmark, faUpRightFromSquare, faCheck, faBookOpen, faShareNodes, faUserPlus, faArrowRight, faXmark, faDownload, faAward, faShieldHalved } from "@fortawesome/free-solid-svg-icons";
-import html2canvas from "html2canvas";
-import { ScaledMemberIdCard, CaptureMemberIdCard } from "@/components/MemberIdCard";
+import { saveMemberId } from "@/lib/drawMemberId";
+import { ScaledMemberIdCard } from "@/components/MemberIdCard";
 import { useRef } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { nigerianStates } from "@/data/nigerianLGAs";
@@ -82,7 +82,6 @@ const MemberPage = () => {
     }
   };
   const [verifier, setVerifier] = useState<{ q: string; options: string[]; ans: string } | null>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
 
   const isOwnPage = useMemo(() => {
     if (typeof window === "undefined" || !member) return false;
@@ -409,28 +408,15 @@ const MemberPage = () => {
       return;
     }
 
-    if (!cardRef.current) return;
     try {
-      const canvas = await html2canvas(cardRef.current, {
-        backgroundColor: null,
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        removeContainer: true,
-      });
-      canvas.toBlob((blob) => {
-        if (!blob) return;
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.download = `GreenPeople-${member.full_name.replace(/\s+/g, "_")}.png`;
-        link.href = url;
-        link.click();
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-      }, "image/png", 0.92);
+      await saveMemberId({
+        fullName: member.full_name, gender: member.gender, state: member.state, lga: member.lga,
+        memberNumber: member.member_number, issued: member.joined_at ? new Date(member.joined_at) : null,
+      }, `GreenPeople-ID-${member.full_name.replace(/\s+/g, "_")}.png`);
       setShowVerifier(false);
       setVerifier(null);
     } catch {
-      toast({ title: "Could not download card", variant: "destructive" });
+      toast({ title: "Could not download card", description: "Please try again, or take a screenshot of your ID.", variant: "destructive" });
     }
   }, [member, toast, verifier]);
 
@@ -525,14 +511,6 @@ const MemberPage = () => {
           )}
         </div>
 
-        {/* Off-screen copy of the ID used for the PNG download */}
-        {isOwnPage && member && (
-          <CaptureMemberIdCard ref={cardRef} data={{
-            fullName: member.full_name, gender: member.gender, state: member.state,
-            lga: member.lga, memberNumber: member.member_number,
-                  issued: member.joined_at ? new Date(member.joined_at) : null,
-          }} />
-        )}
 
         {/* "Is this your page?" for members on another phone or browser */}
         {!isOwnPage && member && (

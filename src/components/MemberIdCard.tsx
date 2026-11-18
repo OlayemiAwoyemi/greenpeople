@@ -23,9 +23,9 @@ export type MemberIdData = {
 export const CARD_W = 420;
 export const CARD_H = 296;
 
-const DEEP = "#0E3133";
-const LIME = "#9AC31F";
-const PAPER = "#F4F9E8";
+export const DEEP = "#0E3133";
+export const LIME = "#9AC31F";
+export const PAPER = "#F4F9E8";
 
 // Fine wavy security lines, like the guilloche print on a passport page.
 const guilloche = (() => {
@@ -40,21 +40,21 @@ const guilloche = (() => {
   return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
 })();
 
-const mrzClean = (s = "") =>
+export const mrzClean = (s = "") =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase().replace(/[^A-Z0-9]+/g, "<").replace(/^<+|<+$/g, "");
-const mrzLine = (s: string) => (s + "<".repeat(44)).slice(0, 44);
+export const mrzLine = (s: string) => (s + "<".repeat(44)).slice(0, 44);
 
-const splitName = (d: MemberIdData) => {
+export const splitName = (d: MemberIdData) => {
   if (d.surname) return { surname: d.surname, given: d.givenNames || "" };
   const parts = d.fullName.trim().split(/\s+/);
   if (parts.length < 2) return { surname: parts[0] || "", given: "" };
   return { surname: parts[parts.length - 1], given: parts.slice(0, -1).join(" ") };
 };
 
-const initialsOf = (name: string) =>
+export const initialsOf = (name: string) =>
   name.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase() || "GP";
 
-const fmtDate = (d: Date) =>
+export const fmtDate = (d: Date) =>
   d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase();
 
 // Shrinks long values (e.g. long LGA names) so they still fit their box.
@@ -63,7 +63,7 @@ const fit = (v = "", span: number) => {
   return v.length <= room ? 11.5 : Math.max(8, 11.5 * (room / v.length));
 };
 
-const stateLabel = (s?: string) => (s && /federal capital/i.test(s) ? "FCT Abuja" : s);
+export const stateLabel = (s?: string) => (s && /federal capital/i.test(s) ? "FCT Abuja" : s);
 
 const Field = ({ label, value, span = 3 }: { label: string; value?: string; span?: number }) => (
   <div style={{ gridColumn: `span ${span}`, minWidth: 0 }}>
