@@ -58,6 +58,29 @@ const MemberPage = () => {
   const [lessonStep, setLessonStep] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showVerifier, setShowVerifier] = useState(false);
+  const [claimOpen, setClaimOpen] = useState(false);
+  const [claimPhone, setClaimPhone] = useState("");
+  const [claimBusy, setClaimBusy] = useState(false);
+  const [claimError, setClaimError] = useState("");
+
+  // A member on a new phone or browser proves the page is theirs with the
+  // phone number they registered with. The check runs in the database, and
+  // only a yes/no comes back.
+  const claimPage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!member) return;
+    const digits = claimPhone.replace(/\D/g, "");
+    if (digits.length < 10) { setClaimError("Enter the full phone number you registered with."); return; }
+    setClaimBusy(true); setClaimError("");
+    const { data } = await supabase.rpc("get_member_page", { p_ref: digits });
+    setClaimBusy(false);
+    if (data?.[0]?.id === member.id) {
+      try { localStorage.setItem("gp_member_id", member.id); } catch { /* ignore */ }
+      window.location.reload();
+    } else {
+      setClaimError("That number doesn't match this page. Check it and try again.");
+    }
+  };
   const [verifier, setVerifier] = useState<{ q: string; options: string[]; ans: string } | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -503,6 +526,37 @@ const MemberPage = () => {
             lga: member.lga, memberNumber: member.member_number,
                   issued: member.joined_at ? new Date(member.joined_at) : null,
           }} />
+        )}
+
+        {/* "Is this your page?" for members on another phone or browser */}
+        {!isOwnPage && member && (
+          <div className="glass p-4 sm:p-5 mb-4">
+            {!claimOpen ? (
+              <button type="button" onClick={() => setClaimOpen(true)} className="w-full flex items-center gap-3 text-left min-h-11">
+                <span className="w-10 h-10 rounded-full bg-pale flex items-center justify-center shrink-0">
+                  <FontAwesomeIcon icon={faShieldHalved} className="w-4 h-4 text-olive" />
+                </span>
+                <span className="flex-1 min-w-0">
+                  <span className="block font-semibold text-foreground">Is this your page?</span>
+                  <span className="block text-sm text-muted-foreground">Confirm your phone number to see and download your membership ID.</span>
+                </span>
+                <FontAwesomeIcon icon={faArrowRight} className="w-3.5 h-3.5 text-muted-foreground" />
+              </button>
+            ) : (
+              <form onSubmit={claimPage}>
+                <label htmlFor="claim-phone" className="block font-semibold text-foreground mb-1">Confirm it's you</label>
+                <p className="text-sm text-muted-foreground mb-3">Enter the phone number you registered with. It isn't shown or stored on this page.</p>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input id="claim-phone" type="tel" inputMode="tel" autoComplete="tel" autoFocus value={claimPhone}
+                    onChange={(e) => { setClaimPhone(e.target.value); setClaimError(""); }} placeholder="e.g. 0803 123 4567"
+                    aria-invalid={!!claimError} aria-describedby={claimError ? "claim-err" : undefined}
+                    className={`flex-1 bg-white/70 border rounded-full px-4 py-3 min-h-11 text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-[3px] focus:ring-primary/60 ${claimError ? "border-destructive" : "border-pale"}`} />
+                  <button type="submit" disabled={claimBusy} className="btn-primary !min-h-11 disabled:opacity-60">{claimBusy ? "Checking…" : "Show my ID"}</button>
+                </div>
+                <p id="claim-err" role="alert" className="text-destructive text-sm font-medium mt-2 min-h-5">{claimError}</p>
+              </form>
+            )}
+          </div>
         )}
 
         {/* Join CTA for visitors */}
