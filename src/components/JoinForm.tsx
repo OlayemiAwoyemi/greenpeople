@@ -9,6 +9,7 @@ import { nigerianStates, nigerianStatesAndLGAs } from "@/data/nigerianLGAs";
 import { normalizeName, normalizeSentence, joinName } from "@/lib/textNormalize";
 import PrivacyModal from "./PrivacyModal";
 import html2canvas from "html2canvas";
+import { ScaledMemberIdCard, CaptureMemberIdCard, type MemberIdData } from "@/components/MemberIdCard";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const ageGroups = ["18-24", "25-34", "35-44", "45-54", "55+"];
@@ -85,7 +86,7 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
     if (!cardRef.current) return;
     try {
       const canvas = await html2canvas(cardRef.current, {
-        backgroundColor: "#0a2e1a",
+        backgroundColor: null,
         scale: 2,
         useCORS: true,
         logging: false,
@@ -213,6 +214,18 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
   const labelClass = "text-foreground text-sm font-semibold mb-1.5 block";
   const errorClass = "text-destructive text-xs font-medium mt-1";
   const inputErrorBorder = "border-destructive";
+
+
+  const idData: MemberIdData = {
+    fullName: joinName({ first: formData.firstName, middle: formData.middleName, surname: formData.surname }) || "Green Member",
+    surname: normalizeName(formData.surname),
+    givenNames: [normalizeName(formData.firstName), normalizeName(formData.middleName)].filter(Boolean).join(" "),
+    gender: formData.gender,
+    state: formData.state,
+    lga: formData.lga,
+    memberNumber,
+    issued: new Date(),
+  };
 
   return (
     <>
@@ -414,44 +427,15 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
 
                   <div className="space-y-4">
                     <div className="relative group perspective-1000">
-                      <div
-                        ref={cardRef}
-                        className="w-full aspect-[1.58/1] max-w-[380px] mx-auto bg-gradient-to-br from-[#0a2e1a] via-[#0d3d23] to-[#0a2e1a] border border-white/20 rounded-2xl p-8 shadow-2xl relative overflow-hidden flex flex-col justify-between"
-                      >
-                        <div className="absolute -top-12 -right-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-                        <div className="flex justify-between items-start relative z-10">
-                          <div>
-                            <h4 className="text-primary font-black text-[10px] md:text-xs tracking-tighter leading-none mb-0.5">GREEN PEOPLE</h4>
-                            <div className="text-white/40 text-[7px] uppercase tracking-[0.2em]">Movement</div>
-                          </div>
-                          <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center border border-white/10">
-                            <FontAwesomeIcon icon={faAward} className="text-primary w-4 h-4" />
-                          </div>
-                        </div>
-                        <div className="relative z-10 mt-4">
-                          <div className="text-white font-bold text-sm md:text-lg leading-normal mb-1.5 pb-0.5">
-                            {joinName({ first: formData.firstName, middle: formData.middleName, surname: formData.surname }) || "Green Member"}
-                          </div>
-                          <div className="flex items-center gap-2 text-white/60 text-[9px] md:text-[11px] font-medium">
-                            <span>{formData.state} · {formData.lga}</span>
-                            <span className="w-1 h-1 bg-white/20 rounded-full" />
-                            <span className="text-primary uppercase tracking-widest font-bold text-[8px]">Verified Member</span>
-                          </div>
-                        </div>
-                        <div className="flex justify-between items-end relative z-10 pt-6 border-t border-white/5">
-                          <div className="text-[8px] text-white/30 font-mono">
-                            GP - {String(memberNumber || 0).padStart(8, '0')}
-                          </div>
-                          <div className="text-[8px] text-white/50 font-bold tracking-widest uppercase">GREENPEOPLE.NG</div>
-                        </div>
-                      </div>
+                      <ScaledMemberIdCard data={idData} />
+                      <CaptureMemberIdCard ref={cardRef} data={idData} />
                     </div>
                     <div className="text-center pt-2">
                       <button 
                         onClick={handleDownloadCard} 
                         className="w-full bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 px-6 py-3 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-primary/5"
                       >
-                        <FontAwesomeIcon icon={faDownload} className="w-3.5 h-3.5" /> Download Your Membership Card
+                        <FontAwesomeIcon icon={faDownload} className="w-3.5 h-3.5" /> Download your membership ID
                       </button>
                     </div>
                   </div>
