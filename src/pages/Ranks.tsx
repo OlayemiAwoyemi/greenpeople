@@ -22,7 +22,7 @@ const Ranks = () => {
   useEffect(() => {
     const load = async () => {
       setLoading(true); setFailed(false);
-      const results = await Promise.all([, { data: posts }, { data: clicks }, { data: reads }, { data: pv }, { data: hostClicks }, { data: refs }, { data: quiz }] = await Promise.all([
+      const results = await Promise.all([
         supabase.from("members").select("id, full_name, phone, state"),
         supabase.from("social_posts").select("id, points, created_at"),
         supabase.from("social_clicks").select("member_id, post_id, points_awarded, created_at, host_member_id"),

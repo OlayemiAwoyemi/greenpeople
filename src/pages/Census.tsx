@@ -24,10 +24,11 @@ type Member = {
   lga: string | null;
   age_group: string | null;
   gender: string | null;
+  has_pvc: string | null;
   is_nigeria_based: boolean | null;
 };
 
-type Dim = "state" | "lga" | "country" | "age_group" | "gender";
+type Dim = "state" | "lga" | "country" | "age_group" | "gender" | "has_pvc";
 
 const DIMS: { key: Dim; label: string }[] = [
   { key: "state", label: "State" },
@@ -35,6 +36,7 @@ const DIMS: { key: Dim; label: string }[] = [
   { key: "country", label: "Country of Residence" },
   { key: "age_group", label: "Age Group" },
   { key: "gender", label: "Gender" },
+  { key: "has_pvc", label: "PVC Ownership" },
 ];
 
 const COLORS = [
@@ -66,7 +68,7 @@ const CensusContent = () => {
       while (true) {
         const { data, error } = await supabase
           .from("members")
-          .select("id, state, lga, age_group, gender, is_nigeria_based")
+          .select("id, state, lga, age_group, gender, has_pvc, is_nigeria_based")
           .range(from, from + pageSize - 1);
         if (error || !data || data.length === 0) break;
         all.push(...(data as Member[]));
