@@ -58,25 +58,6 @@ const fit = (c: CanvasRenderingContext2D, text: string, x: number, y: number, ma
   c.fillText(text, x, y);
 };
 
-/** Fine engraved rosette, like the security print on a banknote. */
-const rosette = (c: CanvasRenderingContext2D, cx: number, cy: number, r: number) => {
-  c.save();
-  c.lineWidth = 0.35;
-  for (let k = 0; k < 3; k++) {
-    const R = r - k * 9, rr = R * 0.36, d = R * 0.52;
-    c.strokeStyle = k === 1 ? "rgba(94,138,18,0.20)" : "rgba(14,49,51,0.09)";
-    c.beginPath();
-    for (let t = 0; t <= Math.PI * 2 * 9 + 0.01; t += 0.02) {
-      const x = (R - rr) * Math.cos(t) + d * Math.cos(((R - rr) / rr) * t);
-      const y = (R - rr) * Math.sin(t) - d * Math.sin(((R - rr) / rr) * t);
-      const sc = r / (R + d - rr + 4);
-      if (t === 0) c.moveTo(cx + x * sc, cy + y * sc); else c.lineTo(cx + x * sc, cy + y * sc);
-    }
-    c.stroke();
-  }
-  c.restore();
-};
-
 export async function drawMemberIdCanvas(data: MemberIdData): Promise<HTMLCanvasElement> {
   try { await document.fonts?.ready; } catch { /* ignore */ }
   const canvas = document.createElement("canvas");
@@ -102,22 +83,19 @@ export async function drawMemberIdCanvas(data: MemberIdData): Promise<HTMLCanvas
   c.lineWidth = 0.4;
   for (let i = 0; i < 26; i++) {
     const y = HEADER_H + 6 + i * 7.2;
-    c.strokeStyle = i % 3 === 0 ? "rgba(154,195,31,0.16)" : "rgba(14,49,51,0.045)";
+    c.strokeStyle = i % 3 === 0 ? "rgba(154,195,31,0.12)" : "rgba(14,49,51,0.03)";
     c.beginPath(); c.moveTo(0, y);
     for (let x = 0; x < CARD_W; x += 84) c.bezierCurveTo(x + 28, y - 4, x + 56, y + 4, x + 84, y);
     c.stroke();
   }
-  c.globalAlpha = 0.6; rosette(c, CARD_W - M - 50, 142, 52); c.globalAlpha = 1;
-  if (logo) { c.globalAlpha = 0.05; c.drawImage(logo, CARD_W - M - 72, 120, 44, 44); c.globalAlpha = 1; }
+  if (logo) { c.globalAlpha = 0.07; c.drawImage(logo, CARD_W - M - 128, 78, 128, 128); c.globalAlpha = 1; }
 
   // ---- header ----
   const hg = c.createLinearGradient(0, 0, CARD_W, 0);
   hg.addColorStop(0, "#0B2A2C"); hg.addColorStop(1, "#14403F");
   c.fillStyle = hg; c.fillRect(0, 0, CARD_W, HEADER_H);
-  c.fillStyle = LIME; c.fillRect(0, HEADER_H - 1.5, CARD_W, 1.5);
   if (logo) {
-    c.save(); c.beginPath(); c.arc(M + 13, HEADER_H / 2, 13, 0, Math.PI * 2); c.closePath();
-    c.fillStyle = "#fff"; c.fill(); c.clip(); c.drawImage(logo, M, HEADER_H / 2 - 13, 26, 26); c.restore();
+    c.drawImage(logo, M, HEADER_H / 2 - 13, 26, 26);
   }
   c.fillStyle = "#FFFFFF"; c.font = `750 11.5px ${FONT}`;
   tracked(c, "GREEN PEOPLE MOVEMENT", M + 34, 20.5, 0.9);
@@ -130,17 +108,11 @@ export async function drawMemberIdCanvas(data: MemberIdData): Promise<HTMLCanvas
 
   // ---- portrait ----
   const PX = M, PY = HEADER_H + 14, PW = 92, PH = 136;
-  c.save();
-  c.shadowColor = "rgba(14,49,51,0.18)"; c.shadowBlur = 8; c.shadowOffsetY = 3;
-  rounded(c, PX, PY, PW, PH, 10); c.fillStyle = "#fff"; c.fill();
-  c.restore();
-  c.save(); rounded(c, PX + 2.5, PY + 2.5, PW - 5, PH - 5, 8); c.clip();
+  c.save(); rounded(c, PX, PY, PW, PH, 10); c.clip();
   const pg = c.createLinearGradient(PX, PY, PX + PW, PY + PH);
   pg.addColorStop(0, "#1E5254"); pg.addColorStop(1, "#0B2A2C");
   c.fillStyle = pg; c.fillRect(PX, PY, PW, PH);
-  rosette(c, PX + PW / 2, PY + 56, 42);
-  c.strokeStyle = "rgba(154,195,31,0.55)"; c.lineWidth = 1;
-  c.beginPath(); c.arc(PX + PW / 2, PY + 56, 29, 0, Math.PI * 2); c.stroke();
+  if (logo) { c.globalAlpha = 0.08; c.drawImage(logo, PX + PW / 2 - 34, PY + 22, 68, 68); c.globalAlpha = 1; }
   c.fillStyle = LIME; c.font = `800 28px ${FONT}`; c.textAlign = "center"; c.textBaseline = "middle";
   c.fillText(initialsOf(data.fullName), PX + PW / 2, PY + 57);
   c.textBaseline = "alphabetic";
@@ -176,8 +148,6 @@ export async function drawMemberIdCanvas(data: MemberIdData): Promise<HTMLCanvas
 
   // ---- footer line ----
   const FY = CARD_H - MRZ_H - 10;
-  c.strokeStyle = "rgba(14,49,51,0.12)"; c.lineWidth = 0.6;
-  c.beginPath(); c.moveTo(M, FY - 9); c.lineTo(CARD_W - M, FY - 9); c.stroke();
   c.fillStyle = MUTED; c.font = `600 5.8px ${FONT}`;
   tracked(c, "ONE PEOPLE  ·  ONE GREEN FUTURE", M, FY, 1.3);
   c.fillStyle = INK; c.font = `700 6.4px ${FONT}`;
@@ -185,8 +155,7 @@ export async function drawMemberIdCanvas(data: MemberIdData): Promise<HTMLCanvas
 
   // ---- machine-readable zone ----
   const MY = CARD_H - MRZ_H;
-  c.fillStyle = "rgba(255,255,255,0.86)"; c.fillRect(0, MY, CARD_W, MRZ_H);
-  c.fillStyle = "rgba(14,49,51,0.10)"; c.fillRect(0, MY, CARD_W, 0.8);
+  c.fillStyle = "rgba(255,255,255,0.55)"; c.fillRect(0, MY, CARD_W, MRZ_H);
   c.fillStyle = INK;
   const line1 = mrzLine(`GPM<NG<${mrzClean(surname)}<<${mrzClean(given)}`);
   const line2 = mrzLine(`GP${num}<${mrzClean(stateLabel(data.state))}<${mrzClean(data.lga)}<<VERIFIED<MEMBER`);
@@ -201,9 +170,6 @@ export async function drawMemberIdCanvas(data: MemberIdData): Promise<HTMLCanvas
   c.textAlign = "left";
   c.restore();
 
-  // hairline edge
-  rounded(c, 0.4, 0.4, CARD_W - 0.8, CARD_H - 0.8, 15.6);
-  c.strokeStyle = "rgba(14,49,51,0.18)"; c.lineWidth = 0.8; c.stroke();
 
   return canvas;
 }

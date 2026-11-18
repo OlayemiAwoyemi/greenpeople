@@ -16,7 +16,7 @@ export const ScaledMemberIdCard = ({ data }: { data: MemberIdData }) => {
     <div className="w-full mx-auto" style={{ maxWidth: CARD_W * 1.25, aspectRatio: `${CARD_W} / ${CARD_H}` }}>
       {src ? (
         <img src={src} alt={`Green People membership ID for ${data.fullName}`}
-          className="w-full h-full rounded-2xl shadow-[0_18px_40px_-18px_rgba(14,49,51,0.55)] animate-in fade-in zoom-in-95 duration-500" />
+          className="w-full h-full rounded-2xl shadow-[0_20px_44px_-24px_rgba(14,49,51,0.45)] animate-in fade-in zoom-in-95 duration-500" />
       ) : (
         <div className="w-full h-full rounded-2xl bg-pale/60 animate-pulse" aria-label="Preparing your ID" />
       )}
