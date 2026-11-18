@@ -1,5 +1,5 @@
 import { motion, useInView } from "framer-motion";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faAward, faShareNodes, faCheck, faDownload, faArrowRight, faBullseye, faUserGroup, faLandmark, faShieldHalved } from "@fortawesome/free-solid-svg-icons";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
@@ -62,6 +62,8 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [submitted, setSubmitted] = useState(false);
   const [successStep, setSuccessStep] = useState(1);
+  const successBoxRef = useRef<HTMLDivElement>(null);
+  useEffect(() => { successBoxRef.current?.scrollTo({ top: 0 }); }, [successStep]);
   const [memberNumber, setMemberNumber] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -396,7 +398,7 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
       <Dialog open={submitted} onOpenChange={(val) => !val && setSubmitted(false)}>
         <DialogContent className="w-[95vw] sm:max-w-xl p-0 overflow-hidden bg-transparent border-0 shadow-none">
           <div className="bg-deep rounded-[2rem] p-1 shadow-2xl">
-            <div className="bg-[#0a2e1a]/95 backdrop-blur-xl rounded-[1.8rem] p-4 sm:p-7 border border-white/10 max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div ref={successBoxRef} className="bg-[#0a2e1a]/95 backdrop-blur-xl rounded-[1.8rem] p-4 sm:p-7 border border-white/10 max-h-[90vh] overflow-y-auto custom-scrollbar">
               {successStep === 1 && (
                 <div className="space-y-4">
                   <div className="text-center">

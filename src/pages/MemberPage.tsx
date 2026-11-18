@@ -56,6 +56,8 @@ const MemberPage = () => {
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({}); // quiz id -> chosen
   const [openLesson, setOpenLesson] = useState<Item | null>(null);
   const [lessonStep, setLessonStep] = useState(0);
+  const lessonBodyRef = useRef<HTMLDivElement>(null);
+  useEffect(() => { lessonBodyRef.current?.scrollTo({ top: 0 }); }, [lessonStep, openLesson]);
   const [loading, setLoading] = useState(true);
   const [showVerifier, setShowVerifier] = useState(false);
   const [claimOpen, setClaimOpen] = useState(false);
@@ -681,7 +683,7 @@ const MemberPage = () => {
                 <FontAwesomeIcon icon={faXmark} className="w-4 h-4" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto overflow-x-hidden p-5 sm:p-8 custom-scrollbar">
+            <div ref={lessonBodyRef} className="flex-1 overflow-y-auto overflow-x-hidden p-5 sm:p-8 custom-scrollbar">
               {lessonBits.length === 0 ? (
                 <p className="text-sm text-muted-foreground">This lesson has no written content yet.</p>
               ) : (
