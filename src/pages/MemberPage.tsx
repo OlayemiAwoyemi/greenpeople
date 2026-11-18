@@ -492,7 +492,7 @@ const MemberPage = () => {
 
 
           {isOwnPage && member && (
-            <div className="mt-4 pt-4 border-t border-white/10">
+            <div className="mt-4 pt-4">
               <div className="mb-3">
                 <ScaledMemberIdCard data={{
                   fullName: member.full_name, gender: member.gender, state: member.state,
@@ -502,7 +502,7 @@ const MemberPage = () => {
               </div>
               <button 
                 onClick={handleDownloadCard}
-                className="w-full bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 px-4 py-3 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                className="w-full bg-primary/10 hover:bg-primary/20 text-primary px-4 py-3 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
               >
                 <FontAwesomeIcon icon={faDownload} className="w-3.5 h-3.5" /> Download membership ID
               </button>
@@ -533,7 +533,7 @@ const MemberPage = () => {
                   <input id="claim-phone" type="tel" inputMode="tel" autoComplete="tel" autoFocus value={claimPhone}
                     onChange={(e) => { setClaimPhone(e.target.value); setClaimError(""); }} placeholder="e.g. 0803 123 4567"
                     aria-invalid={!!claimError} aria-describedby={claimError ? "claim-err" : undefined}
-                    className={`flex-1 bg-white/70 border rounded-full px-4 py-3 min-h-11 text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-[3px] focus:ring-primary/60 ${claimError ? "border-destructive" : "border-pale"}`} />
+                    className={`flex-1 field rounded-full px-4 py-3 min-h-11 text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-0 ${claimError ? "border-destructive" : "border-pale"}`} />
                   <button type="submit" disabled={claimBusy} className="btn-primary !min-h-11 disabled:opacity-60">{claimBusy ? "Checking…" : "Show my ID"}</button>
                 </div>
                 <p id="claim-err" role="alert" className="text-destructive text-sm font-medium mt-2 min-h-5">{claimError}</p>
@@ -572,7 +572,7 @@ const MemberPage = () => {
                     <button
                       key={p.id}
                       onClick={() => handleSocialClick(p)}
-                      className={`group text-left glass-card p-3 flex items-center gap-2.5 sm:gap-3 hover:bg-white/20 transition-all min-w-0 ${done ? "border-primary/40 opacity-70" : "border-white/10"}`}
+                      className={`group text-left glass-card p-3 flex items-center gap-2.5 sm:gap-3 hover:bg-white/20 transition-all min-w-0 ${done ? "opacity-70" : ""}`}
                     >
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${done ? "bg-primary text-primary-foreground" : "bg-white/10 text-muted-foreground"}`}>
                         <FontAwesomeIcon icon={done ? faCheck : faUpRightFromSquare} className="w-3.5 h-3.5" />
@@ -609,7 +609,7 @@ const MemberPage = () => {
               const list = quizzesByItem[it.id] || [];
               const isOpen = activeQuiz === it.id;
               return (
-                <div key={it.id} className={`glass-card overflow-hidden ${done ? "border-primary/40" : "border-white/10"}`}>
+                <div key={it.id} className={`glass-card overflow-hidden ${done ? "bg-primary/5" : ""}`}>
                   <button onClick={() => startLesson(it)} className="w-full text-left p-3 flex items-start gap-2.5 sm:gap-3 hover:bg-white/20 transition-all min-w-0">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${done ? "bg-primary text-primary-foreground" : "bg-white/10 text-muted-foreground"}`}>
                       <FontAwesomeIcon icon={done ? faCheck : faBookOpen} className="w-3.5 h-3.5" />
@@ -625,7 +625,7 @@ const MemberPage = () => {
                   </button>
 
                   {list.length > 0 && (
-                    <div className="border-t border-pale p-3">
+                    <div className="border-t border-pale/50 p-3">
                       {quizDone ? (
                         <div className="text-[11px] text-primary font-semibold inline-flex items-center gap-1.5">
                           <FontAwesomeIcon icon={faCheck} className="w-3 h-3" /> Quiz completed
@@ -633,18 +633,18 @@ const MemberPage = () => {
                       ) : !isOpen ? (
                         <button
                           onClick={() => { setActiveQuiz(it.id); setQuizAnswers({}); }}
-                          className="text-[11px] sm:text-xs font-semibold bg-primary/20 text-primary px-3 py-1.5 rounded-lg whitespace-nowrap border border-primary/20"
+                          className="text-[11px] sm:text-xs font-semibold bg-primary/20 text-primary px-3 py-1.5 rounded-lg whitespace-nowrap"
                         >
                           Take the quiz · earn up to +{list.length * QUIZ_POINTS_PER_CORRECT} pts
                         </button>
                       ) : (
                         <div className="space-y-3">
                           {list.map((q, qi) => (
-                            <div key={q.id} className="bg-white/10 rounded-lg p-3 border border-white/5">
+                            <div key={q.id} className="bg-white/10 rounded-lg p-3">
                               <div className="text-[12px] sm:text-sm font-semibold text-foreground mb-2 text-pretty">{qi + 1}. {q.question}</div>
                               <div className="grid gap-1.5">
                                 {q.options.map((opt, idx) => (
-                                  <label key={idx} className={`flex items-start gap-2 text-[11px] sm:text-xs cursor-pointer p-2 rounded-md border transition-all ${quizAnswers[q.id] === idx ? "border-primary bg-primary/10" : "border-white/10 bg-white/5 hover:bg-white/10"}`}>
+                                  <label key={idx} className={`flex items-start gap-2 text-[11px] sm:text-xs cursor-pointer p-2 rounded-lg transition-all ${quizAnswers[q.id] === idx ? "bg-primary/15 text-foreground" : "bg-white/40 hover:bg-white/60"}`}>
                                     <input type="radio" name={q.id} className="mt-0.5" checked={quizAnswers[q.id] === idx} onChange={() => setQuizAnswers((s) => ({ ...s, [q.id]: idx }))} />
                                     <span className="text-pretty flex-1 min-w-0">{opt}</span>
                                   </label>
@@ -670,8 +670,8 @@ const MemberPage = () => {
       {/* Lesson reader modal */}
       {openLesson && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-deep/30 backdrop-blur-sm p-0 sm:p-4" role="dialog" aria-modal="true">
-          <div className="bg-background w-full sm:max-w-2xl sm:rounded-2xl rounded-t-2xl max-h-[90vh] flex flex-col border border-border shadow-2xl">
-            <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-pale">
+          <div className="bg-background w-full sm:max-w-2xl sm:rounded-2xl rounded-t-2xl max-h-[90vh] flex flex-col shadow-2xl">
+            <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-pale/50">
               <div className="flex-1 min-w-0">
                 <div className="text-[10px] font-bold text-primary mb-1">{openLesson.category.replace("_", " ")}</div>
                 <h3 className="text-base sm:text-lg font-bold text-foreground break-words">{openLesson.title}</h3>
@@ -696,7 +696,7 @@ const MemberPage = () => {
                 </a>
               )}
             </div>
-            <div className="border-t border-pale p-3 sm:p-4 flex items-center gap-3">
+            <div className="border-t border-pale/50 p-3 sm:p-4 flex items-center gap-3">
               <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
                 <div className="h-full bg-primary transition-all" style={{ width: `${((lessonStep + 1) / Math.max(1, lessonBits.length)) * 100}%` }} />
               </div>
@@ -717,9 +717,9 @@ const MemberPage = () => {
 
       {/* Verification Modal */}
       <Dialog open={showVerifier} onOpenChange={setShowVerifier}>
-        <DialogContent className="max-w-sm bg-[#0a2e1a] border-white/10 text-white rounded-3xl">
+        <DialogContent className="max-w-sm bg-[#0a2e1a] border-0 text-white rounded-3xl">
           <div className="text-center py-4">
-            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 border border-primary/30">
+            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
               <FontAwesomeIcon icon={faShieldHalved} className="text-primary w-5 h-5" />
             </div>
             <h3 className="text-lg font-bold mb-2">Security Verification</h3>
@@ -729,7 +729,7 @@ const MemberPage = () => {
                 <button
                   key={opt}
                   onClick={() => verifyAndDownload(opt)}
-                  className="w-full bg-white/5 hover:bg-primary/20 border border-white/10 hover:border-primary/40 p-3 rounded-xl text-sm transition-all"
+                  className="w-full bg-white/5 hover:bg-primary/20 p-3 rounded-xl text-sm transition-all"
                 >
                   {opt}
                 </button>

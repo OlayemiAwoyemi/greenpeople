@@ -38,7 +38,7 @@ const PhoneNumbersContent = () => {
             <FontAwesomeIcon icon={faSearch} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <input id="pn-search" type="text" inputMode="tel" placeholder="Search or confirm a phone number"
               value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-white/70 border border-pale rounded-full pl-11 pr-4 py-3 min-h-11 text-base sm:text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-[3px] focus:ring-primary/60" />
+              className="w-full field rounded-full pl-11 pr-4 py-3 min-h-11 text-base sm:text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-0" />
           </div>
           {searchTerm && (
             <div role="status" className={`px-5 py-3 rounded-full inline-flex items-center gap-2 whitespace-nowrap font-semibold text-sm ${isExactMatch ? "bg-lime/30 text-olive" : "bg-destructive/10 text-destructive"}`}>

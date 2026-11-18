@@ -208,7 +208,7 @@ const MembersContent = () => {
         <div className="flex flex-col sm:flex-row gap-2">
           <label htmlFor="m-search" className="sr-only">Search members</label>
           <input id="m-search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search name, phone, state or LGA"
-            className="flex-1 bg-white/70 border border-pale rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60" />
+            className="flex-1 field rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-0" />
           {filtersOn && (
             <button onClick={clearFilters} className="btn-glass !min-h-11 !px-4 !text-sm justify-center">
               <FontAwesomeIcon icon={faXmark} className="w-3 h-3" />Clear filters
@@ -219,7 +219,7 @@ const MembersContent = () => {
           <label className="block">
             <span className="block text-xs font-semibold text-muted-foreground mb-1 px-1">State</span>
             <select value={stateFilter} onChange={(e) => { setStateFilter(e.target.value); setLgaFilter("all"); }}
-              className="w-full bg-white/70 border border-pale rounded-2xl px-3 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60">
+              className="w-full field rounded-2xl px-3 min-h-11 text-[15px] focus:outline-none focus:ring-0">
               <option value="all">All states</option>
               {stateOptions.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
@@ -227,7 +227,7 @@ const MembersContent = () => {
           <label className="block">
             <span className="block text-xs font-semibold text-muted-foreground mb-1 px-1">Local Government</span>
             <select value={lgaFilter} onChange={(e) => setLgaFilter(e.target.value)}
-              className="w-full bg-white/70 border border-pale rounded-2xl px-3 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60">
+              className="w-full field rounded-2xl px-3 min-h-11 text-[15px] focus:outline-none focus:ring-0">
               <option value="all">All LGAs</option>
               {lgaOptions.map((l) => <option key={l} value={l}>{l}</option>)}
             </select>
@@ -235,7 +235,7 @@ const MembersContent = () => {
           <label className="block">
             <span className="block text-xs font-semibold text-muted-foreground mb-1 px-1">Age Group</span>
             <select value={ageFilter} onChange={(e) => setAgeFilter(e.target.value)}
-              className="w-full bg-white/70 border border-pale rounded-2xl px-3 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60">
+              className="w-full field rounded-2xl px-3 min-h-11 text-[15px] focus:outline-none focus:ring-0">
               <option value="all">All age groups</option>
               {ageOptions.map((a) => <option key={a} value={a}>{a}</option>)}
             </select>
@@ -243,7 +243,7 @@ const MembersContent = () => {
           <label className="block">
             <span className="block text-xs font-semibold text-muted-foreground mb-1 px-1">Gender</span>
             <select value={genderFilter} onChange={(e) => setGenderFilter(e.target.value)}
-              className="w-full bg-white/70 border border-pale rounded-2xl px-3 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60">
+              className="w-full field rounded-2xl px-3 min-h-11 text-[15px] focus:outline-none focus:ring-0">
               <option value="all">All genders</option>
               {genderOptions.map((g) => <option key={g} value={g}>{g}</option>)}
             </select>
@@ -251,7 +251,7 @@ const MembersContent = () => {
           <label className="block">
             <span className="block text-xs font-semibold text-muted-foreground mb-1 px-1">PVC Ownership</span>
             <select value={pvcFilter} onChange={(e) => setPvcFilter(e.target.value)}
-              className="w-full bg-white/70 border border-pale rounded-2xl px-3 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60">
+              className="w-full field rounded-2xl px-3 min-h-11 text-[15px] focus:outline-none focus:ring-0">
               <option value="all">All PVC statuses</option>
               {PVC_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
             </select>
@@ -259,7 +259,7 @@ const MembersContent = () => {
           <label className="block">
             <span className="block text-xs font-semibold text-muted-foreground mb-1 px-1">Country of Residence</span>
             <select value={countryFilter} onChange={(e) => setCountryFilter(e.target.value)}
-              className="w-full bg-white/70 border border-pale rounded-2xl px-3 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60">
+              className="w-full field rounded-2xl px-3 min-h-11 text-[15px] focus:outline-none focus:ring-0">
               <option value="all">All locations</option>
               <option value="Nigeria">Nigeria</option>
               <option value="Diaspora">Diaspora</option>
@@ -297,7 +297,7 @@ const MembersContent = () => {
                       <td className="p-3"><div className="relative inline-block">
                       <select aria-label={`PVC status for ${m.full_name}`} value={m.has_pvc} disabled={updatingId === m.id}
                         onChange={(e) => updatePvc(m.id, e.target.value)} style={{ backgroundImage: "none" }}
-                        className={`appearance-none cursor-pointer text-sm font-semibold pl-3 pr-8 py-1.5 min-h-9 rounded-full border-0 focus:outline-none focus:ring-[3px] focus:ring-primary/60 disabled:opacity-50 ${
+                        className={`appearance-none cursor-pointer text-sm font-semibold pl-3 pr-8 py-1.5 min-h-9 rounded-full border-0 focus:outline-none focus:ring-0 disabled:opacity-50 ${
                           m.has_pvc === "Yes" ? "bg-primary/25 text-foreground" : m.has_pvc === "In Progress" ? "bg-pale text-foreground" : "bg-destructive/10 text-destructive"}`}>
                         {PVC_OPTIONS.map((opt) => <option key={opt} value={opt} className="text-foreground bg-background">{opt}</option>)}
                       </select>
@@ -325,7 +325,7 @@ const MembersContent = () => {
                 <div className="flex items-center justify-between mt-3"><div className="relative inline-block">
                       <select aria-label={`PVC status for ${m.full_name}`} value={m.has_pvc} disabled={updatingId === m.id}
                         onChange={(e) => updatePvc(m.id, e.target.value)} style={{ backgroundImage: "none" }}
-                        className={`appearance-none cursor-pointer text-sm font-semibold pl-3 pr-8 py-1.5 min-h-9 rounded-full border-0 focus:outline-none focus:ring-[3px] focus:ring-primary/60 disabled:opacity-50 ${
+                        className={`appearance-none cursor-pointer text-sm font-semibold pl-3 pr-8 py-1.5 min-h-9 rounded-full border-0 focus:outline-none focus:ring-0 disabled:opacity-50 ${
                           m.has_pvc === "Yes" ? "bg-primary/25 text-foreground" : m.has_pvc === "In Progress" ? "bg-pale text-foreground" : "bg-destructive/10 text-destructive"}`}>
                         {PVC_OPTIONS.map((opt) => <option key={opt} value={opt} className="text-foreground bg-background">{opt}</option>)}
                       </select>

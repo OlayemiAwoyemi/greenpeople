@@ -183,7 +183,7 @@ const PersonCard = ({ ep, person, index }: { ep: Episode; person: Person; index:
             {person.beats.map((b, i) => {
               running += b.points;
               return (
-                <motion.li key={i} className="rounded-2xl bg-white/60 border border-white/70 p-4 sm:p-5"
+                <motion.li key={i} className="rounded-2xl bg-white/60 p-4 sm:p-5"
                   initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-40px" }}
                   transition={{ duration: 0.35, delay: 0.05 * i }}>
                   <div className="flex items-start gap-3">
@@ -206,7 +206,7 @@ const PersonCard = ({ ep, person, index }: { ep: Episode; person: Person; index:
                         {b.sources.map((s) => (
                           <li key={s.url}>
                             <a href={s.url} target="_blank" rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 rounded-full border border-pale bg-white/70 px-3 py-1.5 text-[12px] font-medium text-foreground hover:bg-white hover:border-olive/40 transition-colors">
+                              className="inline-flex items-center gap-1.5 rounded-full bg-white/75 px-3 py-1.5 text-[12px] font-medium text-foreground hover:bg-white transition-colors">
                               {s.label}
                               <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="w-2.5 h-2.5 text-muted-foreground" />
                             </a>

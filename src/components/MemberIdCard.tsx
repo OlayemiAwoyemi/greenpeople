@@ -87,7 +87,7 @@ export const MemberIdCard = forwardRef<HTMLDivElement, { data: MemberIdData }>((
       style={{
         width: CARD_W, height: CARD_H, position: "relative", overflow: "hidden", borderRadius: 14,
         background: PAPER, backgroundImage: guilloche, backgroundSize: "210px 120px",
-        border: `1px solid ${DEEP}22`, fontFamily: "'Inter Tight', system-ui, sans-serif", color: DEEP,
+        fontFamily: "'Inter Tight', system-ui, sans-serif", color: DEEP,
         boxShadow: "0 18px 40px -18px rgba(14,49,51,0.45)",
       }}
     >
@@ -110,7 +110,7 @@ export const MemberIdCard = forwardRef<HTMLDivElement, { data: MemberIdData }>((
 
       {/* Portrait */}
       <div style={{ position: "absolute", left: 20, top: 56, width: 92, height: 118, borderRadius: 8, overflow: "hidden",
-        background: `linear-gradient(160deg, #1B4A4C, ${DEEP})`, border: `2px solid #fff`, boxShadow: `0 0 0 1px ${DEEP}33` }}>
+        background: `linear-gradient(160deg, #1B4A4C, ${DEEP})` }}>
         <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
           color: LIME, fontSize: 38, fontWeight: 800, letterSpacing: "0.02em" }}>{initialsOf(data.fullName)}</div>
         <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, background: LIME, color: DEEP, fontSize: 6.5,

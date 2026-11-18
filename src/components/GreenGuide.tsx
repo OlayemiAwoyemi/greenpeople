@@ -83,7 +83,7 @@ const GreenGuide = () => {
       {/* Chat panel */}
       {open && (
         <div className="fixed bottom-24 left-4 right-4 sm:left-auto sm:right-6 sm:w-[360px] z-50 max-h-[480px] glass flex flex-col overflow-hidden">
-          <div className="bg-white/60 border-b border-pale px-4 py-3 flex items-center gap-3">
+          <div className="bg-white/60 border-b border-pale/50 px-4 py-3 flex items-center gap-3">
             <img src={greenLogo} alt="Green Guide" className="w-9 h-9 rounded-full shrink-0 object-cover" />
             <div className="min-w-0">
               <div className="text-foreground text-sm font-semibold">Green Guide</div>
@@ -118,7 +118,7 @@ const GreenGuide = () => {
             <div ref={bottomRef} />
           </div>
 
-          <div className="border-t border-border p-2.5 flex gap-2">
+          <div className="border-t border-pale/50 p-2.5 flex gap-2">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
