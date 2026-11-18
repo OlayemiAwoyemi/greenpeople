@@ -21,6 +21,8 @@ const Backup = lazy(() => import("./pages/Backup.tsx"));
 const PhoneNumbers = lazy(() => import("./pages/PhoneNumbers.tsx"));
 const TestPage = lazy(() => import("./pages/TestPage.tsx"));
 const Census = lazy(() => import("./pages/Census.tsx"));
+const ElectionMattersHub = lazy(() => import("./pages/ElectionMatters.tsx").then((m) => ({ default: m.ElectionMattersHub })));
+const EpisodePage = lazy(() => import("./pages/ElectionMatters.tsx").then((m) => ({ default: m.EpisodePage })));
 
 const queryClient = new QueryClient();
 
@@ -46,6 +48,8 @@ const App = () => (
             <Route path="/backup" element={<Backup />} />
             <Route path="/phonenumbers" element={<PhoneNumbers />} />
             <Route path="/census" element={<Census />} />
+            <Route path="/election-matters" element={<ElectionMattersHub />} />
+            <Route path="/election-matters/:episode" element={<EpisodePage />} />
             <Route path="/:phone" element={<MemberPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -1,10 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faListCheck } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 import { Reveal, Pop } from "./sky/Reveal";
 
 const episodes = [
-  { no: "Episode 01", title: "The 2027 Scorecard", desc: "Where Nigeria stands today — the numbers that should shape every vote in 2027." },
-  { no: "Episode 02", title: "The Leaders Scorecard", desc: "How the people asking for your vote measure up on public records, promises and delivery." },
+  { no: "Episode 01", id: "2027", title: "The 2027 candidates", desc: "Atiku, Makinde, Tinubu and Obi, scored on their records, promises and integrity. Nobody passed zero." },
+  { no: "Episode 02", id: "1960", title: "Every leader since 1960", desc: "Sixteen governments in sixty-six years, scored on what they did in office. The best didn't reach five." },
 ];
 
 const ElectionMatters = () => (
@@ -22,9 +23,14 @@ const ElectionMatters = () => (
               <span className="text-sm font-semibold text-olive mb-2">{e.no}</span>
               <h3 className="text-2xl font-bold text-foreground mb-2">{e.title}</h3>
               <p className="text-muted-foreground text-[15px] leading-relaxed mb-6 flex-1">{e.desc}</p>
-              <a href="https://instagram.com/greenpeopleng" target="_blank" rel="noopener noreferrer" className="btn-primary self-start" aria-label={`Watch ${e.no}: ${e.title} on Instagram`}>
-                <FontAwesomeIcon icon={faPlay} className="w-3 h-3" /> Watch
-              </a>
+              <div className="flex flex-wrap gap-2">
+                <Link to={`/election-matters/${e.id}`} className="btn-primary" aria-label={`Full breakdown of ${e.no}: ${e.title}`}>
+                  <FontAwesomeIcon icon={faListCheck} className="w-3.5 h-3.5" /> Full breakdown
+                </Link>
+                <a href="https://instagram.com/greenpeopleng" target="_blank" rel="noopener noreferrer" className="btn-glass" aria-label={`Watch ${e.no}: ${e.title}`}>
+                  <FontAwesomeIcon icon={faPlay} className="w-3 h-3" /> Watch
+                </a>
+              </div>
             </article>
           </Pop>
         ))}
