@@ -9,6 +9,7 @@ import Updates from "./pages/Updates.tsx";
 import UpdatePost from "./pages/UpdatePost.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import SkyBackdrop from "./components/sky/SkyBackdrop";
+import ScrollToTop from "./components/ScrollToTop";
 
 const Write = lazy(() => import("./pages/Write.tsx"));
 const Chats = lazy(() => import("./pages/Chats.tsx"));
@@ -33,6 +34,7 @@ const App = () => (
       <Sonner />
       <SkyBackdrop />
       <BrowserRouter>
+        <ScrollToTop />
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading…</div>}>
           <Routes>
             <Route path="/test" element={<TestPage />} />
