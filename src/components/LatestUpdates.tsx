@@ -1,3 +1,4 @@
+import { cleanText } from "@/lib/cleanHtml";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -69,18 +70,18 @@ const LatestUpdates = () => {
               {post.cover_image && (
                 <img
                   src={post.cover_image}
-                  alt={post.title}
+                  alt={cleanText(post.title)}
                   className="w-full h-44 object-cover"
                   loading="lazy"
                 />
               )}
               <div className="p-5">
                 <h3 className="text-base font-semibold text-foreground mb-2 line-clamp-2 break-words hyphens-none" style={{ wordBreak: "normal", overflowWrap: "break-word" }}>
-                  {post.title}
+                  {cleanText(post.title)}
                 </h3>
                 {post.excerpt && (
                   <p className="text-muted-foreground text-sm mb-3 line-clamp-2 break-words hyphens-none" style={{ wordBreak: "normal", overflowWrap: "break-word" }}>
-                    {post.excerpt}
+                    {cleanText(post.excerpt)}
                   </p>
                 )}
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">

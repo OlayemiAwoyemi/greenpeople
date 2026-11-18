@@ -173,13 +173,35 @@
   .glass-dark {
     @apply bg-black/20 backdrop-blur-md border border-white/10 shadow-sm transition-all duration-300;
   }
+  /* Readable text: whole words only, ragged-right, no forced hyphens or gaps */
   .content-wrap {
-    text-align: justify;
-    text-justify: inter-word;
+    text-align: left;
     word-break: normal;
     overflow-wrap: break-word;
-    hyphens: auto;
+    hyphens: manual;
+    text-wrap: pretty;
   }
+  .article-body {
+    text-align: left;
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: manual;
+    line-height: 1.75;
+  }
+  .article-body :where(*) {
+    text-align: left !important;
+    white-space: normal !important;
+    max-width: 100%;
+    word-break: normal !important;
+  }
+  .article-body :where(p, li) { text-wrap: pretty; }
+  .article-body :where(h1, h2, h3, h4) { text-wrap: balance; line-height: 1.25; }
+  .article-body > :where(p) { margin-top: 0; margin-bottom: 1.15em; }
+  .article-body > :first-child { margin-top: 0; }
+  .article-body > :last-child { margin-bottom: 0; }
+  .article-body :where(img) { border-radius: 0.75rem; margin: 1.25em auto; height: auto; }
+  .article-body :where(pre, table) { overflow-x: auto; display: block; }
+  .article-body :where(a) { overflow-wrap: anywhere; }
 }
 
 /* Stop iOS/Android zooming into form fields: inputs must be at least 16px on phones */
