@@ -523,7 +523,7 @@ export type Database = {
       }
       get_member_page: {
         Args: { p_ref: string }
-        Returns: { id: string; full_name: string; state: string; lga: string; gender: string; has_pvc: string; member_number: number }[]
+        Returns: { id: string; full_name: string; state: string; lga: string; gender: string; has_pvc: string; member_number: number; joined_at?: string | null }[]
       }
       register_member: {
         Args: { p: Json }

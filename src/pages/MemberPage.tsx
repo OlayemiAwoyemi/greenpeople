@@ -40,7 +40,7 @@ const MemberPage = () => {
   const referrer = searchParams.get("ref");
   const { toast } = useToast();
 
-  const [member, setMember] = useState<{ id: string; full_name: string; member_number: number; state: string; lga: string; gender: string; has_pvc: string } | null>(null);
+  const [member, setMember] = useState<{ id: string; full_name: string; member_number: number; state: string; lga: string; gender: string; has_pvc: string; joined_at?: string | null } | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [quizzesByItem, setQuizzesByItem] = useState<Record<string, Quiz[]>>({});
@@ -483,6 +483,7 @@ const MemberPage = () => {
                 <ScaledMemberIdCard data={{
                   fullName: member.full_name, gender: member.gender, state: member.state,
                   lga: member.lga, memberNumber: member.member_number,
+                  issued: member.joined_at ? new Date(member.joined_at) : null,
                 }} />
               </div>
               <button 
@@ -500,6 +501,7 @@ const MemberPage = () => {
           <CaptureMemberIdCard ref={cardRef} data={{
             fullName: member.full_name, gender: member.gender, state: member.state,
             lga: member.lga, memberNumber: member.member_number,
+                  issued: member.joined_at ? new Date(member.joined_at) : null,
           }} />
         )}
 
