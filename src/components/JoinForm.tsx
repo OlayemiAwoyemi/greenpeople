@@ -8,8 +8,8 @@ import { useToast } from "@/hooks/use-toast";
 import { nigerianStates, nigerianStatesAndLGAs } from "@/data/nigerianLGAs";
 import { normalizeName, normalizeSentence, joinName } from "@/lib/textNormalize";
 import PrivacyModal from "./PrivacyModal";
-import html2canvas from "html2canvas";
-import { ScaledMemberIdCard, CaptureMemberIdCard, type MemberIdData } from "@/components/MemberIdCard";
+import { saveMemberId } from "@/lib/drawMemberId";
+import { ScaledMemberIdCard, type MemberIdData } from "@/components/MemberIdCard";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const ageGroups = ["18-24", "25-34", "35-44", "45-54", "55+"];
@@ -58,7 +58,6 @@ const validateReason = (reason: string): string | null => {
 
 const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
   const ref = useRef(null);
-  const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [submitted, setSubmitted] = useState(false);
   const [successStep, setSuccessStep] = useState(1);
@@ -82,29 +81,13 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
 
   const lgaOptions = formData.state ? nigerianStatesAndLGAs[formData.state] || [] : [];
 
-  const handleDownloadCard = useCallback(async () => {
-    if (!cardRef.current) return;
+  const handleDownloadCard = async () => {
     try {
-      const canvas = await html2canvas(cardRef.current, {
-        backgroundColor: null,
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        removeContainer: true,
-      });
-      canvas.toBlob((blob) => {
-        if (!blob) return;
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.download = `GreenPeople-${joinName({ first: formData.firstName, middle: formData.middleName, surname: formData.surname }).replace(/\s+/g, "_")}.png`;
-        link.href = url;
-        link.click();
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-      }, "image/png", 0.92);
+      await saveMemberId(idData, `GreenPeople-ID-${idData.fullName.replace(/\s+/g, "_")}.png`);
     } catch {
-      toast({ title: "Could not download card", variant: "destructive" });
+      toast({ title: "Could not download card", description: "Please try again, or take a screenshot of your ID.", variant: "destructive" });
     }
-  }, [formData.firstName, formData.middleName, formData.surname, toast]);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -428,7 +411,6 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                   <div className="space-y-4">
                     <div className="relative group perspective-1000">
                       <ScaledMemberIdCard data={idData} />
-                      <CaptureMemberIdCard ref={cardRef} data={idData} />
                     </div>
                     <div className="text-center pt-2">
                       <button 
