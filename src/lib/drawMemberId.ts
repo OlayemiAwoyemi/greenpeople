@@ -73,13 +73,8 @@ export async function drawMemberId(data: MemberIdData): Promise<Blob> {
   // watermark
   if (logo) { c.globalAlpha = 0.07; c.drawImage(logo, 248, 70, 150, 150); c.globalAlpha = 1; }
 
-  // security stripe
-  const stripe = c.createLinearGradient(0, 0, 0, CARD_H);
-  stripe.addColorStop(0, LIME); stripe.addColorStop(1, "#5E8A12");
-  c.fillStyle = stripe; c.fillRect(0, 0, 6, CARD_H);
-
   // header band
-  c.fillStyle = DEEP; c.fillRect(6, 0, CARD_W - 6, 44);
+  c.fillStyle = DEEP; c.fillRect(0, 0, CARD_W, 44);
   if (logo) {
     c.save(); c.beginPath(); c.arc(34, 22, 14, 0, Math.PI * 2); c.closePath();
     c.fillStyle = "#fff"; c.fill(); c.clip(); c.drawImage(logo, 20, 8, 28, 28); c.restore();
@@ -126,8 +121,8 @@ export async function drawMemberId(data: MemberIdData): Promise<Blob> {
   if (data.issued) field("Date of joining", fmtDate(data.issued), 3, 3, 178);
 
   // machine-readable-style zone
-  c.fillStyle = "rgba(255,255,255,0.8)"; c.fillRect(6, CARD_H - 58, CARD_W - 6, 58);
-  c.fillStyle = "rgba(14,49,51,0.12)"; c.fillRect(6, CARD_H - 58, CARD_W - 6, 1);
+  c.fillStyle = "rgba(255,255,255,0.8)"; c.fillRect(0, CARD_H - 58, CARD_W, 58);
+  c.fillStyle = "rgba(14,49,51,0.12)"; c.fillRect(0, CARD_H - 58, CARD_W, 1);
   c.fillStyle = DEEP;
   const line1 = mrzLine(`GPM<NG<${mrzClean(surname)}<<${mrzClean(given)}`);
   const line2 = mrzLine(`GP${num}<${mrzClean(stateLabel(data.state))}<${mrzClean(data.lga)}<<VERIFIED<MEMBER`);

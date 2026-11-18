@@ -94,11 +94,9 @@ export const MemberIdCard = forwardRef<HTMLDivElement, { data: MemberIdData }>((
       {/* Watermark */}
       <img src={greenLogo} alt="" aria-hidden
         style={{ position: "absolute", right: 22, top: 70, width: 150, height: 150, opacity: 0.07, borderRadius: "50%" }} />
-      {/* Security stripe */}
-      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 6, background: `linear-gradient(180deg, ${LIME}, #5E8A12)` }} />
 
       {/* Header band */}
-      <div style={{ position: "absolute", left: 6, right: 0, top: 0, height: 44, background: DEEP, display: "flex", alignItems: "center", padding: "0 14px", gap: 10 }}>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: 44, background: DEEP, display: "flex", alignItems: "center", padding: "0 14px", gap: 10 }}>
         <img src={greenLogo} alt="Green People" style={{ width: 28, height: 28, borderRadius: "50%", background: "#fff" }} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ color: "#fff", fontSize: 12.5, fontWeight: 800, letterSpacing: "0.06em", lineHeight: "15px" }}>GREEN PEOPLE MOVEMENT</div>
@@ -136,7 +134,7 @@ export const MemberIdCard = forwardRef<HTMLDivElement, { data: MemberIdData }>((
       </div>
 
       {/* Machine-readable-style zone */}
-      <div style={{ position: "absolute", left: 6, right: 0, bottom: 0, height: 58, background: "#ffffffcc",
+      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 58, background: "#ffffffcc",
         borderTop: `1px solid ${DEEP}1f`, padding: "9px 14px 0", fontFamily: "'Courier New', monospace", fontWeight: 700,
         fontSize: 11.2, letterSpacing: "0.06em", lineHeight: "19px", color: DEEP, whiteSpace: "pre" }}>
         <div>{line1}</div>
