@@ -169,7 +169,7 @@ const Ranks = () => {
 
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 mb-6">
           {TIERS.map((t) => (
-            <div key={t.name} className="bg-white/70 border border-pale rounded-2xl p-2 text-center min-w-0">
+            <div key={t.name} className="field rounded-2xl p-2 text-center min-w-0">
               <div className="text-[15px] font-extrabold text-foreground tabular-nums leading-none mb-1">{tierCounts[t.name] || 0}</div>
               <div className={`font-bold text-[11px] truncate ${t.color}`}>{t.short}</div>
               <div className="text-[9px] text-muted-foreground mt-0.5">{t.min.toLocaleString()}+</div>
@@ -180,10 +180,10 @@ const Ranks = () => {
         <div className="glass p-3 mb-4 flex flex-col sm:flex-row gap-2">
           <label htmlFor="r-search" className="sr-only">Search the leaderboard</label>
           <input id="r-search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by name or state"
-            className="flex-1 bg-white/70 border border-pale rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60" />
+            className="flex-1 field rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-0" />
           <label htmlFor="r-sort" className="sr-only">Sort by</label>
           <select id="r-sort" value={sortBy} onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-            className="bg-white/70 border border-pale rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60">
+            className="field rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-0">
             <option value="points">Sort: highest points</option><option value="name">Sort: name A–Z</option><option value="state">Sort: state</option>
           </select>
         </div>
@@ -191,7 +191,7 @@ const Ranks = () => {
         {loading ? <Skeleton rows={8} /> : failed ? <ErrorState onRetry={() => setReload((x) => x + 1)} /> : rows.length === 0 ? <EmptyState title="No members yet" /> : visible.length === 0 ? <EmptyState title="No one matches that search" /> : (
         <div className="glass overflow-hidden">
           {(
-            <div className="divide-y divide-pale">
+            <div className="divide-y divide-pale/50">
               {visible.map((r) => { const i = r.rank;
                 const tier = tierFor(r.points);
                 return (

@@ -112,7 +112,7 @@ const AccessGate = ({ children }: { children: React.ReactNode; customCode?: stri
           <input id="gate-code" type={show ? "text" : "password"} value={code} autoComplete="current-password"
             onChange={(e) => { setCode(e.target.value); setError(""); }}
             placeholder="Access code" autoFocus aria-invalid={!!error} aria-describedby={error ? "gate-err" : undefined}
-            className={`w-full bg-white/70 border rounded-2xl pl-4 pr-12 py-3 min-h-11 text-base sm:text-[15px] text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-[3px] focus:ring-primary/60 ${error ? "border-destructive" : "border-pale"}`} />
+            className={`w-full field rounded-2xl pl-4 pr-12 py-3 min-h-11 text-base sm:text-[15px] text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-0 ${error ? "is-invalid" : ""}`} />
           <button type="button" onClick={() => setShow(!show)} aria-label={show ? "Hide code" : "Show code"}
             className="absolute right-1 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground">
             <FontAwesomeIcon icon={show ? faEyeSlash : faEye} className="w-4 h-4" />

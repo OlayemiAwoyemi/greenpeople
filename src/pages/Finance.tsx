@@ -102,10 +102,10 @@ const Finance = () => {
         <div className="glass p-3 mb-4 flex flex-col sm:flex-row gap-2">
           <label htmlFor="f-search" className="sr-only">Search entries</label>
           <input id="f-search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search description or payee"
-            className="flex-1 bg-white/70 border border-pale rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60" />
+            className="flex-1 field rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-0" />
           <label htmlFor="f-kind" className="sr-only">Filter by type</label>
           <select id="f-kind" value={kind} onChange={(e) => setKind(e.target.value)}
-            className="bg-white/70 border border-pale rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-[3px] focus:ring-primary/60">
+            className="field rounded-2xl px-4 min-h-11 text-[15px] focus:outline-none focus:ring-0">
             <option value="all">All entries</option><option value="income">Income only</option><option value="expenditure">Expenditure only</option>
           </select>
         </div>

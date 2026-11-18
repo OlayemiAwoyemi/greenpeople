@@ -36,7 +36,7 @@ const LiveCounter = () => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.8, duration: 0.5 }}
-      className="glass inline-grid grid-cols-2 divide-x divide-pale px-2 py-4"
+      className="glass inline-grid grid-cols-2 divide-x divide-pale/50 px-2 py-4"
       aria-live="polite"
     >
       {[{ n: members, l: "Members joined" }, { n: pvcHolders, l: "With PVC" }].map((s) => (

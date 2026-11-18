@@ -122,7 +122,7 @@ const WriteContent = () => {
     }
   };
 
-  const inputClass = "w-full bg-white/70 border border-pale rounded-2xl px-4 py-3 min-h-11 text-base md:text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-[3px] focus:ring-primary/60";
+  const inputClass = "w-full field rounded-2xl px-4 py-3 min-h-11 text-base md:text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-0";
   const labelClass = "text-foreground text-sm font-semibold mb-1.5 block";
   const words = form.content.replace(/<[^>]+>/g, " ").trim().split(/\s+/).filter(Boolean).length;
   const minutes = Math.max(1, Math.round(words / 200));
@@ -182,7 +182,7 @@ const WriteContent = () => {
           <div>
             <span className={labelClass}>Cover image</span>
             {form.coverImage ? (
-              <div className="relative rounded-2xl overflow-hidden border border-pale">
+              <div className="relative rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(20,50,20,0.06)]">
                 <img src={form.coverImage} alt="Cover" className="w-full h-44 object-cover" />
                 <button type="button" onClick={() => setForm({ ...form, coverImage: "" })} aria-label="Remove cover image"
                   className="absolute top-2 right-2 w-10 h-10 rounded-full bg-white/90 text-foreground flex items-center justify-center shadow">
@@ -190,7 +190,7 @@ const WriteContent = () => {
                 </button>
               </div>
             ) : (
-              <label className="flex items-center justify-center gap-2 w-full h-32 border-2 border-dashed border-pale rounded-2xl cursor-pointer hover:border-olive/40 transition-colors bg-white/40">
+              <label className="flex items-center justify-center gap-2 w-full h-32 bg-white/50 ring-0 rounded-2xl cursor-pointer transition-colors bg-white/40">
                 <FontAwesomeIcon icon={faImage} className="w-5 h-5 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">{uploading ? "Uploading…" : "Tap to upload a cover image"}</span>
                 <input type="file" accept="image/*" onChange={handleCoverUpload} className="sr-only" disabled={uploading} />
@@ -205,7 +205,7 @@ const WriteContent = () => {
           </div>
           <div>
             <span className={labelClass}>Article</span>
-            <div className="rounded-2xl overflow-hidden border border-pale bg-white/80 [&_.ql-toolbar]:border-0 [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-pale [&_.ql-toolbar]:bg-mist/60 [&_.ql-container]:border-0 [&_.ql-container]:min-h-[320px] [&_.ql-editor]:text-base [&_.ql-editor]:text-foreground">
+            <div className="rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(20,50,20,0.06)] bg-white/80 [&_.ql-toolbar]:border-0 [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-pale [&_.ql-toolbar]:bg-mist/60 [&_.ql-container]:border-0 [&_.ql-container]:min-h-[320px] [&_.ql-editor]:text-base [&_.ql-editor]:text-foreground">
               <ReactQuill theme="snow" value={form.content} onChange={(val) => setForm({ ...form, content: val })}
                 modules={modules} placeholder="Write your update here…" />
             </div>

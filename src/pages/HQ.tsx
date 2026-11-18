@@ -189,10 +189,10 @@ const HQContent = () => {
 
   const tabClass = (t: typeof tab) =>
     `flex-1 px-2 sm:px-4 py-2.5 sm:py-3 rounded-xl text-[11px] sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap min-w-0 ${
-      tab === t ? "bg-primary text-primary-foreground shadow-md" : "bg-white/20 backdrop-blur-md text-foreground/60 hover:text-foreground border border-white/10"
+      tab === t ? "bg-primary text-primary-foreground shadow-md" : "bg-white/20 backdrop-blur-md text-foreground/60 hover:text-foreground"
     }`;
 
-  const inputCls = "w-full bg-white/40 backdrop-blur-md border border-white/20 rounded-xl px-3 py-2.5 text-sm min-w-0 focus:bg-white/60 transition-all";
+  const inputCls = "w-full field rounded-xl px-3 py-2.5 text-sm min-w-0 focus:bg-white/60 transition-all";
 
   return (
     <AdminShell title="HQ" subtitle="Social posts, the Green Classroom and the public finance record.">
@@ -249,8 +249,8 @@ const HQContent = () => {
             </div>
 
             <div className="glass overflow-hidden">
-              <div className="p-3 sm:p-4 border-b border-pale font-semibold text-sm">All Posts ({posts.length})</div>
-              <div className="divide-y divide-pale max-h-[500px] overflow-y-auto">
+              <div className="p-3 sm:p-4 border-b border-pale/50 font-semibold text-sm">All Posts ({posts.length})</div>
+              <div className="divide-y divide-pale/50 max-h-[500px] overflow-y-auto">
                 {posts.length === 0 && <div className="p-6 text-sm text-muted-foreground text-center">No posts yet.</div>}
                 {posts.map((p) => (
                   <div key={p.id} className="p-2.5 sm:p-3 flex items-center gap-2 min-w-0 hover:bg-white/10 transition-colors">
@@ -284,7 +284,7 @@ const HQContent = () => {
                 <textarea value={cDesc} onChange={(e) => setCDesc(e.target.value)} rows={2} placeholder="Short summary (1–2 lines, shown on lesson card)" className={`${inputCls} resize-y min-h-[60px]`} />
                 <div>
                   <label className="text-xs font-medium text-foreground mb-1.5 block">Lesson content (rich text)</label>
-                  <div className="rounded-xl overflow-hidden border border-pale bg-white/80 [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-border [&_.ql-toolbar]:bg-secondary/30 [&_.ql-container]:border-0 [&_.ql-container]:min-h-[220px] [&_.ql-editor]:text-sm [&_.ql-editor]:text-foreground">
+                  <div className="rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(20,50,20,0.06)] bg-white/80 [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-border [&_.ql-toolbar]:bg-secondary/30 [&_.ql-container]:border-0 [&_.ql-container]:min-h-[220px] [&_.ql-editor]:text-sm [&_.ql-editor]:text-foreground">
                     <ReactQuill theme="snow" value={cContent} onChange={setCContent} placeholder="Write the full lesson here. It will be split into digestible bits with a Continue button between each on members' pages." />
                   </div>
                 </div>
@@ -293,7 +293,7 @@ const HQContent = () => {
                   <select value={cCat} onChange={(e) => setCCat(e.target.value as Category)} className={`${inputCls} capitalize`}>
                     {categories.map((c) => <option key={c} value={c}>{c.replace("_", " ")}</option>)}
                   </select>
-                  <label className="flex items-center gap-2 text-xs text-foreground bg-white/40 backdrop-blur-md border border-white/20 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/50 transition-all">
+                  <label className="flex items-center gap-2 text-xs text-foreground field rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/50 transition-all">
                     <input type="checkbox" checked={autoGen} onChange={(e) => setAutoGen(e.target.checked)} />
                     <FontAwesomeIcon icon={faWandMagicSparkles} className="w-3.5 h-3.5 text-primary" />
                     <span className="truncate">{editingId ? "Update & Regenerate Quiz" : "Auto-generate 5 quiz questions"}</span>
@@ -307,8 +307,8 @@ const HQContent = () => {
             </div>
 
             <div className="glass overflow-hidden">
-              <div className="p-3 sm:p-4 border-b border-pale font-semibold text-sm">Lessons ({items.length})</div>
-              <div className="divide-y divide-pale max-h-[500px] overflow-y-auto">
+              <div className="p-3 sm:p-4 border-b border-pale/50 font-semibold text-sm">Lessons ({items.length})</div>
+              <div className="divide-y divide-pale/50 max-h-[500px] overflow-y-auto">
                 {items.length === 0 && <div className="p-6 text-sm text-muted-foreground text-center">No lessons yet.</div>}
                 {items.map((i) => (
                   <div key={i.id} className="p-2.5 sm:p-3 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 min-w-0">
@@ -358,8 +358,8 @@ const HQContent = () => {
             </div>
 
             <div className="glass overflow-hidden">
-              <div className="p-3 sm:p-4 border-b border-pale font-semibold text-sm">Entries ({entries.length})</div>
-              <div className="divide-y divide-pale max-h-[500px] overflow-y-auto">
+              <div className="p-3 sm:p-4 border-b border-pale/50 font-semibold text-sm">Entries ({entries.length})</div>
+              <div className="divide-y divide-pale/50 max-h-[500px] overflow-y-auto">
                 {entries.length === 0 && <div className="p-6 text-sm text-muted-foreground text-center">No entries yet.</div>}
                 {entries.map((e) => (
                   <div key={e.id} className="p-2.5 sm:p-3 flex items-center gap-2 min-w-0">

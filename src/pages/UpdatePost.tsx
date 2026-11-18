@@ -87,7 +87,7 @@ const UpdatePost = () => {
                 className="article-body prose prose-lg max-w-[680px] text-foreground prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:text-xl prose-blockquote:font-semibold prose-blockquote:not-italic prose-blockquote:text-foreground"
                 dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
               />
-              <div className="mt-10 pt-6 border-t border-pale flex flex-wrap items-center gap-2">
+              <div className="mt-10 pt-6 border-t border-pale/50 flex flex-wrap items-center gap-2">
                 <span className="text-sm font-semibold text-muted-foreground mr-2">Share this update</span>
                 {[
                   { l: "X", u: `https://x.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(window.location.href)}` },

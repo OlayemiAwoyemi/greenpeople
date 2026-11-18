@@ -52,15 +52,15 @@ const ChatsContent = () => {
         <div className="grid md:grid-cols-[minmax(0,20rem)_1fr] gap-4">
           {/* list (hidden on phones while a chat is open) */}
           <aside className={`glass overflow-hidden ${selectedId ? "hidden md:block" : ""}`}>
-            <div className="p-3 border-b border-pale">
+            <div className="p-3 border-b border-pale/50">
               <label htmlFor="chat-search" className="sr-only">Search chats</label>
               <div className="relative">
                 <FontAwesomeIcon icon={faMagnifyingGlass} className="w-3.5 h-3.5 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input id="chat-search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by name or date"
-                  className="w-full bg-white/70 border border-pale rounded-full pl-9 pr-4 py-2.5 min-h-11 text-base sm:text-sm focus:outline-none focus:ring-[3px] focus:ring-primary/60" />
+                  className="w-full field rounded-full pl-9 pr-4 py-2.5 min-h-11 text-base sm:text-sm focus:outline-none focus:ring-0" />
               </div>
             </div>
-            <ul className="max-h-[65vh] overflow-y-auto divide-y divide-pale">
+            <ul className="max-h-[65vh] overflow-y-auto divide-y divide-pale/50">
               {visible.map((c) => (
                 <li key={c.id}>
                   <button onClick={() => setSelectedId(c.id)} aria-current={selectedId === c.id}
@@ -88,7 +88,7 @@ const ChatsContent = () => {
               </div>
             ) : (
               <>
-                <header className="px-4 py-3 border-b border-pale flex items-center gap-3">
+                <header className="px-4 py-3 border-b border-pale/50 flex items-center gap-3">
                   <button onClick={() => setSelectedId(null)} className="md:hidden w-10 h-10 -ml-2 rounded-full flex items-center justify-center" aria-label="Back to all chats">
                     <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
                   </button>
@@ -103,7 +103,7 @@ const ChatsContent = () => {
                     return (
                       <div key={i} className={`flex gap-2 ${mine ? "justify-end" : "justify-start"}`}>
                         {!mine && <span className="w-7 h-7 rounded-full bg-deep text-lime flex items-center justify-center shrink-0 mt-1"><FontAwesomeIcon icon={faRobot} className="w-3 h-3" /></span>}
-                        <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${mine ? "bg-deep text-white rounded-br-md" : "bg-white/80 border border-white text-foreground rounded-bl-md"}`}>
+                        <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${mine ? "bg-deep text-white rounded-br-md" : "bg-white/85 shadow-[0_1px_2px_rgba(20,50,20,0.06)] text-foreground rounded-bl-md"}`}>
                           {m.content}
                           <div className={`mt-1 text-[10px] ${mine ? "text-white/60" : "text-muted-foreground"}`}>{when(m.created_at)}</div>
                         </div>

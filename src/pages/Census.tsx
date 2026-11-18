@@ -168,7 +168,7 @@ const CensusContent = () => {
                   {counts.map((c, i) => (
                     <div 
                       key={c.name} 
-                      className="flex items-center gap-3 bg-muted/30 hover:bg-muted/50 border border-border/50 rounded-2xl p-3 transition-colors shadow-sm"
+                      className="flex items-center gap-3 bg-muted/30 hover:bg-muted/50 rounded-2xl p-3 transition-colors shadow-sm"
                     >
                       <span 
                         className="w-3.5 h-3.5 rounded-full shrink-0 shadow-sm" 
@@ -224,7 +224,7 @@ const CensusContent = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-left border-b border-pale text-muted-foreground">
+                    <tr className="text-left border-b border-pale/50 text-muted-foreground">
                       <th className="py-2 pr-4">#</th>
                       <th className="py-2 pr-4">{DIMS.find((d) => d.key === dim)?.label}</th>
                       <th className="py-2 pr-4 text-right">Members</th>
@@ -233,7 +233,7 @@ const CensusContent = () => {
                   </thead>
                   <tbody>
                     {counts.map((c, i) => (
-                      <tr key={c.name} className="border-b border-pale/40">
+                      <tr key={c.name} className="border-b border-pale/30">
                         <td className="py-2 pr-4 text-muted-foreground">{i + 1}</td>
                         <td className="py-2 pr-4 font-medium">{c.name}</td>
                         <td className="py-2 pr-4 text-right">{c.value.toLocaleString()}</td>

@@ -93,10 +93,10 @@ const BackupContent = () => {
       </div>
 
       <div className="glass overflow-hidden">
-        <div className="px-4 py-3 border-b border-pale font-semibold text-sm flex items-center gap-2">
+        <div className="px-4 py-3 border-b border-pale/50 font-semibold text-sm flex items-center gap-2">
           <FontAwesomeIcon icon={faDatabase} className="w-3.5 h-3.5" /> Tables
         </div>
-        <ul className="divide-y divide-pale">
+        <ul className="divide-y divide-pale/50">
           {TABLES.map((t) => (
             <li key={t} className="px-4 py-2.5 flex items-center gap-3 min-w-0">
               <span className="flex-1 min-w-0 truncate text-sm font-medium text-foreground">{t.replace(/_/g, " ")}</span>

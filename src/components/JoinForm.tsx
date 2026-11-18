@@ -197,11 +197,11 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
     celebrate();
   };
 
-  const inputClass = "w-full bg-white/70 border border-pale rounded-2xl px-4 py-3 min-h-11 text-base md:text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-[3px] focus:ring-primary/60 transition-all";
-  const selectClass = "w-full bg-white/70 border border-pale rounded-2xl px-3.5 py-2.5 min-h-11 pr-10 text-base md:text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-[3px] focus:ring-primary/60 appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%230E3133%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_12px_center]";
+  const inputClass = "w-full field rounded-2xl px-4 py-3 min-h-11 text-base md:text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-0 transition-all";
+  const selectClass = "w-full field rounded-2xl px-3.5 py-2.5 min-h-11 pr-10 text-base md:text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-0 appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%230E3133%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_12px_center]";
   const labelClass = "text-foreground text-sm font-semibold mb-1.5 block";
   const errorClass = "text-destructive text-xs font-medium mt-1";
-  const inputErrorBorder = "border-destructive";
+  const inputErrorBorder = "is-invalid";
 
 
   const idData: MemberIdData = {
@@ -252,10 +252,10 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                 ].map((opt) => (
                   <button key={opt.label} type="button"
                     onClick={() => { setFormData({ ...formData, isNigeriaBased: opt.id }); setErrors(prev => ({ ...prev, isNigeriaBased: "" })); }}
-                    className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
+                    className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                       formData.isNigeriaBased === opt.id
-                        ? "bg-primary text-primary-foreground border-primary shadow-md"
-                        : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                        ? "bg-primary text-primary-foreground shadow-md"
+                        : "bg-primary-foreground/10 text-primary-foreground/60 hover:bg-primary-foreground/20"
                     }`}>{opt.label}</button>
                 ))}
               </div>
@@ -328,10 +328,10 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                 {["Male", "Female"].map((g) => (
                   <button key={g} type="button"
                     onClick={() => { setFormData({ ...formData, gender: g }); setErrors(prev => ({ ...prev, gender: "" })); }}
-                    className={`px-5 py-2 rounded-lg text-xs font-medium border transition-all ${
+                    className={`px-5 py-2 rounded-lg text-xs font-medium transition-all ${
                       formData.gender === g
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-primary-foreground/10 text-primary-foreground/60 hover:bg-primary-foreground/20"
                     }`}>{g}</button>
                 ))}
               </div>
@@ -345,10 +345,10 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                 {ageGroups.map((ag) => (
                   <button key={ag} type="button"
                     onClick={() => { setFormData({ ...formData, ageGroup: ag }); setErrors(prev => ({ ...prev, ageGroup: "" })); }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                       formData.ageGroup === ag
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-primary-foreground/10 text-primary-foreground/60 hover:bg-primary-foreground/20"
                     }`}>{ag}</button>
                 ))}
               </div>
@@ -362,10 +362,10 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                 {["Yes", "No", "In Progress"].map((opt) => (
                   <button key={opt} type="button"
                     onClick={() => { setFormData({ ...formData, hasPvc: opt }); setErrors(prev => ({ ...prev, hasPvc: "" })); }}
-                    className={`px-4 py-2 rounded-lg text-xs font-medium border transition-all whitespace-nowrap ${
+                    className={`px-4 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
                       formData.hasPvc === opt
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-primary-foreground/10 text-primary-foreground/60 border-primary-foreground/15 hover:border-primary-foreground/30"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-primary-foreground/10 text-primary-foreground/60 hover:bg-primary-foreground/20"
                     }`}>{opt}</button>
                 ))}
               </div>
@@ -400,11 +400,11 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
       <Dialog open={submitted} onOpenChange={(val) => !val && setSubmitted(false)}>
         <DialogContent className="w-[95vw] sm:max-w-xl p-0 overflow-hidden bg-transparent border-0 shadow-none">
           <div className="bg-deep rounded-[2rem] p-1 shadow-2xl">
-            <div ref={successBoxRef} className="bg-[#0a2e1a]/95 backdrop-blur-xl rounded-[1.8rem] p-4 sm:p-7 border border-white/10 max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div ref={successBoxRef} className="bg-[#0a2e1a]/95 backdrop-blur-xl rounded-[1.8rem] p-4 sm:p-7 max-h-[90vh] overflow-y-auto custom-scrollbar">
               {successStep === 1 && (
                 <div className="space-y-4">
                   <div className="text-center">
-                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3 border border-primary/30">
+                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3">
                       <FontAwesomeIcon icon={faCheck} className="w-5 h-5 text-primary" />
                     </div>
                     <h2 className="text-xl font-black text-white mb-1 leading-tight">
@@ -420,14 +420,14 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                     <div className="text-center pt-2">
                       <button 
                         onClick={handleDownloadCard} 
-                        className="w-full bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 px-6 py-3 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-primary/5"
+                        className="w-full bg-primary/20 hover:bg-primary/30 text-primary px-6 py-3 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-primary/5"
                       >
                         <FontAwesomeIcon icon={faDownload} className="w-3.5 h-3.5" /> Download your membership ID
                       </button>
                     </div>
                   </div>
 
-                  <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
+                  <div className="bg-white/5 rounded-2xl p-4 text-center">
                     <h3 className="text-sm font-bold text-white mb-1.5 flex items-center justify-center gap-2">
                       <FontAwesomeIcon icon={faWhatsapp} className="text-[#25D366]" /> Join WhatsApp
                     </h3>
@@ -464,7 +464,7 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                         { icon: faLandmark, text: "We ensure every member can choose leaders without being tricked." },
                         { icon: faUserGroup, text: "Goal: 10 million members ready to vote before 2027." }
                       ].map((step, i) => (
-                        <div key={i} className="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/10">
+                        <div key={i} className="flex items-center gap-3 bg-white/5 p-3 rounded-xl">
                           <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
                             <FontAwesomeIcon icon={step.icon} className="text-primary text-[10px]" />
                           </div>
@@ -490,9 +490,9 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
                       <p className="text-[11px] leading-snug">Points show your activity. High points lead to higher Ranks — from Ward Leader to President.</p>
                     </div>
 
-                    <div className="bg-primary/10 border border-primary/20 rounded-2xl p-5">
+                    <div className="bg-primary/10 rounded-2xl p-5">
                       <h4 className="text-primary font-bold text-[10px] mb-3 uppercase tracking-wider">Your Personal Link</h4>
-                      <a href={`/${memberNumber ?? formData.phone.replace(/\D/g, "")}`} className="block bg-white/10 p-3 rounded-xl text-center font-mono text-[11px] text-primary-foreground border border-white/10 mb-4 truncate">
+                      <a href={`/${memberNumber ?? formData.phone.replace(/\D/g, "")}`} className="block bg-white/10 p-3 rounded-xl text-center font-mono text-[11px] text-primary-foreground mb-4 truncate">
                         greenpeople.ng/{memberNumber ?? formData.phone.replace(/\D/g, "")}
                       </a>
 
