@@ -2,7 +2,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserPlus, faBullhorn, faBullseye } from "@fortawesome/free-solid-svg-icons";
-import missionHands from "@/assets/mission-hands.jpg";
+import missionPeople from "@/assets/mission-people.webp";
 
 const missions = [
   {
@@ -88,13 +88,13 @@ const OurMission = () => {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="relative"
           >
-            <div className="rounded-glass overflow-hidden glass p-2">
+            <div className="rounded-glass overflow-hidden shadow-[0_24px_60px_-28px_rgba(14,49,51,0.45)]">
               <img
-                src={missionHands}
-                alt="Nigerian community joining hands with green wristbands for voter registration"
-                className="w-full h-80 object-cover rounded-[22px]"
-                width={1024}
-                height={832}
+                src={missionPeople}
+                alt="Nigerians of every age, young and old, raising their hands together on a neighbourhood street at sunset"
+                className="w-full aspect-[16/10] object-cover object-[50%_40%]"
+                width={1280}
+                height={720}
                 loading="lazy"
               />
             </div>
