@@ -5,7 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXTwitter, faInstagram, faFacebook, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { faPlus, faTrash, faChalkboard, faMoneyBillTrendUp, faShareNodes, faWandMagicSparkles, faCircleNotch, faPencil, faXmark } from "@fortawesome/free-solid-svg-icons";
 import AccessGate from "@/components/AccessGate";
-import Navbar from "@/components/Navbar";
+import AdminShell from "@/components/admin/AdminShell";
+import { Link } from "react-router-dom";
 import { POINTS_LABEL_SHORT } from "@/lib/greenSeeds";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
@@ -49,7 +50,13 @@ const HQContent = () => {
   const [fDate, setFDate] = useState(new Date().toISOString().slice(0, 10));
   const [entries, setEntries] = useState<{ id: string; kind: string; description: string; amount_naira: number; source_or_payee: string | null; occurred_on: string }[]>([]);
 
+  const [stats, setStats] = useState<{ members: number; pvc: number } | null>(null);
+
   const refresh = async () => {
+    supabase.rpc("public_member_stats").then(({ data }) => {
+      const r = data?.[0];
+      if (r) setStats({ members: Number(r.members), pvc: Number(r.pvc_holders) });
+    });
     const [s, c, f, q] = await Promise.all([
       supabase.from("social_posts").select("*").order("created_at", { ascending: false }),
       supabase.from("curriculum_items").select("*").order("created_at", { ascending: false }),
@@ -188,12 +195,26 @@ const HQContent = () => {
   const inputCls = "w-full bg-white/40 backdrop-blur-md border border-white/20 rounded-xl px-3 py-2.5 text-sm min-w-0 focus:bg-white/60 transition-all";
 
   return (
-    <div className="min-h-screen pt-20 pb-16 overflow-x-hidden">
-      <Navbar />
-      <div className="max-w-5xl mx-auto px-4 sm:px-5">
-        <div className="mb-6">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-1">HQ — Master Control</h1>
-          <p className="text-muted-foreground text-xs sm:text-sm break-words">Manage social posts, Green Classroom, and finance records.</p>
+    <AdminShell title="HQ" subtitle="Social posts, the Green Classroom and the public finance record.">
+        {/* dashboard */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+          {[
+            { label: "Members", value: stats ? stats.members.toLocaleString("en-NG") : "…", note: stats ? `${stats.pvc.toLocaleString("en-NG")} with PVC` : "", to: "/members" },
+            { label: "Live social posts", value: posts.filter((p) => p.active).length.toLocaleString("en-NG"), note: `${posts.length} in total`, tab: "social" as const },
+            { label: "Lessons", value: items.filter((i) => i.active).length.toLocaleString("en-NG"), note: `${Object.keys(quizCounts).length} with a quiz`, tab: "classroom" as const },
+            { label: "Balance", value: `₦${(entries.reduce((t, e) => t + (e.kind === "income" ? 1 : -1) * Number(e.amount_naira), 0)).toLocaleString("en-NG")}`, note: `${entries.length} entries`, tab: "finance" as const },
+          ].map((t) => {
+            const body = (
+              <>
+                <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{t.label}</div>
+                <div className="mt-1 text-2xl sm:text-3xl font-black text-foreground tabular-nums truncate">{t.value}</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{t.note}</div>
+              </>
+            );
+            return t.to
+              ? <Link key={t.label} to={t.to} className="glass p-4 sm:p-5 hover:-translate-y-0.5 transition-transform">{body}</Link>
+              : <button key={t.label} onClick={() => setTab(t.tab!)} className="glass p-4 sm:p-5 text-left hover:-translate-y-0.5 transition-transform">{body}</button>;
+          })}
         </div>
 
         <div className="flex gap-1.5 sm:gap-2 mb-6 sm:mb-8">
@@ -359,8 +380,7 @@ const HQContent = () => {
             </div>
           </div>
         )}
-      </div>
-    </div>
+    </AdminShell>
   );
 };
 

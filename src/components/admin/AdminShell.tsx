@@ -7,7 +7,7 @@ import greenLogo from "@/assets/green-logo.png";
 const tabs = [
   { to: "/hq", label: "HQ" }, { to: "/members", label: "Members" }, { to: "/ranks", label: "Ranks" },
   { to: "/finance", label: "Finance" }, { to: "/census", label: "Census" }, { to: "/chats", label: "Chats" },
-  { to: "/write", label: "Write" }, { to: "/backup", label: "Backup" },
+  { to: "/write", label: "Write" }, { to: "/phonenumbers", label: "Phones" }, { to: "/backup", label: "Backup" },
 ];
 
 /** Consistent admin layout: glass top bar, breadcrumb to HQ, segmented nav. */
