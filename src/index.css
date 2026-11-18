@@ -227,3 +227,8 @@
 .animate-counter-pulse {
   animation: counter-pulse 2s ease-in-out infinite;
 }
+
+@layer utilities {
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+}
