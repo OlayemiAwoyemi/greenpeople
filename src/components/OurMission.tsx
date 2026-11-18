@@ -91,10 +91,10 @@ const OurMission = () => {
             <div className="rounded-glass overflow-hidden shadow-[0_24px_60px_-28px_rgba(14,49,51,0.45)]">
               <img
                 src={missionPeople}
-                alt="Nigerians of every age and walk of life standing together with fists raised"
-                className="w-full h-80 md:h-96 object-cover object-[50%_35%]"
-                width={1200}
-                height={960}
+                alt="Nigerians of every age, young and old, raising their hands together on a neighbourhood street at sunset"
+                className="w-full aspect-[16/10] object-cover object-[50%_40%]"
+                width={1280}
+                height={720}
                 loading="lazy"
               />
             </div>
