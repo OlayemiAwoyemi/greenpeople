@@ -9,7 +9,8 @@ import { nigerianStates, nigerianStatesAndLGAs } from "@/data/nigerianLGAs";
 import { normalizeName, normalizeSentence, joinName } from "@/lib/textNormalize";
 import PrivacyModal from "./PrivacyModal";
 import { saveMemberId } from "@/lib/drawMemberId";
-import { ScaledMemberIdCard, type MemberIdData } from "@/components/MemberIdCard";
+import { type MemberIdData } from "@/components/MemberIdCard";
+import { ScaledMemberIdCard } from "@/components/MemberIdImage";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const ageGroups = ["18-24", "25-34", "35-44", "45-54", "55+"];

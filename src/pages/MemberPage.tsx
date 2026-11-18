@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXTwitter, faInstagram, faFacebook, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { faLandmark, faUpRightFromSquare, faCheck, faBookOpen, faShareNodes, faUserPlus, faArrowRight, faXmark, faDownload, faAward, faShieldHalved } from "@fortawesome/free-solid-svg-icons";
 import { saveMemberId } from "@/lib/drawMemberId";
-import { ScaledMemberIdCard } from "@/components/MemberIdCard";
+import { ScaledMemberIdCard } from "@/components/MemberIdImage";
 import { useRef } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { nigerianStates } from "@/data/nigerianLGAs";
