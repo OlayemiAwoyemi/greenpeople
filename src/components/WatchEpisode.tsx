@@ -57,8 +57,8 @@ const Player = ({ id, onClose }: { id: string; onClose: () => void }) => {
 };
 
 /** "Watch" button that plays an Election Matters episode in place. */
-export const WatchButton = ({ id, className = "btn-glass", label = "Watch" }: { id: string; className?: string; label?: string }) => {
-  const [open, setOpen] = useState(false);
+export const WatchButton = ({ id, className = "btn-glass", label = "Watch", autoOpen = false }: { id: string; className?: string; label?: string; autoOpen?: boolean }) => {
+  const [open, setOpen] = useState(autoOpen);
   const v = EPISODE_VIDEOS[id];
   if (!v) return null;
   return (
