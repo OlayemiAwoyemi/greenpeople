@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { nigerianStates, nigerianStatesAndLGAs } from "@/data/nigerianLGAs";
 import { normalizeName, normalizeSentence, joinName } from "@/lib/textNormalize";
 import PrivacyModal from "./PrivacyModal";
+import { celebrate } from "@/lib/celebrate";
 import { saveMemberId } from "@/lib/drawMemberId";
 import { type MemberIdData } from "@/components/MemberIdCard";
 import { ScaledMemberIdCard } from "@/components/MemberIdImage";
@@ -193,6 +194,7 @@ const JoinForm = ({ isTest = false }: { isTest?: boolean }) => {
       try { localStorage.setItem("gp_member_id", inserted.id); } catch { /* ignore */ }
     }
     setSubmitted(true);
+    celebrate();
   };
 
   const inputClass = "w-full bg-white/70 border border-pale rounded-2xl px-4 py-3 min-h-11 text-base md:text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-[3px] focus:ring-primary/60 transition-all";

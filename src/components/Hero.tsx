@@ -71,7 +71,7 @@ const Hero = () => (
         </div>
       </div>
     </div>
-    <Skyline className="h-28 md:h-40 mt-auto" />
+    <Skyline withGate className="h-56 sm:h-72 md:h-96 mt-auto" />
   </section>
 );
 

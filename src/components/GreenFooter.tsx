@@ -14,7 +14,7 @@ const socialLinks = [
 
 const GreenFooter = () => (
   <footer className="relative">
-    <Skyline className="h-24 md:h-36" />
+    <Skyline className="h-36 md:h-52" />
     <div className="bg-white/70 border-t border-white backdrop-blur-md pb-10">
       <div className="section-container -mt-2 pt-12">
         <div className="glass p-8 md:p-10 text-center mb-10 max-w-3xl mx-auto">
