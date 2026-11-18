@@ -11,14 +11,10 @@ const LiveCounter = () => {
   const prev = useRef({ m: 0, p: 0 });
 
   const fetchCounts = async () => {
-    const { count: totalMembers } = await supabase
-      .from("members")
-      .select("*", { count: "exact", head: true });
-
-    const { count: totalPvc } = await supabase
-      .from("members")
-      .select("*", { count: "exact", head: true })
-      .eq("has_pvc", "Yes");
+    const { data } = await supabase.rpc("public_member_stats");
+    const s = data?.[0];
+    const totalMembers = s ? Number(s.members) : null;
+    const totalPvc = s ? Number(s.pvc_holders) : null;
 
     if (totalMembers !== null) setMembers(totalMembers);
     if (totalPvc !== null) setPvcHolders(totalPvc);

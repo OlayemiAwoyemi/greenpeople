@@ -47,33 +47,16 @@ const Momentum = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { count: totalMembers } = await supabase
-        .from("members").select("*", { count: "exact", head: true });
-
-      const { count: totalPvc } = await supabase
-        .from("members").select("*", { count: "exact", head: true })
-        .eq("has_pvc", "Yes");
-
-      const { data: locationData } = await supabase
-        .from("members").select("state, lga");
-
-      const uniqueStates = new Set(locationData?.map(m => m.state) || []);
-      const uniqueLgas = new Set(locationData?.map(m => `${m.state}|${m.lga}`) || []);
-
+      const { data: statRows } = await supabase.rpc("public_member_stats");
+      const s = statRows?.[0];
       setStats({
-        members: totalMembers || 0,
-        pvcHolders: totalPvc || 0,
-        states: uniqueStates.size,
-        lgas: uniqueLgas.size,
+        members: Number(s?.members ?? 0),
+        pvcHolders: Number(s?.pvc_holders ?? 0),
+        states: Number(s?.states ?? 0),
+        lgas: Number(s?.lgas ?? 0),
       });
 
-      const { data: reasons } = await supabase
-        .from("members")
-        .select("full_name, state, reason")
-        .not("reason", "is", null)
-        .not("reason", "eq", "")
-        .order("created_at", { ascending: false })
-        .limit(20);
+      const { data: reasons } = await supabase.rpc("public_testimonials", { p_limit: 20 });
 
       if (reasons && reasons.length > 0) {
         // Shuffle on every page load

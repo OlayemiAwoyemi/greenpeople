@@ -30,8 +30,10 @@ const GreenGuide = () => {
     try {
       let convId = conversationId;
       if (!convId) {
-        const { data } = await supabase.from("chat_conversations").insert({ visitor_name: "Visitor" }).select("id").single();
-        convId = data?.id || null;
+        // Visitors can add to a chat but not read chats back, so pick the id here.
+        const newId = crypto.randomUUID();
+        const { error: convErr } = await supabase.from("chat_conversations").insert({ id: newId, visitor_name: "Visitor" });
+        convId = convErr ? null : newId;
         setConversationId(convId);
       }
 

@@ -39,7 +39,7 @@ const MemberPage = () => {
   const referrer = searchParams.get("ref");
   const { toast } = useToast();
 
-  const [member, setMember] = useState<{ id: string; full_name: string; phone: string; state: string; lga: string; gender: string; has_pvc: string } | null>(null);
+  const [member, setMember] = useState<{ id: string; full_name: string; member_number: number; state: string; lga: string; gender: string; has_pvc: string } | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [quizzesByItem, setQuizzesByItem] = useState<Record<string, Quiz[]>>({});
@@ -78,12 +78,10 @@ const MemberPage = () => {
         return;
       }
 
-      const { data: members } = await supabase.from("members").select("id, full_name, phone, state, lga, gender, has_pvc");
-      const m = (members ?? []).find((x) => {
-        const memberDigits = x.phone.replace(/\D/g, "");
-        if (!memberDigits) return false;
-        return memberDigits.endsWith(digits) || digits.endsWith(memberDigits);
-      });
+      // Looks up one member by member number or by the phone number in older links.
+      // Phone numbers never come back to the browser.
+      const { data: found } = await supabase.rpc("get_member_page", { p_ref: digits });
+      const m = found?.[0];
       
       if (!m) { setLoading(false); return; }
       setMember(m);
@@ -333,7 +331,7 @@ const MemberPage = () => {
 
   const sharePage = async () => {
     if (!member) return;
-    const url = `${window.location.origin}/${member.phone.replace(/\D/g, "")}?ref=${member.id}`;
+    const url = `${window.location.origin}/${member.member_number}?ref=${member.id}`;
     const text = `I'm building a new Nigeria with the Green People movement. Visit my page, take action, and join us 🌱`;
     if (navigator.share) {
       try { await navigator.share({ title: "Green People", text, url }); return; } catch { /* fallthrough */ }
@@ -427,7 +425,7 @@ const MemberPage = () => {
       <Navbar />
       <div className="pt-32 text-center px-5">
         <h1 className="text-2xl font-bold mb-2">Member not found</h1>
-        <p className="text-muted-foreground text-sm mb-6">No member matches that phone number.</p>
+        <p className="text-muted-foreground text-sm mb-6">No member matches that link.</p>
         <Link to="/ranks" className="text-primary text-sm font-semibold hover:underline">View the leaderboard →</Link>
       </div>
     </div>
@@ -519,7 +517,7 @@ const MemberPage = () => {
               </div>
               <div className="flex justify-between items-end relative z-10 pt-6 border-t border-white/5">
                 <div className="text-[8px] text-white/30 font-mono uppercase">
-                  GP - {member.phone.replace(/\D/g, "").slice(-8).padStart(8, '0')}
+                  GP - {String(member.member_number).padStart(8, '0')}
                 </div>
                 <div className="text-[8px] text-white/50 font-bold tracking-widest uppercase">GREENPEOPLE.NG</div>
               </div>

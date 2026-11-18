@@ -505,7 +505,30 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: Record<PropertyKey, never>; Returns: boolean }
+      admin_exists: { Args: Record<PropertyKey, never>; Returns: boolean }
+      claim_first_admin: { Args: Record<PropertyKey, never>; Returns: boolean }
+      add_admin_by_email: { Args: { p_email: string }; Returns: boolean }
+      public_member_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: { members: number; pvc_holders: number; states: number; lgas: number }[]
+      }
+      public_testimonials: {
+        Args: { p_limit?: number }
+        Returns: { full_name: string; state: string; reason: string }[]
+      }
+      public_member_directory: {
+        Args: Record<PropertyKey, never>
+        Returns: { id: string; full_name: string; state: string; member_number: number }[]
+      }
+      get_member_page: {
+        Args: { p_ref: string }
+        Returns: { id: string; full_name: string; state: string; lga: string; gender: string; has_pvc: string; member_number: number }[]
+      }
+      register_member: {
+        Args: { p: Json }
+        Returns: { id: string; member_number: number }[]
+      }
     }
     Enums: {
       curriculum_category:
