@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -7,6 +7,8 @@ const formatNumber = (n: number) => n.toLocaleString("en-NG");
 const LiveCounter = () => {
   const [members, setMembers] = useState(0);
   const [pvcHolders, setPvcHolders] = useState(0);
+  const [pulse, setPulse] = useState(0);
+  const prev = useRef({ m: 0, p: 0 });
 
   const fetchCounts = async () => {
     const { count: totalMembers } = await supabase
@@ -28,23 +30,27 @@ const LiveCounter = () => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (prev.current.m !== members || prev.current.p !== pvcHolders) setPulse((x) => x + 1);
+    prev.current = { m: members, p: pvcHolders };
+  }, [members, pvcHolders]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.8, duration: 0.5 }}
-      className="flex flex-wrap items-center gap-2 text-sm"
+      className="glass inline-grid grid-cols-2 divide-x divide-pale px-2 py-4"
+      aria-live="polite"
     >
-      <span className="text-primary-foreground/60">Already</span>
-      <span className="font-bold text-primary">
-        {formatNumber(members)}
-      </span>
-      <span className="text-primary-foreground/60">joined</span>
-      <span className="text-primary-foreground/30">·</span>
-      <span className="font-bold text-primary">
-        {formatNumber(pvcHolders)}
-      </span>
-      <span className="text-primary-foreground/60">with PVC</span>
+      {[{ n: members, l: "Members joined" }, { n: pvcHolders, l: "With PVC" }].map((s) => (
+        <div key={s.l} className="px-6 text-center">
+          <div key={pulse} className="animate-soft-pulse text-3xl md:text-4xl font-extrabold text-foreground tabular-nums tracking-tight">
+            {formatNumber(s.n)}
+          </div>
+          <div className="text-sm font-semibold text-muted-foreground mt-0.5 whitespace-nowrap">{s.l}</div>
+        </div>
+      ))}
     </motion.div>
   );
 };

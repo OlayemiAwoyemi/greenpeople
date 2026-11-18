@@ -57,13 +57,13 @@ const UpdatePost = () => {
   }, [slug]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Navbar />
-      <main className="pt-20 pb-16">
-        <div className="section-container max-w-3xl overflow-x-auto">
+      <main className="pt-28 pb-16">
+        <div className="mx-auto px-5 max-w-[760px] overflow-hidden">
           <Link to="/updates" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-8 transition-colors">
             <FontAwesomeIcon icon={faArrowLeft} className="w-3 h-3" />
-            Back to Updates
+            Back to updates
           </Link>
 
           {loading ? (
@@ -74,12 +74,12 @@ const UpdatePost = () => {
               <Link to="/updates" className="text-primary text-sm font-semibold hover:underline">← Back to Updates</Link>
             </div>
           ) : (
-            <article className="overflow-hidden">
+            <article className="glass p-6 md:p-10 overflow-hidden">
               {post.cover_image && (
-                <img src={post.cover_image} alt={post.title} className="w-full h-64 md:h-80 object-cover rounded-2xl mb-8" />
+                <img src={post.cover_image} alt={post.title} className="w-full h-64 md:h-80 object-cover rounded-3xl mb-8" width={760} height={320} />
               )}
               <div className="flex items-start justify-between gap-4 mb-4">
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground">{post.title}</h1>
+                <h1 className="text-3xl md:text-5xl font-extrabold text-foreground">{post.title}</h1>
                 {hasAccess && (
                   <Link
                     to={`/write?edit=${post.id}`}
@@ -95,11 +95,24 @@ const UpdatePost = () => {
                 {new Date(post.created_at).toLocaleDateString("en-NG", { dateStyle: "long" })}
                 <span>·</span>
                 <span>{post.author}</span>
+                <span>·</span>
+                <span>{Math.max(1, Math.round((post.content || "").replace(/<[^>]+>/g, " ").split(/\s+/).length / 200))} min read</span>
               </div>
               <div
-                className="prose prose-sm max-w-none text-foreground/90 [&_img]:rounded-xl [&_img]:my-4 [&_p]:mb-4 [&_p]:leading-relaxed content-wrap"
+                className="prose prose-lg max-w-[680px] text-foreground prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:text-2xl prose-blockquote:font-semibold prose-blockquote:not-italic prose-blockquote:text-foreground overflow-hidden [&_img]:rounded-xl [&_img]:my-4 [&_p]:mb-4 [&_p]:leading-relaxed"
+                style={{ wordBreak: "normal", overflowWrap: "break-word", hyphens: "none", textAlign: "left", WebkitHyphens: "none", msHyphens: "none" } as React.CSSProperties}
                 dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
               />
+              <div className="mt-10 pt-6 border-t border-pale flex flex-wrap items-center gap-2">
+                <span className="text-sm font-semibold text-muted-foreground mr-2">Share this update</span>
+                {[
+                  { l: "X", u: `https://x.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(window.location.href)}` },
+                  { l: "Facebook", u: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}` },
+                  { l: "WhatsApp", u: `https://wa.me/?text=${encodeURIComponent(post.title + " " + window.location.href)}` },
+                ].map((s) => (
+                  <a key={s.l} href={s.u} target="_blank" rel="noopener noreferrer" className="btn-glass !px-4 !text-sm" aria-label={`Share on ${s.l}`}>{s.l}</a>
+                ))}
+              </div>
             </article>
           )}
         </div>

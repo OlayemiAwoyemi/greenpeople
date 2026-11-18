@@ -36,22 +36,22 @@ const OurMission = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="mission" className="py-20 md:py-28 bg-secondary/30" ref={ref}>
+    <section id="mission" className="py-20 md:py-28" ref={ref}>
       <div className="section-container">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <motion.span
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
-              className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block"
+              className="eyebrow"
             >
-              Our Mission
+              Our mission
             </motion.span>
             <motion.h2
               initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.1 }}
-              className="text-2xl md:text-3xl font-bold text-foreground mb-10 leading-tight"
+              className="text-3xl md:text-[2.75rem] font-bold text-foreground mb-10 leading-tight"
             >
               Three goals. <span className="text-gradient-green">One green future.</span>
             </motion.h2>
@@ -65,15 +65,15 @@ const OurMission = () => {
                   transition={{ delay: 0.15 + i * 0.1 }}
                   className="flex gap-4 group"
                 >
-                  <div className="shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <FontAwesomeIcon icon={mission.icon} className="w-4 h-4 text-primary" />
+                  <div className="shrink-0 icon-chip w-11 h-11">
+                    <FontAwesomeIcon icon={mission.icon} className="w-4 h-4" />
                   </div>
                   <div>
                     <div className="flex items-baseline gap-2 mb-1">
-                      <h3 className="font-semibold text-sm text-foreground">{mission.title}</h3>
-                      <span className="text-primary font-bold text-xs">{mission.stat}</span>
+                      <h3 className="font-semibold text-lg text-foreground">{mission.title}</h3>
+                      <span className="text-olive font-bold text-sm">{mission.stat}</span>
                     </div>
-                    <p className="text-muted-foreground text-xs leading-relaxed">
+                    <p className="text-muted-foreground text-[15px] leading-relaxed">
                       {mission.description}
                     </p>
                   </div>
@@ -88,19 +88,19 @@ const OurMission = () => {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="relative"
           >
-            <div className="rounded-xl overflow-hidden">
+            <div className="rounded-glass overflow-hidden glass p-2">
               <img
                 src={missionHands}
                 alt="Nigerian community joining hands with green wristbands for voter registration"
-                className="w-full h-80 object-cover"
+                className="w-full h-80 object-cover rounded-[22px]"
                 width={1024}
                 height={832}
                 loading="lazy"
               />
             </div>
-            <div className="absolute -bottom-4 -left-4 bg-accent text-accent-foreground px-4 py-3 rounded-lg shadow-lg">
+            <div className="absolute -bottom-4 -left-4 glass px-5 py-3">
               <div className="text-xl font-bold">10M+</div>
-              <div className="text-xs text-accent-foreground/80">Voters Target</div>
+              <div className="text-sm text-muted-foreground font-semibold">Voters target</div>
             </div>
           </motion.div>
         </div>

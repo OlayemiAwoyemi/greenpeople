@@ -213,23 +213,23 @@ const HQContent = () => {
 
         {tab === "social" && (
           <div className="space-y-6">
-            <div className="glass-card p-4 sm:p-6 bg-white/30">
+            <div className="glass p-4 sm:p-6">
               <h3 className="font-semibold text-foreground mb-4 text-sm sm:text-base">Add Social Post Links (Bulk)</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 mb-3">
                 <select value={platform} onChange={(e) => { const p = e.target.value as Platform; setPlatform(p); setLinkPoints(platformMeta[p].defaultPoints); }} className={inputCls}>
                   {(Object.keys(platformMeta) as Platform[]).map((p) => <option key={p} value={p}>{platformMeta[p].label}</option>)}
                 </select>
                 <input type="number" value={linkPoints} onChange={(e) => setLinkPoints(parseInt(e.target.value) || 10)} placeholder={`${POINTS_LABEL_SHORT}/click`} className={inputCls} />
-                <button onClick={addBulkLinks} className="col-span-2 sm:col-span-1 bg-primary text-primary-foreground rounded-xl px-4 py-2.5 text-sm font-semibold whitespace-nowrap inline-flex items-center justify-center gap-2 shadow-sm hover:opacity-90">
+                <button onClick={addBulkLinks} className="col-span-2 sm:col-span-1 btn-primary !min-h-10 !text-sm whitespace-nowrap inline-flex items-center justify-center gap-2">
                   <FontAwesomeIcon icon={faPlus} className="w-3.5 h-3.5" /> Add Links
                 </button>
               </div>
               <textarea value={bulkLinks} onChange={(e) => setBulkLinks(e.target.value)} rows={5} placeholder={`Paste one URL per line:\nhttps://x.com/...`} className={`${inputCls} font-mono text-xs`} />
             </div>
 
-            <div className="glass-card overflow-hidden bg-white/20">
-              <div className="p-3 sm:p-4 border-b border-white/10 font-semibold text-sm">All Posts ({posts.length})</div>
-              <div className="divide-y divide-white/10 max-h-[500px] overflow-y-auto">
+            <div className="glass overflow-hidden">
+              <div className="p-3 sm:p-4 border-b border-pale font-semibold text-sm">All Posts ({posts.length})</div>
+              <div className="divide-y divide-pale max-h-[500px] overflow-y-auto">
                 {posts.length === 0 && <div className="p-6 text-sm text-muted-foreground text-center">No posts yet.</div>}
                 {posts.map((p) => (
                   <div key={p.id} className="p-2.5 sm:p-3 flex items-center gap-2 min-w-0 hover:bg-white/10 transition-colors">
@@ -249,7 +249,7 @@ const HQContent = () => {
 
         {tab === "classroom" && (
           <div className="space-y-6">
-            <div className="glass-card p-4 sm:p-6 bg-white/30">
+            <div className="glass p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-foreground text-sm sm:text-base">{editingId ? "Edit Lesson" : "Add Lesson (Byte-sized)"}</h3>
                 {editingId && (
@@ -263,7 +263,7 @@ const HQContent = () => {
                 <textarea value={cDesc} onChange={(e) => setCDesc(e.target.value)} rows={2} placeholder="Short summary (1–2 lines, shown on lesson card)" className={`${inputCls} resize-y min-h-[60px]`} />
                 <div>
                   <label className="text-xs font-medium text-foreground mb-1.5 block">Lesson content (rich text)</label>
-                  <div className="rounded-xl overflow-hidden border border-white/20 bg-white/40 backdrop-blur-md [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-white/10 [&_.ql-toolbar]:bg-white/20 [&_.ql-container]:border-0 [&_.ql-container]:min-h-[220px] [&_.ql-editor]:text-sm [&_.ql-editor]:text-foreground">
+                  <div className="rounded-xl overflow-hidden border border-pale bg-white/80 [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-border [&_.ql-toolbar]:bg-secondary/30 [&_.ql-container]:border-0 [&_.ql-container]:min-h-[220px] [&_.ql-editor]:text-sm [&_.ql-editor]:text-foreground">
                     <ReactQuill theme="snow" value={cContent} onChange={setCContent} placeholder="Write the full lesson here. It will be split into digestible bits with a Continue button between each on members' pages." />
                   </div>
                 </div>
@@ -278,20 +278,20 @@ const HQContent = () => {
                     <span className="truncate">{editingId ? "Update & Regenerate Quiz" : "Auto-generate 5 quiz questions"}</span>
                   </label>
                 </div>
-                <button onClick={saveCurriculum} disabled={generating} className="bg-primary text-primary-foreground rounded-xl px-4 py-2.5 text-sm font-semibold whitespace-nowrap inline-flex items-center justify-center gap-2 disabled:opacity-50 shadow-sm">
+                <button onClick={saveCurriculum} disabled={generating} className="btn-primary !min-h-10 !text-sm whitespace-nowrap inline-flex items-center justify-center gap-2 disabled:opacity-50">
                   {generating ? <FontAwesomeIcon icon={faCircleNotch} className="w-3.5 h-3.5 animate-spin" /> : <FontAwesomeIcon icon={editingId ? faPencil : faPlus} className="w-3.5 h-3.5" />}
                   {generating ? "Generating quiz…" : editingId ? "Update Lesson" : "Save Lesson"}
                 </button>
               </div>
             </div>
 
-            <div className="glass-card overflow-hidden bg-white/20">
-              <div className="p-3 sm:p-4 border-b border-white/10 font-semibold text-sm">Lessons ({items.length})</div>
-              <div className="divide-y divide-white/10 max-h-[500px] overflow-y-auto">
+            <div className="glass overflow-hidden">
+              <div className="p-3 sm:p-4 border-b border-pale font-semibold text-sm">Lessons ({items.length})</div>
+              <div className="divide-y divide-pale max-h-[500px] overflow-y-auto">
                 {items.length === 0 && <div className="p-6 text-sm text-muted-foreground text-center">No lessons yet.</div>}
                 {items.map((i) => (
-                  <div key={i.id} className="p-2.5 sm:p-3 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 min-w-0 hover:bg-white/10 transition-colors">
-                    <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider bg-primary/20 text-primary px-2 py-1 rounded whitespace-nowrap self-start flex-shrink-0 border border-primary/20">{i.category.replace("_", " ")}</span>
+                  <div key={i.id} className="p-2.5 sm:p-3 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 min-w-0">
+                    <span className="text-[9px] sm:text-[10px] font-bold tracking-wider bg-primary/10 text-primary px-2 py-1 rounded whitespace-nowrap self-start flex-shrink-0">{i.category.replace("_", " ")}</span>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-[13px] sm:text-sm text-foreground break-words">{i.title}</div>
                       {i.description && <div className="text-[11px] sm:text-xs text-muted-foreground line-clamp-2 break-words">{i.description}</div>}
@@ -317,7 +317,7 @@ const HQContent = () => {
 
         {tab === "finance" && (
           <div className="space-y-6">
-            <div className="glass-card p-4 sm:p-6 bg-white/30">
+            <div className="glass p-4 sm:p-6">
               <h3 className="font-semibold text-foreground mb-4 text-sm sm:text-base">Add Finance Entry</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                 <select value={fKind} onChange={(e) => setFKind(e.target.value as "income" | "expenditure")} className={inputCls}>
@@ -331,18 +331,18 @@ const HQContent = () => {
                 <input type="number" step="0.01" value={fAmt} onChange={(e) => setFAmt(e.target.value)} placeholder="Amount in Naira" className={inputCls} />
                 <input value={fParty} onChange={(e) => setFParty(e.target.value)} placeholder={fKind === "income" ? "Source (donor name)" : "Payee"} className={inputCls} />
               </div>
-              <button onClick={addFinance} className="w-full bg-primary text-primary-foreground rounded-xl px-4 py-2.5 text-sm font-semibold whitespace-nowrap inline-flex items-center justify-center gap-2 shadow-sm">
+              <button onClick={addFinance} className="w-full btn-primary !min-h-10 !text-sm whitespace-nowrap inline-flex items-center justify-center gap-2">
                 <FontAwesomeIcon icon={faPlus} className="w-3.5 h-3.5" /> Save Entry
               </button>
             </div>
 
-            <div className="glass-card overflow-hidden bg-white/20">
-              <div className="p-3 sm:p-4 border-b border-white/10 font-semibold text-sm">Entries ({entries.length})</div>
-              <div className="divide-y divide-white/10 max-h-[500px] overflow-y-auto">
+            <div className="glass overflow-hidden">
+              <div className="p-3 sm:p-4 border-b border-pale font-semibold text-sm">Entries ({entries.length})</div>
+              <div className="divide-y divide-pale max-h-[500px] overflow-y-auto">
                 {entries.length === 0 && <div className="p-6 text-sm text-muted-foreground text-center">No entries yet.</div>}
                 {entries.map((e) => (
-                  <div key={e.id} className="p-2.5 sm:p-3 flex items-center gap-2 min-w-0 hover:bg-white/10 transition-colors">
-                    <span className={`text-[9px] sm:text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded whitespace-nowrap flex-shrink-0 border ${e.kind === "income" ? "bg-primary/20 text-primary border-primary/20" : "bg-destructive/20 text-destructive border-destructive/20"}`}>{e.kind}</span>
+                  <div key={e.id} className="p-2.5 sm:p-3 flex items-center gap-2 min-w-0">
+                    <span className={`text-[9px] sm:text-[10px] font-bold tracking-wider px-2 py-1 rounded whitespace-nowrap flex-shrink-0 ${e.kind === "income" ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"}`}>{e.kind}</span>
                     <div className="flex-1 min-w-0">
                       <div className="text-[12px] sm:text-sm text-foreground truncate">{e.description}</div>
                       <div className="text-[10px] sm:text-xs text-muted-foreground truncate">{e.occurred_on}{e.source_or_payee ? ` · ${e.source_or_payee}` : ""}</div>

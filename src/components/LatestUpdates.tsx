@@ -36,18 +36,18 @@ const LatestUpdates = () => {
   if (posts.length === 0) return null;
 
   return (
-    <section className="py-20 md:py-28 bg-secondary" ref={ref}>
+    <section className="py-20 md:py-28" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           className="text-center mb-12"
         >
-          <span className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block">
-            Stay Informed
+          <span className="eyebrow">
+            Stay informed
           </span>
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
-            Latest Updates
+          <h2 className="text-3xl md:text-[2.75rem] font-bold text-foreground mb-3">
+            Latest updates
           </h2>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
             News and stories from the Green People Movement
@@ -64,7 +64,7 @@ const LatestUpdates = () => {
             <Link
               key={post.id}
               to={`/updates/${post.slug}`}
-              className="bg-background border border-border rounded-xl overflow-hidden hover:shadow-md transition-shadow block"
+              className="glass overflow-hidden hover:shadow-md transition-shadow block"
             >
               {post.cover_image && (
                 <img

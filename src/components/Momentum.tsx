@@ -28,12 +28,12 @@ const AnimatedCounter = ({ target, label, icon }: { target: number; label: strin
   }, [isInView, target]);
 
   return (
-    <div ref={ref} className="text-center">
-      <FontAwesomeIcon icon={icon} className="w-5 h-5 text-primary mx-auto mb-2" />
-      <div className="text-2xl md:text-3xl font-bold text-foreground">
+    <div ref={ref} className="glass text-center p-5">
+      <div className="icon-chip w-10 h-10 mx-auto mb-3"><FontAwesomeIcon icon={icon} className="w-4 h-4" /></div>
+      <div className="text-3xl md:text-[2.75rem] font-bold text-foreground">
         {count.toLocaleString("en-NG")}
       </div>
-      <div className="text-muted-foreground text-xs mt-1">{label}</div>
+      <div className="text-muted-foreground text-sm font-semibold mt-1">{label}</div>
     </div>
   );
 };
@@ -96,17 +96,17 @@ const Momentum = () => {
   }, [testimonials.length]);
 
   return (
-    <section id="momentum" className="py-20 md:py-28 bg-secondary/30" ref={ref}>
+    <section id="momentum" className="py-20 md:py-28" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           className="text-center max-w-2xl mx-auto mb-14"
         >
-          <span className="text-primary font-semibold text-xs uppercase tracking-widest mb-3 block">
+          <span className="eyebrow">
             Momentum
           </span>
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3 leading-tight">
+          <h2 className="text-3xl md:text-[2.75rem] font-bold text-foreground mb-3 leading-tight">
             The movement is growing
           </h2>
         </motion.div>
@@ -115,21 +115,21 @@ const Momentum = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.15 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-lg md:max-w-2xl mx-auto mb-16"
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-16"
         >
-          <AnimatedCounter target={stats.members} label="Members Joined" icon={faUsers} />
-          <AnimatedCounter target={stats.pvcHolders} label="PVC Holders" icon={faIdCard} />
-          <AnimatedCounter target={stats.states} label="States Reached" icon={faLocationDot} />
-          <AnimatedCounter target={stats.lgas} label="LGAs Reached" icon={faChartLine} />
+          <AnimatedCounter target={stats.members} label="Members joined" icon={faUsers} />
+          <AnimatedCounter target={stats.pvcHolders} label="PVC holders" icon={faIdCard} />
+          <AnimatedCounter target={stats.states} label="States reached" icon={faLocationDot} />
+          <AnimatedCounter target={stats.lgas} label="LGAs reached" icon={faChartLine} />
         </motion.div>
 
         {/* Real testimonials from form submissions */}
         {testimonials.length > 0 && (
           <div className="max-w-2xl mx-auto">
-            <h3 className="text-center text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-6">
-              Why People Believe in Green People
+            <h3 className="text-center text-base font-semibold text-muted-foreground mb-6">
+              Why people believe in Green People
             </h3>
-            <div className="bg-background border border-border rounded-xl p-6 md:p-8 relative min-h-[140px]">
+            <div className="glass p-6 md:p-8 relative min-h-[140px]">
               <div className="absolute top-4 left-6 text-4xl text-primary/10 font-bold">"</div>
               {testimonials.map((t, i) => (
                 <motion.div
@@ -163,7 +163,8 @@ const Momentum = () => {
                     <button
                       key={i}
                       onClick={() => setActiveTestimonial(i)}
-                      className={`w-2 h-2 rounded-full transition-colors ${
+                      aria-label={`Show testimonial ${i + 1}`}
+                      className={`w-2.5 h-2.5 rounded-full transition-colors ${
                         activeTestimonial === i ? "bg-primary" : "bg-border"
                       }`}
                     />
