@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import AdminShell, { Skeleton, EmptyState, ErrorState, Initials } from "@/components/admin/AdminShell";
+import { fetchAll } from "@/lib/fetchAll";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -67,7 +68,7 @@ const MembersContent = () => {
 
   const load = () => {
     setLoading(true); setLoadError(false);
-    supabase.from("members").select("*").order("created_at", { ascending: false })
+    fetchAll((a, b) => supabase.from("members").select("*").order("created_at", { ascending: false }).order("id").range(a, b))
       .then(({ data, error }) => { if (error) setLoadError(true); else if (data) setMembers(data); setLoading(false); });
   };
   useEffect(load, []);

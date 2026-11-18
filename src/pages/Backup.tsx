@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import AccessGate from "@/components/AccessGate";
-import Navbar from "@/components/Navbar";
+import AdminShell from "@/components/admin/AdminShell";
+import { fetchAll } from "@/lib/fetchAll";
 import { useToast } from "@/hooks/use-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faDatabase, faShield } from "@fortawesome/free-solid-svg-icons";
@@ -39,7 +40,7 @@ const BackupContent = () => {
       const dump: Record<string, unknown[]> = {};
       for (const t of TABLES) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data, error } = await (supabase as any).from(t).select("*");
+        const { data, error } = await fetchAll((a, b) => (supabase as any).from(t).select("*").range(a, b));
         if (error) console.warn(t, error);
         dump[t] = data ?? [];
       }
@@ -57,7 +58,7 @@ const BackupContent = () => {
 
   const downloadTable = async (t: string) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (supabase as any).from(t).select("*");
+    const { data, error } = await fetchAll((a, b) => (supabase as any).from(t).select("*").range(a, b));
     if (error || !data) return toast({ title: `Failed: ${t}`, variant: "destructive" });
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -66,41 +67,48 @@ const BackupContent = () => {
     setTimeout(() => URL.revokeObjectURL(url), 2000);
   };
 
+  const total = Object.values(counts).reduce((x, y) => x + y, 0);
+  const loaded = Object.keys(counts).length === TABLES.length;
+
   return (
-    <div className="min-h-screen pt-20 pb-16 overflow-x-hidden">
-      <Navbar />
-      <div className="max-w-3xl mx-auto px-4 sm:px-5">
-        <div className="flex items-center gap-2 mb-2">
-          <FontAwesomeIcon icon={faShield} className="w-4 h-4 text-primary" />
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground">Backup Vault</h1>
-        </div>
-        <p className="text-xs sm:text-sm text-muted-foreground mb-6 break-words">
-          Download a complete JSON snapshot of every table. Save it weekly. If anything breaks, we can restore.
-        </p>
-
-        <button onClick={downloadAll} disabled={busy} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 btn-primary !min-h-10 !text-sm shadow-md disabled:opacity-50 mb-8 whitespace-nowrap">
-          <FontAwesomeIcon icon={faDownload} className="w-4 h-4" />
-          {busy ? "Bundling…" : "Download Full Backup (JSON)"}
+    <AdminShell title="Backup vault" subtitle="Download a complete copy of every table. Save one every week."
+      actions={
+        <button onClick={downloadAll} disabled={busy} className="btn-primary !min-h-11 disabled:opacity-60">
+          <FontAwesomeIcon icon={faDownload} className="w-4 h-4" /> {busy ? "Bundling…" : "Download full backup"}
         </button>
-
-        <div className="glass overflow-hidden">
-          <div className="p-3 sm:p-4 border-b border-pale font-semibold text-sm flex items-center gap-2">
-            <FontAwesomeIcon icon={faDatabase} className="w-3.5 h-3.5" /> Tables
-          </div>
-          <div className="divide-y divide-pale">
-            {TABLES.map((t) => (
-              <div key={t} className="p-2.5 sm:p-3 flex items-center gap-2 min-w-0">
-                <code className="text-[11px] sm:text-xs text-foreground/80 truncate flex-1 min-w-0">{t}</code>
-                <span className="text-[10px] sm:text-xs text-muted-foreground whitespace-nowrap">{counts[t] ?? "—"}</span>
-                <button onClick={() => downloadTable(t)} className="text-[10px] sm:text-xs font-semibold bg-secondary text-foreground px-2 py-1 rounded-md whitespace-nowrap">
-                  <FontAwesomeIcon icon={faDownload} className="w-3 h-3 mr-1" />JSON
-                </button>
-              </div>
-            ))}
-          </div>
+      }>
+      <div className="grid gap-3 sm:grid-cols-3 mb-5">
+        <div className="glass p-5">
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Records</div>
+          <div className="mt-1 text-3xl font-black text-foreground tabular-nums">{loaded ? total.toLocaleString("en-NG") : "…"}</div>
+        </div>
+        <div className="glass p-5">
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Tables</div>
+          <div className="mt-1 text-3xl font-black text-foreground tabular-nums">{TABLES.length}</div>
+        </div>
+        <div className="glass p-5 flex gap-3 items-start">
+          <FontAwesomeIcon icon={faShield} className="w-4 h-4 mt-1 text-olive" />
+          <p className="text-sm text-muted-foreground">The file is JSON and holds members' phone numbers. Keep it somewhere private.</p>
         </div>
       </div>
-    </div>
+
+      <div className="glass overflow-hidden">
+        <div className="px-4 py-3 border-b border-pale font-semibold text-sm flex items-center gap-2">
+          <FontAwesomeIcon icon={faDatabase} className="w-3.5 h-3.5" /> Tables
+        </div>
+        <ul className="divide-y divide-pale">
+          {TABLES.map((t) => (
+            <li key={t} className="px-4 py-2.5 flex items-center gap-3 min-w-0">
+              <span className="flex-1 min-w-0 truncate text-sm font-medium text-foreground">{t.replace(/_/g, " ")}</span>
+              <span className="text-sm text-muted-foreground tabular-nums whitespace-nowrap">{counts[t] === undefined ? "…" : counts[t].toLocaleString("en-NG")}</span>
+              <button onClick={() => downloadTable(t)} className="btn-glass !min-h-9 !px-3 !text-xs" aria-label={`Download ${t}`}>
+                <FontAwesomeIcon icon={faDownload} className="w-3 h-3" /> JSON
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </AdminShell>
   );
 };
 

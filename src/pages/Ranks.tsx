@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Skeleton, EmptyState, ErrorState, Initials } from "@/components/admin/AdminShell";
 import { Link } from "react-router-dom";
+import { fetchAll } from "@/lib/fetchAll";
 import { supabase } from "@/integrations/supabase/client";
 import { initialsAfterFirst } from "@/lib/textNormalize";
 import { tierFor, TIERS, POINTS_LABEL } from "@/lib/greenSeeds";
@@ -35,16 +36,16 @@ const Ranks = () => {
         hostReadsResult,
         hostQuizzesResult,
       ] = await Promise.all([
-        supabase.rpc("public_member_directory"),
-        supabase.from("social_posts").select("id, points, created_at").eq("active", true),
-        supabase.from("social_clicks").select("member_id, post_id, created_at").is("host_member_id", null),
-        supabase.from("curriculum_reads").select("member_id, item_id").is("host_member_id", null),
-        supabase.from("page_visits").select("host_member_id, points_awarded"),
-        supabase.from("social_clicks").select("host_member_id, points_awarded").not("host_member_id", "is", null),
-        supabase.from("member_referrals").select("referrer_id, points_awarded"),
-        supabase.from("quiz_attempts").select("member_id, item_id").is("host_member_id", null),
-        supabase.from("curriculum_reads").select("host_member_id, points_awarded").not("host_member_id", "is", null),
-        supabase.from("quiz_attempts").select("host_member_id, points_awarded").not("host_member_id", "is", null),
+        fetchAll((a, b) => supabase.rpc("public_member_directory").order("id").range(a, b)),
+        fetchAll((a, b) => supabase.from("social_posts").select("id, points, created_at").eq("active", true).order("id").range(a, b)),
+        fetchAll((a, b) => supabase.from("social_clicks").select("member_id, post_id, created_at").is("host_member_id", null).order("id").range(a, b)),
+        fetchAll((a, b) => supabase.from("curriculum_reads").select("member_id, item_id").is("host_member_id", null).order("id").range(a, b)),
+        fetchAll((a, b) => supabase.from("page_visits").select("host_member_id, points_awarded").order("id").range(a, b)),
+        fetchAll((a, b) => supabase.from("social_clicks").select("host_member_id, points_awarded").not("host_member_id", "is", null).order("id").range(a, b)),
+        fetchAll((a, b) => supabase.from("member_referrals").select("referrer_id, points_awarded").order("id").range(a, b)),
+        fetchAll((a, b) => supabase.from("quiz_attempts").select("member_id, item_id").is("host_member_id", null).order("id").range(a, b)),
+        fetchAll((a, b) => supabase.from("curriculum_reads").select("host_member_id, points_awarded").not("host_member_id", "is", null).order("id").range(a, b)),
+        fetchAll((a, b) => supabase.from("quiz_attempts").select("host_member_id, points_awarded").not("host_member_id", "is", null).order("id").range(a, b)),
       ]);
       if (membersResult.error) { setFailed(true); setLoading(false); return; }
       const { data: members } = membersResult;

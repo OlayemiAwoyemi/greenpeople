@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import AccessGate from "@/components/AccessGate";
 import { supabase } from "@/integrations/supabase/client";
-import Navbar from "@/components/Navbar";
+import AdminShell from "@/components/admin/AdminShell";
 import {
   PieChart,
   Pie,
@@ -104,16 +104,7 @@ const CensusContent = () => {
   }, [counts]);
 
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <div className="pt-24 pb-16 section-container">
-        <div className="flex items-center gap-3 mb-2">
-          <FontAwesomeIcon icon={faUsers} className="text-primary text-2xl" />
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Green Census</h1>
-        </div>
-        <p className="text-muted-foreground mb-6">
-          Live breakdown of {total.toLocaleString()} registered Green People across Nigeria's 36 States + FCT and the diaspora.
-        </p>
+    <AdminShell title="Census" subtitle={`Live breakdown of ${total.toLocaleString("en-NG")} registered Green People across the 36 states, the FCT and the diaspora.`}>
 
         {/* Dimension picker */}
         <div className="flex flex-wrap gap-2 mb-8">
@@ -123,8 +114,8 @@ const CensusContent = () => {
               onClick={() => setDim(d.key)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition ${
                 dim === d.key
-                  ? "bg-primary text-primary-foreground shadow"
-                  : "bg-muted text-foreground/70 hover:bg-muted/70"
+                  ? "bg-deep text-white shadow"
+                  : "bg-white/60 text-foreground/80 hover:bg-white/90"
               }`}
             >
               {d.label}
@@ -257,8 +248,7 @@ const CensusContent = () => {
             </div>
           </div>
         )}
-      </div>
-    </div>
+    </AdminShell>
   );
 };
 

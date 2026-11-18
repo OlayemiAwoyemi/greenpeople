@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { fetchAll } from "@/lib/fetchAll";
 import { supabase } from "@/integrations/supabase/client";
-import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faSearch, faPhone, faUserCheck, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faPhone, faUserCheck, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import AccessGate from "@/components/AccessGate";
+import AdminShell, { EmptyState, Skeleton } from "@/components/admin/AdminShell";
 
 const PhoneNumbersContent = () => {
   const [phoneNumbers, setPhoneNumbers] = useState<string[]>([]);
@@ -12,10 +13,7 @@ const PhoneNumbersContent = () => {
   
   useEffect(() => {
     const fetchNumbers = async () => {
-      const { data, error } = await supabase
-        .from("members")
-        .select("phone")
-        .order("phone", { ascending: true });
+      const { data, error } = await fetchAll<{ phone: string }>((a, b) => supabase.from("members").select("phone").order("phone", { ascending: true }).range(a, b));
       
       if (data) {
         setPhoneNumbers(data.map(m => m.phone));
@@ -32,66 +30,40 @@ const PhoneNumbersContent = () => {
   const isExactMatch = phoneNumbers.includes(searchTerm.trim());
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="section-container py-8">
-        <div className="flex items-center gap-3 mb-8">
-          <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
-            <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
-          </Link>
-          <h1 className="text-2xl font-bold text-foreground">Member Directory</h1>
-          <span className="bg-primary/10 text-primary text-xs font-semibold px-2.5 py-1 rounded-full">
-            {phoneNumbers.length} total
-          </span>
-        </div>
-
-        {/* Search & Verification Box */}
-        <div className="glass-card p-6 mb-8 bg-white/5 border-white/10">
-          <div className="flex flex-col md:flex-row gap-4 items-center">
-            <div className="relative flex-1 w-full">
-              <FontAwesomeIcon icon={faSearch} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search or confirm a phone number..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-primary-foreground/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-base md:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-              />
+    <AdminShell title="Phone numbers" subtitle={`${phoneNumbers.length.toLocaleString("en-NG")} registered numbers. Search to confirm whether someone has joined.`}>
+      <div className="glass p-4 sm:p-5 mb-5">
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+          <div className="relative flex-1">
+            <label htmlFor="pn-search" className="sr-only">Search or confirm a phone number</label>
+            <FontAwesomeIcon icon={faSearch} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <input id="pn-search" type="text" inputMode="tel" placeholder="Search or confirm a phone number"
+              value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-white/70 border border-pale rounded-full pl-11 pr-4 py-3 min-h-11 text-base sm:text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-[3px] focus:ring-primary/60" />
+          </div>
+          {searchTerm && (
+            <div role="status" className={`px-5 py-3 rounded-full inline-flex items-center gap-2 whitespace-nowrap font-semibold text-sm ${isExactMatch ? "bg-lime/30 text-olive" : "bg-destructive/10 text-destructive"}`}>
+              <FontAwesomeIcon icon={isExactMatch ? faUserCheck : faCircleExclamation} />
+              {isExactMatch ? "Member confirmed" : "Not found"}
             </div>
-            {searchTerm && (
-              <div className={`px-6 py-3.5 rounded-2xl flex items-center gap-2 whitespace-nowrap font-bold text-sm border ${
-                isExactMatch 
-                  ? "bg-primary/20 text-primary border-primary/30" 
-                  : "bg-destructive/10 text-destructive border-destructive/20"
-              }`}>
-                <FontAwesomeIcon icon={isExactMatch ? faUserCheck : faCircleExclamation} />
-                {isExactMatch ? "Member Confirmed" : "Not Found"}
-              </div>
-            )}
-          </div>
+          )}
         </div>
-
-        {loading ? (
-          <div className="text-center py-16 text-muted-foreground text-sm">Loading directory...</div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-            {filteredNumbers.length === 0 ? (
-              <div className="col-span-full text-center py-12 text-muted-foreground italic text-sm">
-                No matching numbers found in our database.
-              </div>
-            ) : (
-              filteredNumbers.map((num, i) => (
-                <div key={i} className="bg-card/50 border border-border rounded-xl p-3 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <FontAwesomeIcon icon={faPhone} className="w-3 h-3 text-primary/70" />
-                  </div>
-                  <span className="text-sm font-medium text-foreground">{num}</span>
-                </div>
-              ))
-            )}
-          </div>
-        )}
       </div>
-    </div>
+
+      {loading ? <Skeleton rows={6} /> : filteredNumbers.length === 0 ? (
+        <EmptyState title="No matching numbers" hint="Check the digits and try again." />
+      ) : (
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+          {filteredNumbers.map((num, i) => (
+            <li key={i} className="glass !rounded-2xl px-4 py-3 flex items-center gap-3">
+              <span className="w-8 h-8 rounded-full bg-pale flex items-center justify-center shrink-0">
+                <FontAwesomeIcon icon={faPhone} className="w-3 h-3 text-olive" />
+              </span>
+              <a href={`tel:${num.replace(/\s/g, "")}`} className="text-sm font-medium text-foreground tabular-nums hover:underline">{num}</a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </AdminShell>
   );
 };
 
