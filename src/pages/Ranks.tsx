@@ -22,7 +22,16 @@ const Ranks = () => {
   useEffect(() => {
     const load = async () => {
       setLoading(true); setFailed(false);
-      const results = await Promise.all([
+      const [
+        membersResult,
+        postsResult,
+        clicksResult,
+        readsResult,
+        visitsResult,
+        hostClicksResult,
+        referralsResult,
+        quizResult,
+      ] = await Promise.all([
         supabase.from("members").select("id, full_name, phone, state"),
         supabase.from("social_posts").select("id, points, created_at"),
         supabase.from("social_clicks").select("member_id, post_id, points_awarded, created_at, host_member_id"),
@@ -32,8 +41,15 @@ const Ranks = () => {
         supabase.from("member_referrals").select("referrer_id, points_awarded"),
         supabase.from("quiz_attempts").select("member_id, points_awarded"),
       ]);
-      if (results[0].error) { setFailed(true); setLoading(false); return; }
-      const [{ data: members }, { data: posts }, { data: clicks }, { data: reads }, { data: pv }, { data: hostClicks }, { data: refs }, { data: quiz }] = results;
+      if (membersResult.error) { setFailed(true); setLoading(false); return; }
+      const { data: members } = membersResult;
+      const { data: posts } = postsResult;
+      const { data: clicks } = clicksResult;
+      const { data: reads } = readsResult;
+      const { data: pv } = visitsResult;
+      const { data: hostClicks } = hostClicksResult;
+      const { data: refs } = referralsResult;
+      const { data: quiz } = quizResult;
 
       const postMap = new Map((posts ?? []).map((p) => [p.id, p]));
       const totals = new Map<string, number>();
