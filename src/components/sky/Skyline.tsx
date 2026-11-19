@@ -9,8 +9,8 @@ import gate from "@/assets/landmarks/gate.webp";
  *         Jaekel House, the Three Wise Men, the first storey building,
  *         the National Christian Centre and the National Mosque (drifts slowly);
  *  mid  — Lagos: the Lekki–Ikoyi Link Bridge and the Marina skyline, then
- *         Abuja: CBD towers, Christian Centre, Mosque, Aso Rock and the
- *         National Assembly (pans gently, like the video camera);
+ *         Abuja: CBD towers, Christian Centre, Mosque, Zuma Rock, the
+ *         National Assembly and its Mace monument (pans gently, like the video camera);
  *  gate — the Abuja City Gate, front and centre (optional).
  * Layers also lean with the pointer on desktop (see SkyBackdrop).
  */
