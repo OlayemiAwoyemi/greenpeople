@@ -4,11 +4,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faInstagram, faYoutube, faXTwitter } from "@fortawesome/free-brands-svg-icons";
 
-/** Episode videos, self-hosted so they always play, on any device. */
-export const EPISODE_VIDEOS: Record<string, { src: string; poster: string; number: string; title: string }> = {
-  "2027": { src: "/em/video/ep01.mp4", poster: "/em/video/ep01.jpg", number: "01", title: "The 2027 candidates" },
-  "1960": { src: "/em/video/ep02.mp4", poster: "/em/video/ep02.jpg", number: "02", title: "Every leader since 1960" },
+/** Episode videos, self-hosted so they always play, on any device.
+ *  Phones and tablets get the portrait cut; desktops get the landscape cut. */
+type EpisodeVideo = { src: string; poster: string; wide: string; widePoster: string; number: string; title: string };
+export const EPISODE_VIDEOS: Record<string, EpisodeVideo> = {
+  "2027": { src: "/em/video/ep01.mp4", poster: "/em/video/ep01.jpg", wide: "/em/video/ep01-wide.mp4", widePoster: "/em/video/ep01-wide.jpg", number: "01", title: "The 2027 candidates" },
+  "1960": { src: "/em/video/ep02.mp4", poster: "/em/video/ep02.jpg", wide: "/em/video/ep02-wide.mp4", widePoster: "/em/video/ep02-wide.jpg", number: "02", title: "Every leader since 1960" },
 };
+
+/** Desktop = a wide, landscape window with a mouse. Decided once, when the player opens. */
+const prefersWide = () =>
+  typeof window !== "undefined" && window.matchMedia("(min-width: 1024px) and (orientation: landscape) and (pointer: fine)").matches;
 
 const SOCIALS = [
   { href: "https://youtube.com/@greenpeopleng", icon: faYoutube, label: "YouTube" },
@@ -19,6 +25,7 @@ const SOCIALS = [
 const Player = ({ id, onClose }: { id: string; onClose: () => void }) => {
   const v = EPISODE_VIDEOS[id];
   const closeRef = useRef<HTMLButtonElement>(null);
+  const [wide] = useState(prefersWide);
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -31,7 +38,8 @@ const Player = ({ id, onClose }: { id: string; onClose: () => void }) => {
     <div role="dialog" aria-modal="true" aria-label={`Election Matters ${v.number}: ${v.title}`}
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-deep/70 backdrop-blur-md animate-in fade-in-0"
       onClick={onClose}>
-      <div className="relative w-full max-w-[min(420px,calc((100dvh-9rem)*9/16))]" onClick={(e) => e.stopPropagation()}>
+      <div className={wide ? "relative w-full max-w-[min(1120px,calc((100dvh-9rem)*16/9))]" : "relative w-full max-w-[min(420px,calc((100dvh-9rem)*9/16))]"}
+        onClick={(e) => e.stopPropagation()}>
         <div className="mb-3 flex items-center justify-between gap-3 text-white">
           <p className="text-sm font-semibold truncate">Episode {v.number} · {v.title}</p>
           <button ref={closeRef} type="button" onClick={onClose} aria-label="Close video"
@@ -39,8 +47,8 @@ const Player = ({ id, onClose }: { id: string; onClose: () => void }) => {
             <FontAwesomeIcon icon={faXmark} className="w-4 h-4" />
           </button>
         </div>
-        <video src={v.src} poster={v.poster} controls autoPlay playsInline preload="metadata"
-          className="w-full aspect-[9/16] rounded-3xl bg-black shadow-2xl object-cover" />
+        <video src={wide ? v.wide : v.src} poster={wide ? v.widePoster : v.poster} controls autoPlay playsInline preload="metadata"
+          className={wide ? "w-full aspect-video rounded-3xl bg-black shadow-2xl object-cover" : "w-full aspect-[9/16] rounded-3xl bg-black shadow-2xl object-cover"} />
         <div className="mt-3 flex items-center justify-center gap-2">
           <span className="text-xs text-white/70 mr-1">Also on</span>
           {SOCIALS.map((s) => (
